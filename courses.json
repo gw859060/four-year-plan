@@ -1,0 +1,51 @@
+{
+    "plan": [
+        {
+            "year": "1",
+            "details": [
+                {
+                    "semester": "1",
+                    "classes": [
+                        {
+                            "subject": "CSC",
+                            "number": "141",
+                            "name": "Computer Science I",
+                            "credits": "3",
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "ESS",
+                            "number": "101",
+                            "name": "Introduction to Geology",
+                            "credits": "3",
+                            "requirement": "gen ed",
+                            "attribute": "science"
+                        }
+                    ]
+                },
+                {
+                    "semester": "2",
+                    "classes": [
+                        {
+                            "subject": "CSC",
+                            "number": "142",
+                            "name": "Computer Science II",
+                            "credits": "3",
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "BIO",
+                            "number": "110",
+                            "name": "General Biology",
+                            "credits": "3",
+                            "requirement": "gen ed",
+                            "attribute": "science"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
