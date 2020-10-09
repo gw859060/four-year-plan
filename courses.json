@@ -10,7 +10,7 @@
                             "subject": "CSC",
                             "number": "141",
                             "name": "Computer Science I",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -18,7 +18,7 @@
                             "subject": "MAT",
                             "number": "151",
                             "name": "Computer Science I",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "math"
                         },
@@ -26,7 +26,7 @@
                             "subject": "ESS",
                             "number": "101",
                             "name": "Introduction to Geology",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "science"
                         },
@@ -34,7 +34,7 @@
                             "subject": "FYE",
                             "number": "100",
                             "name": "First Year Experience",
-                            "credits": "4",
+                            "credits": 4,
                             "requirement": "gen ed",
                             "attribute": "fye"
                         },
@@ -42,7 +42,7 @@
                             "subject": "GEO",
                             "number": "204",
                             "name": "Introduction to Urban Studies",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": [
                                     "i",
@@ -58,7 +58,7 @@
                             "subject": "CSC",
                             "number": "142",
                             "name": "Computer Science II",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -66,7 +66,7 @@
                             "subject": "MAT",
                             "number": "161",
                             "name": "Calculus I",
-                            "credits": "4",
+                            "credits": 4,
                             "requirement": "major",
                             "attribute": "math"
                         },
@@ -74,7 +74,7 @@
                             "subject": "BIO",
                             "number": "110",
                             "name": "General Biology",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "science"
                         },
@@ -82,7 +82,7 @@
                             "subject": "LNC",
                             "number": "100",
                             "name": "Discover the World on Film",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "humanities"
                         },
@@ -90,10 +90,10 @@
                             "subject": "ANT",
                             "number": "103",
                             "name": "Introduction to Archaeology",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "social"
-                        },
+                        }
                     ]
                 }
             ]
@@ -108,7 +108,7 @@
                             "subject": "CSC",
                             "number": "240",
                             "name": "Computer Science III",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -116,7 +116,7 @@
                             "subject": "CSC",
                             "number": "231",
                             "name": "Computer Systems",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -124,7 +124,7 @@
                             "subject": "MAT",
                             "number": "121",
                             "name": "Introduction to Statistics I",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "math"
                         },
@@ -132,7 +132,7 @@
                             "subject": "SPK",
                             "number": "230",
                             "name": "Business and Professional Speech Communication",
-                            "credits": "4",
+                            "credits": 4,
                             "requirement": "gen ed",
                             "attribute": "speaking"
                         },
@@ -140,7 +140,7 @@
                             "subject": "FLM",
                             "number": "200",
                             "name": "Introduction to Film",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "writing"
                         }
@@ -153,7 +153,7 @@
                             "subject": "CSC",
                             "number": "241",
                             "name": "Data Structures & Algorithms",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -161,7 +161,7 @@
                             "subject": "CSC",
                             "number": "220",
                             "name": "Foundations of Computer Science",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
@@ -169,7 +169,7 @@
                             "subject": "STA",
                             "number": "200",
                             "name": "Introduction to Statistics II",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "math"
                         },
@@ -177,7 +177,7 @@
                             "subject": "GEO",
                             "number": "101",
                             "name": "World Geography",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "social"
                         },
@@ -185,7 +185,7 @@
                             "subject": "ENG",
                             "number": "371",
                             "name": "Technical Writing",
-                            "credits": "3",
+                            "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "writing"
                         }
