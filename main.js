@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', (function () {
 
     function initPlan() {
         // @TODO: allow user input via localStorage?
-
         let request = new XMLHttpRequest();
         let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
 
@@ -59,23 +58,20 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let creditTotal = 0;
 
                     classes.forEach(cls => {
-                        let tile = get('.template-tile').content.cloneNode(true);
-                        let shorthand = get('.tile-shorthand', tile);
-                        let fullname = get('.tile-name', tile);
-                        let req = get('.req', tile);
-                        let attr = get('.attr', tile);
-                        let credits = get('.tile-credits', tile);
+                        let tileTemplate = get('.template-tile').content.cloneNode(true);
+                        let shorthandNode = get('.tile-shorthand', tileTemplate);
+                        let fullnameNode = get('.tile-name', tileTemplate);
+                        let reqContainer = get('.req-container', tileTemplate);
+                        let creditsNode = get('.tile-credits', tileTemplate);
 
-                        shorthand.innerHTML = cls.subject + '<br />' + cls.number;
-                        fullname.textContent = cls.name;
-                        req.textContent = handleReq(cls.requirement);
-                        req.classList.add(cls.requirement);
-                        attr.textContent = handleReq(cls.attribute);
-                        attr.classList.add(cls.attribute);
-                        credits.textContent = cls.credits + ' cr.';
-
-                        semesterSection.appendChild(tile);
+                        createCatalogLink(shorthandNode, cls.subject, cls.number);
+                        fullnameNode.textContent = cls.name;
+                        handleReq(reqContainer, cls.requirement);
+                        handleReq(reqContainer, cls.attribute);
+                        creditsNode.textContent = cls.credits + ' cr.';
                         creditTotal += cls.credits;
+
+                        semesterSection.appendChild(tileTemplate);
                     });
 
                     /* ***** TOTALS ***** */
@@ -88,71 +84,71 @@ document.addEventListener('DOMContentLoaded', (function () {
                 });
             });
 
-            function createClassLink(node, subject, number) {
+            function createCatalogLink(node, subject, number) {
                 let link = document.createElement('a');
 
-                link.classList.add('class-link');
+                link.classList.add('shorthand-link');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
                 link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
-                link.textContent = subject + ' ' + number;
+                link.innerHTML = subject + '<br />' + number;
                 node.appendChild(link);
             }
 
-            function handleReq(reqs) {
-                // if it fulfills multiple requirements
-                if (typeof reqs === 'object') {
-                    let list = [];
-
-                    reqs.forEach(req => list.push(expandReq(req)));
-                    return list;
+            function handleReq(node, abbrev) {
+                // if multiple attributes (eg. arts and writing)
+                if (typeof abbrev === 'object') {
+                    abbrev.forEach(attr => buildPill(node, attr));
+                } else {
+                    buildPill(node, abbrev);
                 }
-                // otherwise a single requirement
-                else {
-                    return expandReq(reqs);
+
+                function buildPill(node, attr) {
+                    let pill = document.createElement('span');
+
+                    pill.classList.add('pill', attr);
+                    pill.textContent = expandAbbrev(attr);
+
+                    node.appendChild(pill);
                 }
-            }
 
-            function expandReq(abbrev) {
-                switch (abbrev) {
-                    case 'gened':
-                        return 'Gen. Ed.';
-                        break;
-                    case 'fye':
-                        return 'First Year Experience';
-                        break;
-                    case 'social':
-                        return 'Social Science';
-                        break;
-                    case 'math':
-                        return 'Mathematics';
-                        break;
-                    case 'english':
-                        return 'English Composition';
-                        break;
-                    case 'writing':
-                        return 'Writing Emphasis';
-                        break;
-                    case 'speaking':
-                        return 'Speaking Emphasis';
-                        break;
-                    case 'i':
-                        return 'Interdisciplinary';
-                        break;
-                    case 'j':
-                        return 'Diverse Communities';
-                        break;
-                    default:
-                        return capitalizeFirstLetter(abbrev);
+                function expandAbbrev(abbrev) {
+                    switch (abbrev) {
+                        case 'gened':
+                            return 'Gen. Ed.';
+                            break;
+                        case 'fye':
+                            return 'First Year Experience';
+                            break;
+                        case 'social':
+                            return 'Social Science';
+                            break;
+                        case 'math':
+                            return 'Mathematics';
+                            break;
+                        case 'english':
+                            return 'English Composition';
+                            break;
+                        case 'writing':
+                            return 'Writing Emphasis';
+                            break;
+                        case 'speaking':
+                            return 'Speaking Emphasis';
+                            break;
+                        case 'i':
+                            return 'Interdisciplinary';
+                            break;
+                        case 'j':
+                            return 'Diverse Communities';
+                            break;
+                        default:
+                            return capitalizeFirstLetter(abbrev);
+                    }
                 }
-            }
 
-            function buildPill(abbrev, fullname) {
-                a;
-            }
-
-            function capitalizeFirstLetter(string) {
-                return string[0].toUpperCase() + string.slice(1);
+                function capitalizeFirstLetter(string) {
+                    return string[0].toUpperCase() + string.slice(1);
+                }
             }
         }
 
