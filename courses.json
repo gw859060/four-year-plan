@@ -19,7 +19,7 @@
                             "number": "151",
                             "name": "Introduction to Discrete Mathematics",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "math"
                         },
                         {
@@ -27,7 +27,7 @@
                             "number": "101",
                             "name": "Introduction to Geology",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "science"
                         },
                         {
@@ -35,7 +35,7 @@
                             "number": "100",
                             "name": "First Year Experience",
                             "credits": 4,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "fye"
                         },
                         {
@@ -43,7 +43,7 @@
                             "number": "204",
                             "name": "Introduction to Urban Studies",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": [
                                     "i",
                                     "j"
@@ -75,7 +75,7 @@
                             "number": "110",
                             "name": "General Biology",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "science"
                         },
                         {
@@ -83,7 +83,7 @@
                             "number": "100",
                             "name": "Discover the World on Film",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "humanities"
                         },
                         {
@@ -91,7 +91,7 @@
                             "number": "103",
                             "name": "Introduction to Archaeology",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "social"
                         }
                     ]
@@ -133,7 +133,7 @@
                             "number": "230",
                             "name": "Business and Professional Speech Communication",
                             "credits": 4,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "speaking"
                         },
                         {
@@ -141,7 +141,7 @@
                             "number": "200",
                             "name": "Introduction to Film",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "writing"
                         }
                     ]
@@ -178,7 +178,7 @@
                             "number": "101",
                             "name": "World Geography",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "social"
                         },
                         {
@@ -186,7 +186,7 @@
                             "number": "371",
                             "name": "Technical Writing",
                             "credits": 3,
-                            "requirement": "gen ed",
+                            "requirement": "gened",
                             "attribute": "writing"
                         }
                     ]
