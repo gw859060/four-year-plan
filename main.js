@@ -52,24 +52,24 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                     semesterHeader.textContent = season + ' Semester';
 
-                    /* ***** CLASSES ***** */
+                    /* ***** COURSES ***** */
 
-                    let classes = semester.classes;
+                    let courses = semester.courses;
                     let creditTotal = 0;
 
-                    classes.forEach(cls => {
+                    courses.forEach(course => {
                         let tileTemplate = get('.template-tile').content.cloneNode(true);
-                        let shorthandNode = get('.tile-shorthand', tileTemplate);
-                        let fullnameNode = get('.tile-name', tileTemplate);
+                        let shorthandNode = get('.course-shorthand', tileTemplate);
+                        let fullnameNode = get('.course-name', tileTemplate);
                         let reqContainer = get('.req-container', tileTemplate);
-                        let creditsNode = get('.tile-credits', tileTemplate);
+                        let creditsNode = get('.course-credits', tileTemplate);
 
-                        createCatalogLink(shorthandNode, cls.subject, cls.number);
-                        fullnameNode.textContent = cls.name;
-                        handleReq(reqContainer, cls.requirement);
-                        handleReq(reqContainer, cls.attribute);
-                        creditsNode.textContent = cls.credits + ' cr.';
-                        creditTotal += cls.credits;
+                        createCatalogLink(shorthandNode, course.subject, course.number);
+                        fullnameNode.textContent = course.name;
+                        handleReq(reqContainer, course.requirement);
+                        handleReq(reqContainer, course.attribute);
+                        creditsNode.textContent = course.credits + ' cr.';
+                        creditTotal += course.credits;
 
                         semesterSection.appendChild(tileTemplate);
                     });
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             }
 
             function handleReq(node, abbrev) {
-                // if class contains multiple attributes
+                // if course contains multiple attributes
                 if (typeof abbrev === 'object') {
                     abbrev.forEach(attr => buildPill(node, attr));
                 } else {
@@ -155,11 +155,12 @@ document.addEventListener('DOMContentLoaded', (function () {
 
             function highlightTiles() {
                 return function () {
-                    // if no existing selection
+                    // if current target is not already selected
                     if (this.classList.contains('selected') === false) {
                         let tiles = getAll('.tile');
-                        let selectedPills = getAll('.' + this.classList[1]);
+                        let selectedPills = getAll('.pill.' + this.classList[1]);
 
+                        // clear existing selections before highlighting new ones
                         clearSelected();
 
                         tiles.forEach(tile => {

@@ -15,7 +15,7 @@ html {
 body {
     color: #222;
     font: 1em/1.45 'IBM Plex Sans Condensed', sans-serif;
-    background-color: #eee;
+    background-color: #f3f3f3;
     margin: 0;
 }
 
@@ -50,22 +50,26 @@ section {
 
 /* ***** grids ***** */
 
-.year-num {
-    margin-bottom: .2em;
-}
-
 .requirements,
 .semesters {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1.5em;
+    grid-gap: 2em;
+}
+
+.requirement {
+    /* margin-bottom: 1em; */
+}
+
+.year-num {
+    margin-bottom: .2em;
 }
 
 .semesters {
     margin-top: 2em;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
 
     .requirements,
     .semesters {
@@ -81,17 +85,18 @@ section {
     background: white;
     border-radius: .4em;
     padding: .8em 1.25em 1em;
+    transition: .2s ease;
 }
 
 .tile + .tile {
-    margin-top: .6em;
+    margin-top: .75em;
 }
 
 .tile.deselected {
-    opacity: .6;
+    opacity: .5;
 }
 
-.tile-shorthand {
+.course-shorthand {
     display: flex;
     align-items: center;
     margin-right: 1.1rem;
@@ -111,13 +116,13 @@ section {
     text-decoration: underline;
 }
 
-.tile-body {
+.course-body {
     flex: 1;
     margin-right: 1.1rem;
 }
 
 /* @TODO: truncate long name with ellipsis? */
-.tile-name {
+.course-name {
     font-size: 1.05em;
     line-height: 1.2;
     margin: 0 0 .4rem;
@@ -129,12 +134,11 @@ section {
     color: rgba(0, 0, 0, .8);
     background-color: #eee;
     font-size: .9em;
-    padding: .25em .5em;
+    padding: .2em .5em;
     border-radius: .3em;
     transition: .2s ease;
-
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
+    /* -webkit-box-decoration-break: clone;
+    box-decoration-break: clone; */
 }
 
 .pill:hover {
@@ -150,7 +154,19 @@ section {
     background-color: #ddcff8;
 }
 
-.tile-credits {
+.pill.selected:hover {
+    background-color: #d0c0eb;
+}
+
+.pill.fake {
+    font-size: .95em;
+    background-color: #e3e3e3;
+    padding: .15em .4em;
+    margin: 0 .1em;
+    cursor: auto;
+}
+
+.course-credits {
     display: flex;
     color: #777;
     font-size: .95em;
