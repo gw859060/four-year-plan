@@ -17,7 +17,7 @@
                         {
                             "subject": "MAT",
                             "number": "151",
-                            "name": "Computer Science I",
+                            "name": "Introduction to Discrete Mathematics",
                             "credits": 3,
                             "requirement": "gen ed",
                             "attribute": "math"
