@@ -90,13 +90,14 @@ document.addEventListener('DOMContentLoaded', (function () {
                 link.classList.add('shorthand-link');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
+                link.setAttribute('title', 'Open course catalog on wcupa.edu');
                 link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
                 link.innerHTML = subject + '<br />' + number;
                 node.appendChild(link);
             }
 
             function handleReq(node, abbrev) {
-                // if multiple attributes (eg. arts and writing)
+                // if class contains multiple attributes
                 if (typeof abbrev === 'object') {
                     abbrev.forEach(attr => buildPill(node, attr));
                 } else {
@@ -108,6 +109,7 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                     pill.classList.add('pill', attr);
                     pill.textContent = expandAbbrev(attr);
+                    pill.addEventListener('click', highlightTiles(), false);
 
                     node.appendChild(pill);
                 }
@@ -148,6 +150,39 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                 function capitalizeFirstLetter(string) {
                     return string[0].toUpperCase() + string.slice(1);
+                }
+            }
+
+            function highlightTiles() {
+                return function () {
+                    // if no existing selection
+                    if (this.classList.contains('selected') === false) {
+                        let tiles = getAll('.tile');
+                        let selectedPills = getAll('.' + this.classList[1]);
+
+                        clearSelected();
+
+                        tiles.forEach(tile => {
+                            tile.classList.add('deselected');
+                        });
+
+                        selectedPills.forEach(pill => {
+                            pill.classList.add('selected');
+                            pill.closest('.tile').classList.remove('deselected');
+                        });
+                    }
+                    // otherwise you're clicking a selected pill
+                    else {
+                        clearSelected();
+                    }
+                }
+
+                function clearSelected() {
+                    let selectedPills = getAll('.pill.selected');
+                    let deselectedTiles = getAll('.deselected');
+
+                    selectedPills.forEach(pill => pill.classList.remove('selected'));
+                    deselectedTiles.forEach(tile => tile.classList.remove('deselected'));
                 }
             }
         }

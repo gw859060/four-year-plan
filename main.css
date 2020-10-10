@@ -9,7 +9,7 @@
 }
 
 html {
-    font-size: 16px;
+    font-size: 17px;
 }
 
 body {
@@ -27,7 +27,12 @@ main {
 }
 
 h1 {
+    font-size: 2.2em;
     margin: 1em 0;
+}
+
+h2 {
+    font-size: 1.6em;
 }
 
 h2,
@@ -35,11 +40,19 @@ h3 {
     margin: 0 0 .75em;
 }
 
+p {
+    margin: 0 0 1em;
+}
+
 section {
-    margin-bottom: 3em;
+    margin-bottom: 4em;
 }
 
 /* ***** grids ***** */
+
+.year-num {
+    margin-bottom: .2em;
+}
 
 .requirements,
 .semesters {
@@ -48,8 +61,8 @@ section {
     grid-gap: 1.5em;
 }
 
-.semester-num {
-    color: #777;
+.semesters {
+    margin-top: 2em;
 }
 
 @media screen and (max-width: 800px) {
@@ -72,6 +85,10 @@ section {
 
 .tile + .tile {
     margin-top: .6em;
+}
+
+.tile.deselected {
+    opacity: .6;
 }
 
 .tile-shorthand {
@@ -99,6 +116,7 @@ section {
     margin-right: 1.1rem;
 }
 
+/* @TODO: truncate long name with ellipsis? */
 .tile-name {
     font-size: 1.05em;
     line-height: 1.2;
@@ -111,68 +129,25 @@ section {
     color: rgba(0, 0, 0, .8);
     background-color: #eee;
     font-size: .9em;
-    /* font-weight: bold; */
     padding: .25em .5em;
     border-radius: .3em;
+    transition: .2s ease;
 
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
+}
+
+.pill:hover {
+    background-color: #dfdfdf;
+    cursor: pointer;
 }
 
 .pill + .pill {
     margin-left: .4em;
 }
 
-.pill.major {
-    /* background-color: #f8b2de; */
-}
-
-.pill.gened {
-    /* background-color: #cbb5f2; */
-}
-
-.pill.core {
-    /* background-color: #eee; */
-}
-
-.pill.math {
-    /* background-color: #f8b2b4; */
-}
-
-.pill.science {
-    /* background-color: #c0efaf; */
-}
-
-.pill.fye {
-    /* background-color: #f5c6b2; */
-}
-
-.pill.humanities {
-    /* background-color: #aed4f1; */
-}
-
-.pill.social {
-    /* background-color: #efeaaf; */
-}
-
-.pill.speaking {
-    /* background-color: ; */
-}
-
-.pill.writing {
-    /* background-color: ; */
-}
-
-.pill.english {
-    /* background-color: ; */
-}
-
-.pill.i {
-    /* background-color: #ccc; */
-}
-
-.pill.j {
-    /* background-color: #ccc; */
+.pill.selected {
+    background-color: #ddcff8;
 }
 
 .tile-credits {
