@@ -48,7 +48,10 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let semesterHeader = get('.semester-num', semesterSection);
 
                     // @TODO: show status (in progress/completed)
-                    semesterHeader.textContent = 'Semester ' + semesterNum;
+                    // @TODO: support summer/winter
+                    let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
+
+                    semesterHeader.textContent = season + ' Semester';
 
                     /* ***** CLASSES ***** */
 
@@ -56,27 +59,32 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let creditTotal = 0;
 
                     classes.forEach(cls => {
-                        let rowTemplate = get('.template-row').content.cloneNode(true);
-                        let classNode = get('.class', rowTemplate);
-                        let reqNode = get('.requirement', rowTemplate);
-                        let attrNode = get('.attribute', rowTemplate);
-                        let creditsNode = get('.credits', rowTemplate);
+                        let tile = get('.template-tile').content.cloneNode(true);
+                        let shorthand = get('.tile-shorthand', tile);
+                        let fullname = get('.tile-name', tile);
+                        let req = get('.req', tile);
+                        let attr = get('.attr', tile);
+                        let credits = get('.tile-credits', tile);
 
-                        createClassLink(classNode, cls.subject, cls.number);
-                        reqNode.textContent = handleReq(cls.requirement);
-                        attrNode.textContent = handleReq(cls.attribute);
-                        creditsNode.textContent = cls.credits;
+                        shorthand.innerHTML = cls.subject + '<br />' + cls.number;
+                        fullname.textContent = cls.name;
+                        req.textContent = handleReq(cls.requirement);
+                        req.classList.add(cls.requirement);
+                        attr.textContent = handleReq(cls.attribute);
+                        attr.classList.add(cls.attribute);
+                        credits.textContent = cls.credits + ' cr.';
+
+                        semesterSection.appendChild(tile);
                         creditTotal += cls.credits;
-                        get('tbody', semesterSection).appendChild(rowTemplate);
                     });
 
                     /* ***** TOTALS ***** */
 
                     let totalTemplate = get('.template-total').content.cloneNode(true);
-                    let totalNode = get('.credit-total', totalTemplate);
+                    let total = get('.credit-total', totalTemplate);
 
-                    totalNode.textContent = creditTotal;
-                    get('tbody', semesterSection).appendChild(totalTemplate);
+                    total.textContent = creditTotal + ' cr.';
+                    semesterSection.appendChild(totalTemplate);
                 });
             });
 
@@ -97,8 +105,6 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let list = [];
 
                     reqs.forEach(req => list.push(expandReq(req)));
-                    // list.forEach(item => );
-
                     return list;
                 }
                 // otherwise a single requirement
@@ -109,7 +115,7 @@ document.addEventListener('DOMContentLoaded', (function () {
 
             function expandReq(abbrev) {
                 switch (abbrev) {
-                    case 'gen ed':
+                    case 'gened':
                         return 'Gen. Ed.';
                         break;
                     case 'fye':
@@ -136,12 +142,13 @@ document.addEventListener('DOMContentLoaded', (function () {
                     case 'j':
                         return 'Diverse Communities';
                         break;
-                    case 'complex':
-                        return 'Complex Large-Scale Systems';
-                        break;
                     default:
                         return capitalizeFirstLetter(abbrev);
                 }
+            }
+
+            function buildPill(abbrev, fullname) {
+                a;
             }
 
             function capitalizeFirstLetter(string) {
@@ -150,7 +157,8 @@ document.addEventListener('DOMContentLoaded', (function () {
         }
 
         function cleanUp() {
-            // get('.loading').remove();
+            get('.loading').remove();
+            get('.requirements').setAttribute('style', '');
             getAll('template').forEach(template => template.remove());
         }
     }

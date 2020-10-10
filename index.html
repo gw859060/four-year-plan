@@ -18,13 +18,13 @@
             <div>Loading classes...</div>
             <noscript>This page will not work without JavaScript.</noscript>
         </section>
-        <section class="requirements">
+        <section class="requirements" style="display: none">
             <div>
                 <h2>General Education</h2>
                 <div>Placeholder</div>
             </div>
             <div>
-                <h2>Major requirements</h2>
+                <h2>Major</h2>
                 <div>Placeholder</div>
             </div>
         </section>
@@ -34,48 +34,31 @@
                 <div class="semesters">
                     <div class="semester">
                         <h3 class="semester-num"></h3>
-                        <table>
-                            <thead>
-                                <tr class="row-header">
-                                    <th>Course</th>
-                                    <th>Requirement</th>
-                                    <th>Attribute</th>
-                                    <th>Credits</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                     <div class="semester">
                         <h3 class="semester-num"></h3>
-                        <table>
-                            <thead>
-                                <tr class="row-header">
-                                    <th>Course</th>
-                                    <th>Requirement</th>
-                                    <th>Attribute</th>
-                                    <th>Credits</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                 </div>
             </section>
         </template>
-        <template class="template-row">
-            <tr class="row-class">
-                <td class="class"></td>
-                <td class="requirement"></td>
-                <td class="attribute"></td>
-                <td class="credits"></td>
-            </tr>
+        <template class="template-tile">
+            <div class="tile">
+                <div class="tile-shorthand"></div>
+                <div class="tile-body">
+                    <h4 class="tile-name"></h4>
+                    <div class="req-container">
+                        <span class="pill req"></span>
+                        <span class="pill attr"></span>
+                    </div>
+                </div>
+                <div class="tile-credits"></div>
+            </div>
         </template>
         <template class="template-total">
-            <tr class="row-total">
-                <th colspan="3">Total</th>
-                <th class="credit-total"></th>
-            </tr>
+            <div class="total">
+                <div>Total</div>
+                <div class="credit-total"></div>
+            </div>
         </template>
     </main>
 </body>

@@ -21,7 +21,7 @@ body {
 header,
 main {
     max-width: 65em;
-    padding: 0 2em;
+    padding: 0 3em;
     margin: auto;
 }
 
@@ -48,10 +48,10 @@ a {
 .semesters {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2em;
+    grid-gap: 1.5em;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 750px) {
 
     .requirements,
     .semesters {
@@ -70,10 +70,10 @@ a {
 }
 
 .tile + .tile {
-    margin-top: .75em;
+    margin-top: .6em;
 }
 
-.tile-name {
+.tile-shorthand {
     display: flex;
     align-items: center;
     margin-right: 1.2rem;
@@ -83,7 +83,7 @@ a {
     font-weight: bold;
     text-align: center;
     letter-spacing: .05ch;
-    line-height: 1;
+    line-height: 1.1;
 }
 
 .tile-body {
@@ -92,7 +92,7 @@ a {
 }
 
 /* @TODO: use condensed font? */
-.tile-body h4 {
+.tile-name {
     font-size: 1.05em;
     line-height: 1.2;
     margin: 0 0 .3rem;
@@ -101,59 +101,87 @@ a {
 /* @TODO: click pill to fade out everything not of that pill type
    and also fade out gen ed/major req tiles at the top */
 .pill {
-    color: white;
+    color: rgba(0, 0, 0, .75);
+    background-color: #eee;
     font-size: .8em;
     font-weight: bold;
     padding: .25em .5em;
     border-radius: .3em;
+
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 }
 
 .pill + .pill {
     margin-left: .15em;
 }
 
-.pill-major {
-    background-color: slateblue;
+.pill.major {
+    background-color: #f8b2de;
 }
 
-.pill-gened {
-    background-color: steelblue;
+.pill.gened {
+    background-color: #cbb5f2;
 }
 
-.pill-core {
-    background-color: mediumseagreen;
+.pill.core {
+    background-color: #eee;
 }
 
-.pill-math {
-    background-color: indianred;
+.pill.math {
+    background-color: #f8b2b4;
+}
+
+.pill.science {
+    background-color: #c0efaf;
+}
+
+.pill.fye {
+    background-color: #f5c6b2;
+}
+
+.pill.humanities {
+    background-color: #aed4f1;
+}
+
+.pill.social {
+    background-color: #efeaaf;
+}
+
+.pill.speaking {
+    /* background-color: ; */
+}
+
+.pill.writing {
+    /* background-color: ; */
+}
+
+.pill.i {
+    /* background-color: ; */
+}
+
+.pill.j {
+    /* background-color: ; */
 }
 
 .tile-credits {
     display: flex;
     color: #777;
-    font-size: .9em;
+    font-size: .95em;
     font-weight: bold;
     margin: auto;
 }
 
 /* ***** table ***** */
-table {
-    border-collapse: collapse;
-    /* font-family: monospace; */
-    width: 100%;
+.total {
+    display: flex;
+    justify-content: flex-end;
+    font-size: .95em;
+    font-weight: bold;
+    margin-top: 1em;
 }
 
-th {
-    background: #ddd;
-}
-
-th,
-td {
-    border: 1px solid black;
-    padding: 3px 6px;
-}
-
-.credits,
-.row-total {
-    text-align: right;
+.credit-total {
+    color: #777;
+    margin: 0 1.25em 0 .5em;
 }
