@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                     // @TODO: support summer/winter
                     let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
 
-                    semesterHeader.textContent = season + ' Semester';
+                    semesterHeader.innerHTML = 'Semester ' + semesterNum + ' <span class="subdued">' + season + ' 2020</span>';
 
                     /* ***** COURSES ***** */
 
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let creditTotal = 0;
 
                     courses.forEach(course => {
-                        let tileTemplate = get('.template-tile').content.cloneNode(true);
-                        let shorthandNode = get('.course-shorthand', tileTemplate);
-                        let fullnameNode = get('.course-name', tileTemplate);
-                        let reqContainer = get('.req-container', tileTemplate);
-                        let creditsNode = get('.course-credits', tileTemplate);
+                        let courseTemplate = get('.template-course').content.cloneNode(true);
+                        let shorthandNode = get('.course-shorthand', courseTemplate);
+                        let fullnameNode = get('.course-name', courseTemplate);
+                        let reqContainer = get('.req-container', courseTemplate);
+                        let creditsNode = get('.course-credits', courseTemplate);
 
                         createCatalogLink(shorthandNode, course.subject, course.number);
                         fullnameNode.textContent = course.name;
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                         creditsNode.textContent = course.credits + ' cr.';
                         creditTotal += course.credits;
 
-                        semesterSection.appendChild(tileTemplate);
+                        semesterSection.appendChild(courseTemplate);
                     });
 
                     /* ***** TOTALS ***** */
@@ -87,10 +87,10 @@ document.addEventListener('DOMContentLoaded', (function () {
             function createCatalogLink(node, subject, number) {
                 let link = document.createElement('a');
 
-                link.classList.add('shorthand-link');
+                link.classList.add('shorthand-link', 'subdued');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
-                link.setAttribute('title', 'Open course catalog on wcupa.edu');
+                link.setAttribute('title', `View ${subject} ${number} in catalog on wcupa.edu`);
                 link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
                 link.innerHTML = subject + '<br />' + number;
                 node.appendChild(link);
@@ -157,14 +157,14 @@ document.addEventListener('DOMContentLoaded', (function () {
                 return function () {
                     // if current target is not already selected
                     if (this.classList.contains('selected') === false) {
-                        let tiles = getAll('.tile');
+                        let courses = getAll('.tile.course');
                         let selectedPills = getAll('.pill.' + this.classList[1]);
 
                         // clear existing selections before highlighting new ones
                         clearSelected();
 
-                        tiles.forEach(tile => {
-                            tile.classList.add('deselected');
+                        courses.forEach(course => {
+                            course.classList.add('deselected');
                         });
 
                         selectedPills.forEach(pill => {
@@ -180,17 +180,16 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                 function clearSelected() {
                     let selectedPills = getAll('.pill.selected');
-                    let deselectedTiles = getAll('.deselected');
+                    let deselectedCourses = getAll('.deselected');
 
                     selectedPills.forEach(pill => pill.classList.remove('selected'));
-                    deselectedTiles.forEach(tile => tile.classList.remove('deselected'));
+                    deselectedCourses.forEach(course => course.classList.remove('deselected'));
                 }
             }
         }
 
         function cleanUp() {
-            get('.loading').remove();
-            get('.requirements').setAttribute('style', '');
+            get('noscript').remove();
             getAll('template').forEach(template => template.remove());
         }
     }

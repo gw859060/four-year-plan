@@ -20,15 +20,17 @@ body {
 }
 
 header,
-main {
+main,
+footer {
     max-width: 70em;
-    padding: 0 3em;
+    padding-left: 3em;
+    padding-right: 3em;
     margin: auto;
 }
 
 h1 {
     font-size: 2.2em;
-    margin: 1em 0;
+    margin: 0;
 }
 
 h2 {
@@ -45,40 +47,20 @@ p {
 }
 
 section {
-    margin-bottom: 4em;
+    margin-bottom: 3em;
 }
 
-/* ***** grids ***** */
-
-.requirements,
-.semesters {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2em;
+hr {
+    border-color: #ccc;
+    border-style: solid;
+    border-width: 1px 0 0 0;
 }
 
-.requirement {
-    /* margin-bottom: 1em; */
+/* ***** reusable ***** */
+
+.subdued {
+    color: #777;
 }
-
-.year-num {
-    margin-bottom: .2em;
-}
-
-.semesters {
-    margin-top: 2em;
-}
-
-@media screen and (max-width: 900px) {
-
-    .requirements,
-    .semesters {
-        grid-template-columns: none;
-    }
-
-}
-
-/* ***** tile ***** */
 
 .tile {
     display: flex;
@@ -88,12 +70,122 @@ section {
     transition: .2s ease;
 }
 
-.tile + .tile {
+.tile.deselected {
+    opacity: .5;
+}
+
+/* ***** header ***** */
+
+header {
+    margin-top: 5em;
+    margin-bottom: 5em;
+    line-height: 1;
+}
+
+header h1:first-of-type {
+    margin-bottom: .2em;
+}
+
+/* ***** requirements ***** */
+
+.requirements {
+    display: flex;
+}
+
+.requirements.gened {
+    flex-flow: row wrap;
+}
+
+.major-minor {
+    display: flex;
+    /* padding-bottom: 0.5em;
+    border-bottom: 1px solid #ccc; */
+}
+
+.requirements.major,
+.requirements.minor {
+    flex: 1;
+    display: block;
+    margin-bottom: 0;
+}
+
+.minor {
+    margin-left: 2em;
+}
+
+.requirements h2 {
+    flex: 1 100%;
+}
+
+.requirements h2 + h2 {
+    margin-top: -1em;
+}
+
+.tile.requirement {
+    display: block;
+    flex: 1;
+}
+
+.gened .requirement + .requirement {
+    margin-left: 1em;
+}
+
+.major-minor .requirement + .requirement {
     margin-top: .75em;
 }
 
-.tile.deselected {
-    opacity: .5;
+.requirement h3 {
+    margin-bottom: .4em;
+}
+
+.attribute {
+    display: flex;
+    justify-content: space-between;
+}
+
+.attribute + .attribute {
+    margin-top: .275em;
+}
+
+.attribute-class {
+    font-size: .9em;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: bold;
+    letter-spacing: .05ch;
+}
+
+/* ***** semesters ***** */
+
+.year {
+    /* background: #aaa; */
+}
+
+.year-num {
+    margin-bottom: .2em;
+}
+
+.semesters {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2em;
+}
+
+.semesters {
+    margin-top: 2em;
+}
+
+@media screen and (max-width: 900px) {
+
+    .semesters {
+        grid-template-columns: none;
+    }
+
+}
+
+/* ***** courses ***** */
+
+.course + .course {
+    margin-top: .75em;
 }
 
 .course-shorthand {
@@ -103,7 +195,6 @@ section {
 }
 
 .shorthand-link {
-    color: #777;
     font-size: .9em;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: bold;
@@ -160,7 +251,7 @@ section {
 
 .pill.fake {
     font-size: .95em;
-    background-color: #e3e3e3;
+    background-color: #e5e5e5;
     padding: .15em .4em;
     margin: 0 .1em;
     cursor: auto;
@@ -168,7 +259,6 @@ section {
 
 .course-credits {
     display: flex;
-    color: #777;
     font-size: .95em;
     font-weight: bold;
     margin: auto;
@@ -185,6 +275,5 @@ section {
 }
 
 .credit-total {
-    color: #777;
     margin: 0 1.25em 0 .75em;
 }
