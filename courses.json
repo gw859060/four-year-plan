@@ -129,20 +129,20 @@
                             "attribute": "math"
                         },
                         {
-                            "subject": "SPK",
-                            "number": "230",
-                            "name": "Business and Professional Speech Communication",
-                            "credits": 4,
-                            "requirement": "gened",
-                            "attribute": "speaking"
-                        },
-                        {
                             "subject": "FLM",
                             "number": "200",
                             "name": "Introduction to Film",
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": "writing"
+                        },
+                        {
+                            "subject": "GEO",
+                            "number": "101",
+                            "name": "World Geography",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "social"
                         }
                     ]
                 },
@@ -174,12 +174,12 @@
                             "attribute": "math"
                         },
                         {
-                            "subject": "GEO",
-                            "number": "101",
-                            "name": "World Geography",
+                            "subject": "ART",
+                            "number": "113",
+                            "name": "Digital Media",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "social"
+                            "requirement": "minor",
+                            "attribute": "core"
                         },
                         {
                             "subject": "ENG",
@@ -188,6 +188,188 @@
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": "writing"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "year": 3,
+            "semesters": [
+                {
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "301",
+                            "name": "Computer Security & Ethics",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "ethics"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "345",
+                            "name": "Programming Language Concepts/Paradigms",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "SPK",
+                            "number": "230",
+                            "name": "Business and Professional Speech Communication",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        },
+                        {
+                            "subject": "COM",
+                            "number": "206",
+                            "name": "Argumentation",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        },
+                        {
+                            "subject": "ART",
+                            "number": "210",
+                            "name": "Typography I",
+                            "credits": 3,
+                            "requirement": "minor",
+                            "attribute": "elective"
+                        }
+                    ]
+                },
+                {
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "402",
+                            "name": "Software Engineering",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "417",
+                            "name": "User Interfaces",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "302",
+                            "name": "Computer Security",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "EIT",
+                            "number": "360",
+                            "name": "Italian Cinema",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        },
+                        {
+                            "subject": "LNC",
+                            "number": "105",
+                            "name": "Global Science Fiction",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "year": 4,
+            "semesters": [
+                {
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "476",
+                            "name": "Game Development",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "317",
+                            "name": "Introduction to Digital Image Processing",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "400",
+                            "name": "Internship",
+                            "credits": 6,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "WRT",
+                            "number": "200",
+                            "name": "Critical Writing and Research",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "english"
+                        }
+                    ]
+                },
+                {
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "468",
+                            "name": "Introduction to Cloud Computing",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "481",
+                            "name": "Artificial Intelligence",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "321",
+                            "name": "Database Management Systems",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "331",
+                            "name": "Operating Systems",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "COM",
+                            "number": "201",
+                            "name": "Fundamentals of Communication Technology",
+                            "credits": 3,
+                            "requirement": "minor",
+                            "attribute": "core"
                         }
                     ]
                 }
