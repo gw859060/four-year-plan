@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             /* ***** YEARS ***** */
 
             let years = request.response.years;
+            let semesterYear = 2020; // for "Fall 2020", "Spring 2021"; I know it's a bad name
 
             years.forEach(year => {
                 let yearTemplate = get('.template-year').content.cloneNode(true);
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                     // @TODO: support summer/winter
                     let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
 
-                    semesterHeader.innerHTML = 'Semester ' + semesterNum + ' <span class="subdued">' + season + ' 2020</span>';
+                    semesterHeader.innerHTML = 'Semester ' + semesterNum + ' <span class="subdued">' + season + ' ' + semesterYear + '</span>';
 
                     /* ***** COURSES ***** */
 
@@ -81,6 +82,8 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                     total.textContent = creditTotal + ' cr.';
                     semesterSection.appendChild(totalTemplate);
+
+                    if (semesterNum === 1) semesterYear++;
                 });
             });
 
@@ -90,28 +93,28 @@ document.addEventListener('DOMContentLoaded', (function () {
                 link.classList.add('shorthand-link', 'subdued');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
-                link.setAttribute('title', `View ${subject} ${number} in catalog on wcupa.edu`);
+                link.setAttribute('title', `Open in course catalog on wcupa.edu`);
                 link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
                 link.innerHTML = subject + '<br />' + number;
                 node.appendChild(link);
             }
 
-            function handleReq(node, abbrev) {
+            function handleReq(parentNode, abbrev) {
                 // if course contains multiple attributes
                 if (typeof abbrev === 'object') {
-                    abbrev.forEach(attr => buildPill(node, attr));
+                    abbrev.forEach(attr => buildPill(parentNode, attr));
                 } else {
-                    buildPill(node, abbrev);
+                    buildPill(parentNode, abbrev);
                 }
 
-                function buildPill(node, attr) {
+                function buildPill(parentNode, attr) {
                     let pill = document.createElement('span');
 
                     pill.classList.add('pill', attr);
                     pill.textContent = expandAbbrev(attr);
                     pill.addEventListener('click', highlightTiles(), false);
 
-                    node.appendChild(pill);
+                    parentNode.appendChild(pill);
                 }
 
                 function expandAbbrev(abbrev) {
@@ -155,7 +158,7 @@ document.addEventListener('DOMContentLoaded', (function () {
 
             function highlightTiles() {
                 return function () {
-                    // if current target is not already selected
+                    // if target pill is not already selected
                     if (this.classList.contains('selected') === false) {
                         let courses = getAll('.tile.course');
                         let selectedPills = getAll('.pill.' + this.classList[1]);

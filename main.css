@@ -9,12 +9,12 @@
 }
 
 html {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 body {
     color: #222;
-    font: 1em/1.45 'IBM Plex Sans Condensed', sans-serif;
+    font: 1em/1.45 'IBM Plex Sans', sans-serif;
     background-color: #f3f3f3;
     margin: 0;
 }
@@ -22,24 +22,30 @@ body {
 header,
 main,
 footer {
-    max-width: 70em;
+    max-width: 69em;
     padding-left: 3em;
     padding-right: 3em;
     margin: auto;
 }
 
 h1 {
-    font-size: 2.2em;
+    font-size: 2.4em;
     margin: 0;
 }
 
 h2 {
-    font-size: 1.6em;
+    font-size: 1.7em;
+    margin: 0 0 .75em;
 }
 
-h2,
 h3 {
-    margin: 0 0 .75em;
+    font-size: 1.35em;
+    margin: 0 0 .5em;
+}
+
+h4 {
+    font-size: 1.15em;
+    margin: 0 0 .4rem;
 }
 
 p {
@@ -56,6 +62,17 @@ hr {
     border-width: 1px 0 0 0;
 }
 
+@media screen and (max-width: 900px) {
+
+    header,
+    main,
+    footer {
+        padding-left: 10vw;
+        padding-right: 10vw;
+    }
+
+}
+
 /* ***** reusable ***** */
 
 .subdued {
@@ -67,6 +84,7 @@ hr {
     background: white;
     border-radius: .4em;
     padding: .8em 1.25em 1em;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
     transition: .2s ease;
 }
 
@@ -77,8 +95,8 @@ hr {
 /* ***** header ***** */
 
 header {
-    margin-top: 5em;
-    margin-bottom: 5em;
+    margin-top: 4em;
+    margin-bottom: 4em;
     line-height: 1;
 }
 
@@ -92,50 +110,13 @@ header h1:first-of-type {
     display: flex;
 }
 
-.requirements.gened {
-    flex-flow: row wrap;
-}
-
-.major-minor {
-    display: flex;
-    /* padding-bottom: 0.5em;
-    border-bottom: 1px solid #ccc; */
-}
-
-.requirements.major,
-.requirements.minor {
+.requirement {
     flex: 1;
     display: block;
-    margin-bottom: 0;
 }
 
-.minor {
-    margin-left: 2em;
-}
-
-.requirements h2 {
-    flex: 1 100%;
-}
-
-.requirements h2 + h2 {
-    margin-top: -1em;
-}
-
-.tile.requirement {
-    display: block;
-    flex: 1;
-}
-
-.gened .requirement + .requirement {
-    margin-left: 1em;
-}
-
-.major-minor .requirement + .requirement {
-    margin-top: .75em;
-}
-
-.requirement h3 {
-    margin-bottom: .4em;
+.requirement h4 {
+    font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .attribute {
@@ -147,11 +128,60 @@ header h1:first-of-type {
     margin-top: .275em;
 }
 
-.attribute-class {
+.attribute-course {
+    display: flex;
+    align-items: flex-end;
+
     font-size: .9em;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: bold;
     letter-spacing: .05ch;
+    white-space: nowrap;
+}
+
+/* gen eds */
+.requirements.gened {
+    flex-flow: row wrap;
+}
+
+.gened h3 {
+    flex: 1 100%;
+}
+
+.gened .requirement + .requirement {
+    margin-left: 1.25em;
+}
+
+/* major/minor */
+.major-minor .requirements {
+    flex: 1;
+    display: block;
+    margin-bottom: 0;
+}
+
+.major-minor .requirements + .requirements {
+    margin-left: 1.5em;
+}
+
+.major-minor .tile + .tile {
+    margin-top: .75em;
+}
+
+@media screen and (max-width: 900px) {
+
+    .requirements.gened,
+    .major-minor {
+        flex-direction: column;
+    }
+
+    .gened .requirement + .requirement {
+        margin: 1em 0 0 0;
+    }
+
+    .major-minor .requirements + .requirements {
+        margin: 2em 0 0 0;
+    }
+
 }
 
 /* ***** semesters ***** */
@@ -167,7 +197,7 @@ header h1:first-of-type {
 .semesters {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2em;
+    grid-gap: 1.5em;
 }
 
 .semesters {
@@ -214,15 +244,11 @@ header h1:first-of-type {
 
 /* @TODO: truncate long name with ellipsis? */
 .course-name {
-    font-size: 1.05em;
     line-height: 1.2;
-    margin: 0 0 .4rem;
 }
 
-/* @TODO: click pill to fade out everything not of that pill type
-   and also fade out gen ed/major req tiles at the top */
 .pill {
-    color: rgba(0, 0, 0, .8);
+    color: rgba(0, 0, 0, .75);
     background-color: #eee;
     font-size: .9em;
     padding: .2em .5em;
@@ -250,9 +276,10 @@ header h1:first-of-type {
 }
 
 .pill.fake {
-    font-size: .95em;
+    font-size: 1em;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
     background-color: #e5e5e5;
-    padding: .15em .4em;
+    padding: .175em .425em;
     margin: 0 .1em;
     cursor: auto;
 }
