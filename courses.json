@@ -208,7 +208,10 @@
                                     "major",
                                     "gened"
                                 ],
-                            "attribute": "ethics"
+                            "attribute": [
+                                    "core",
+                                    "ethics"
+                                ]
                         },
                         {
                             "subject": "CSC",
@@ -249,19 +252,19 @@
                     "courses": [
                         {
                             "subject": "CSC",
-                            "number": "402",
-                            "name": "Software Engineering",
+                            "number": "417",
+                            "name": "User Interfaces",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "core"
                         },
                         {
                             "subject": "CSC",
-                            "number": "417",
-                            "name": "User Interfaces",
+                            "number": "321",
+                            "name": "Database Management Systems",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "elective"
                         },
                         {
                             "subject": "CSC",
@@ -299,11 +302,11 @@
                     "courses": [
                         {
                             "subject": "CSC",
-                            "number": "476",
-                            "name": "Game Development",
+                            "number": "468",
+                            "name": "Introduction to Cloud Computing",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "elective"
                         },
                         {
                             "subject": "CSC",
@@ -336,24 +339,16 @@
                     "courses": [
                         {
                             "subject": "CSC",
-                            "number": "468",
-                            "name": "Introduction to Cloud Computing",
+                            "number": "402",
+                            "name": "Software Engineering",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "elective"
+                            "attribute": "core"
                         },
                         {
                             "subject": "CSC",
                             "number": "481",
                             "name": "Artificial Intelligence",
-                            "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
-                        },
-                        {
-                            "subject": "CSC",
-                            "number": "321",
-                            "name": "Database Management Systems",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "elective"
