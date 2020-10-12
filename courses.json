@@ -182,12 +182,12 @@
                             "attribute": "core"
                         },
                         {
-                            "subject": "ENG",
-                            "number": "371",
-                            "name": "Technical Writing",
+                            "subject": "EIT",
+                            "number": "360",
+                            "name": "Italian Cinema",
                             "credits": 3,
                             "requirement": "gened",
-                            "attribute": "writing"
+                            "attribute": "speaking"
                         }
                     ]
                 }
@@ -204,7 +204,10 @@
                             "number": "301",
                             "name": "Computer Security & Ethics",
                             "credits": 3,
-                            "requirement": "gened",
+                            "requirement": [
+                                    "major",
+                                    "gened"
+                                ],
                             "attribute": "ethics"
                         },
                         {
@@ -216,12 +219,12 @@
                             "attribute": "core"
                         },
                         {
-                            "subject": "SPK",
-                            "number": "230",
-                            "name": "Business and Professional Speech Communication",
+                            "subject": "ENG",
+                            "number": "371",
+                            "name": "Technical Writing",
                             "credits": 3,
                             "requirement": "gened",
-                            "attribute": "speaking"
+                            "attribute": "writing"
                         },
                         {
                             "subject": "COM",
@@ -269,9 +272,9 @@
                             "attribute": "elective"
                         },
                         {
-                            "subject": "EIT",
-                            "number": "360",
-                            "name": "Italian Cinema",
+                            "subject": "SPK",
+                            "number": "230",
+                            "name": "Business and Professional Speech Communication",
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": "speaking"
@@ -356,20 +359,20 @@
                             "attribute": "elective"
                         },
                         {
-                            "subject": "CSC",
-                            "number": "331",
-                            "name": "Operating Systems",
-                            "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
-                        },
-                        {
                             "subject": "COM",
                             "number": "201",
                             "name": "Fundamentals of Communication Technology",
                             "credits": 3,
                             "requirement": "minor",
                             "attribute": "core"
+                        },
+                        {
+                            "subject": "COM",
+                            "number": "292",
+                            "name": "Living in the Digital Age",
+                            "credits": 3,
+                            "requirement": "minor",
+                            "attribute": "elective"
                         }
                     ]
                 }
