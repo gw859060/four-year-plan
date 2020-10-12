@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Garrett's Four Year Plan – WCUPA</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@700&family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap">
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
 </head>
@@ -17,7 +17,8 @@
     </header>
     <main>
         <noscript>This page will not work without JavaScript.</noscript>
-        <h2>Degree Requirements</h2>
+        <h2 class="degree-header">Degree Requirements</h2>
+        <p class="description">Does not list AP scores and equivalent courses.</p>
         <section class="requirements gened">
             <h3>General Education</h3>
             <div class="tile requirement academic">
@@ -287,11 +288,12 @@
                 </div>
             </section>
         </section>
+        <h2 class="year-header">Course Schedule</h2>
+        <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar classes. Click it again to clear.</p>
+        <!-- @TODO: ability to filter by prefix or by requirement -->
     </main>
     <template class="template-year">
         <section class="year">
-            <h2 class="year-num"></h2>
-            <p>Click a <span class="pill fake">Requirement</span> to highlight similar classes. Click again to clear.</p>
             <div class="semesters">
                 <div class="semester">
                     <h3 class="semester-num"></h3>

@@ -35,7 +35,7 @@ h1 {
 
 h2 {
     font-size: 1.7em;
-    margin: 0 0 .75em;
+    margin: 3em 0 .2em;
 }
 
 h3 {
@@ -53,13 +53,17 @@ p {
 }
 
 section {
-    margin-bottom: 3em;
+    margin: 0 0 3em;
 }
 
 hr {
     border-color: #ccc;
     border-style: solid;
     border-width: 1px 0 0 0;
+}
+
+p + section {
+    margin-top: 2em;
 }
 
 @media screen and (max-width: 900px) {
@@ -69,6 +73,14 @@ hr {
     footer {
         padding-left: 10vw;
         padding-right: 10vw;
+    }
+
+}
+
+@media screen and (min-width: 1400px) {
+
+    html {
+        font-size: 17px;
     }
 
 }
@@ -190,18 +202,10 @@ header h1:first-of-type {
     /* background: #aaa; */
 }
 
-.year-num {
-    margin-bottom: .2em;
-}
-
 .semesters {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 1.5em;
-}
-
-.semesters {
-    margin-top: 2em;
 }
 
 @media screen and (max-width: 900px) {
@@ -225,9 +229,9 @@ header h1:first-of-type {
 }
 
 .shorthand-link {
+    color: #222;
     font-size: .9em;
     font-family: 'IBM Plex Mono', monospace;
-    font-weight: bold;
     text-decoration: none;
     letter-spacing: .05ch;
     line-height: 1.1;
@@ -276,7 +280,7 @@ header h1:first-of-type {
 }
 
 .pill.fake {
-    font-size: 1em;
+    font-size: .95em;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
     background-color: #e5e5e5;
     padding: .175em .425em;
@@ -287,7 +291,6 @@ header h1:first-of-type {
 .course-credits {
     display: flex;
     font-size: .95em;
-    font-weight: bold;
     margin: auto;
 }
 
@@ -297,10 +300,9 @@ header h1:first-of-type {
     display: flex;
     justify-content: flex-end;
     font-size: .95em;
-    font-weight: bold;
     margin-top: 1em;
 }
 
 .credit-total {
-    margin: 0 1.25em 0 .75em;
+    margin: 0 1.25em 0 .5em;
 }

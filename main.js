@@ -33,9 +33,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                 let yearTemplate = get('.template-year').content.cloneNode(true);
                 let yearNum = year.year;
                 let yearSection = get('.year', yearTemplate);
-                let yearHeader = get('.year-num', yearTemplate);
 
-                yearHeader.textContent = 'Year ' + yearNum;
                 get('main').appendChild(yearTemplate);
 
                 /* ***** SEMESTERS ***** */
@@ -51,7 +49,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                     // @TODO: support summer/winter
                     let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
 
-                    semesterHeader.innerHTML = 'Semester ' + semesterNum + ' <span class="subdued">' + season + ' ' + semesterYear + '</span>';
+                    semesterHeader.innerHTML = 'Year ' + yearNum + ' <span class="subdued">' + season + ' ' + semesterYear + '</span>';
 
                     /* ***** COURSES ***** */
 
@@ -90,7 +88,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             function createCatalogLink(node, subject, number) {
                 let link = document.createElement('a');
 
-                link.classList.add('shorthand-link', 'subdued');
+                link.classList.add('shorthand-link');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
                 link.setAttribute('title', `Open in course catalog on wcupa.edu`);
@@ -126,7 +124,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                             return 'First Year Experience';
                             break;
                         case 'social':
-                            return 'Social Science';
+                            return 'Behav. & Social Science';
                             break;
                         case 'math':
                             return 'Mathematics';
