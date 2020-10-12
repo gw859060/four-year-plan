@@ -35,7 +35,9 @@ h1 {
 
 h2 {
     font-size: 1.7em;
-    margin: 3em 0 .2em;
+    margin: 2.5em 0 .2em;
+    padding-top: 1.5em;
+    border-top: 2px dashed #bbb;
 }
 
 h3 {
@@ -57,13 +59,17 @@ section {
 }
 
 hr {
-    border-color: #ccc;
-    border-style: solid;
+    border: solid #ccc;
     border-width: 1px 0 0 0;
 }
 
 p + section {
     margin-top: 2em;
+}
+
+abbr {
+    font-variant: none; /* override default styles */
+    text-decoration: none;
 }
 
 @media screen and (max-width: 900px) {
@@ -74,6 +80,8 @@ p + section {
         padding-left: 10vw;
         padding-right: 10vw;
     }
+
+    /* @TODO: make h3 header sticky */
 
 }
 
@@ -125,10 +133,6 @@ header h1:first-of-type {
 .requirement {
     flex: 1;
     display: block;
-}
-
-.requirement h4 {
-    font-family: 'IBM Plex Sans', sans-serif;
 }
 
 .attribute {
@@ -225,20 +229,11 @@ header h1:first-of-type {
 .course-shorthand {
     display: flex;
     align-items: center;
-    margin-right: 1.1rem;
-}
-
-.shorthand-link {
-    color: #222;
     font-size: .9em;
     font-family: 'IBM Plex Mono', monospace;
-    text-decoration: none;
-    letter-spacing: .05ch;
-    line-height: 1.1;
-}
-
-.shorthand-link:hover {
-    text-decoration: underline;
+    letter-spacing: .075ch;
+    line-height: 1.2;
+    margin-right: 1.1rem;
 }
 
 .course-body {
@@ -246,9 +241,17 @@ header h1:first-of-type {
     margin-right: 1.1rem;
 }
 
-/* @TODO: truncate long name with ellipsis? */
 .course-name {
     line-height: 1.2;
+}
+
+.course-link {
+    color: #222;
+    text-decoration: none;
+}
+
+.course-link:hover {
+    text-decoration: underline;
 }
 
 .pill {
@@ -258,8 +261,6 @@ header h1:first-of-type {
     padding: .2em .5em;
     border-radius: .3em;
     transition: .2s ease;
-    /* -webkit-box-decoration-break: clone;
-    box-decoration-break: clone; */
 }
 
 .pill:hover {
@@ -272,11 +273,14 @@ header h1:first-of-type {
 }
 
 .pill.selected {
-    background-color: #ddcff8;
+    color: #f8f8f8;
+    background-color: #444;
+    /* background-color: #ddcff8; */
 }
 
 .pill.selected:hover {
-    background-color: #d0c0eb;
+    background-color: #222;
+    /* background-color: #d0c0eb; */
 }
 
 .pill.fake {
@@ -300,9 +304,12 @@ header h1:first-of-type {
     display: flex;
     justify-content: flex-end;
     font-size: .95em;
+    font-weight: bold;
     margin-top: 1em;
 }
 
 .credit-total {
+    font-weight: normal;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
     margin: 0 1.25em 0 .5em;
 }

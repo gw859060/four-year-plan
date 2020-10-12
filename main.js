@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', (function () {
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
-                        createCatalogLink(shorthandNode, course.subject, course.number);
-                        fullnameNode.textContent = course.name;
+                        shorthandNode.innerHTML = course.subject + '<br />' + course.number;
+                        linkCourseName(fullnameNode, course.subject, course.number, course.name);
                         handleReq(reqContainer, course.requirement);
                         handleReq(reqContainer, course.attribute);
                         creditsNode.textContent = course.credits + ' cr.';
@@ -85,16 +85,16 @@ document.addEventListener('DOMContentLoaded', (function () {
                 });
             });
 
-            function createCatalogLink(node, subject, number) {
+            function linkCourseName(parentNode, subject, number, name) {
                 let link = document.createElement('a');
 
-                link.classList.add('shorthand-link');
+                link.classList.add('course-link');
                 link.setAttribute('target', '_blank');
                 link.setAttribute('ref', 'noopener');
                 link.setAttribute('title', `Open in course catalog on wcupa.edu`);
                 link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
-                link.innerHTML = subject + '<br />' + number;
-                node.appendChild(link);
+                link.textContent = name;
+                parentNode.appendChild(link);
             }
 
             function handleReq(parentNode, abbrev) {
