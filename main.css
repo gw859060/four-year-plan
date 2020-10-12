@@ -229,6 +229,8 @@ header h1:first-of-type {
 .course-shorthand {
     display: flex;
     align-items: center;
+    width: 3.25ch;
+
     font-size: .9em;
     font-family: 'IBM Plex Mono', monospace;
     letter-spacing: .075ch;

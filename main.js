@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
-                        shorthandNode.innerHTML = course.subject + '<br />' + course.number;
+                        shorthandNode.innerHTML = course.subject + ' ' + course.number;
                         linkCourseName(fullnameNode, course.subject, course.number, course.name);
                         handleReq(reqContainer, course.requirement);
                         handleReq(reqContainer, course.attribute);

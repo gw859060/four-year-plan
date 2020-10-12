@@ -178,8 +178,14 @@
                             "number": "113",
                             "name": "Digital Media",
                             "credits": 3,
-                            "requirement": "minor",
-                            "attribute": "core"
+                            "requirement": [
+                                    "minor",
+                                    "gened"
+                                ],
+                            "attribute": [
+                                    "core",
+                                    "arts"
+                                ]
                         },
                         {
                             "subject": "EIT",
