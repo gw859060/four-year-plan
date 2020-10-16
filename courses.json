@@ -64,9 +64,9 @@
                         },
                         {
                             "subject": "MAT",
-                            "number": "161",
-                            "name": "Calculus I",
-                            "credits": 4,
+                            "number": "143",
+                            "name": "Brief Calculus",
+                            "credits": 3,
                             "requirement": "major",
                             "attribute": "math"
                         },
@@ -174,20 +174,6 @@
                             "attribute": "math"
                         },
                         {
-                            "subject": "ART",
-                            "number": "113",
-                            "name": "Digital Media",
-                            "credits": 3,
-                            "requirement": [
-                                    "minor",
-                                    "gened"
-                                ],
-                            "attribute": [
-                                    "core",
-                                    "arts"
-                                ]
-                        },
-                        {
                             "subject": "EIT",
                             "number": "360",
                             "name": "Italian Cinema",
@@ -242,14 +228,6 @@
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": "speaking"
-                        },
-                        {
-                            "subject": "ART",
-                            "number": "210",
-                            "name": "Typography I",
-                            "credits": 3,
-                            "requirement": "minor",
-                            "attribute": "elective"
                         }
                     ]
                 },
@@ -258,11 +236,11 @@
                     "courses": [
                         {
                             "subject": "CSC",
-                            "number": "417",
-                            "name": "User Interfaces",
+                            "number": "402",
+                            "name": "Software Engineering",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "capstone"
                         },
                         {
                             "subject": "CSC",
@@ -274,8 +252,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "302",
-                            "name": "Computer Security",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "elective"
@@ -316,8 +294,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "317",
-                            "name": "Introduction to Digital Image Processing",
+                            "number": "302",
+                            "name": "Computer Security",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "elective"
@@ -345,11 +323,11 @@
                     "courses": [
                         {
                             "subject": "CSC",
-                            "number": "402",
-                            "name": "Software Engineering",
+                            "number": "417",
+                            "name": "User Interfaces",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "complex"
                         },
                         {
                             "subject": "CSC",
@@ -357,22 +335,6 @@
                             "name": "Artificial Intelligence",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "elective"
-                        },
-                        {
-                            "subject": "COM",
-                            "number": "201",
-                            "name": "Fundamentals of Communication Technology",
-                            "credits": 3,
-                            "requirement": "minor",
-                            "attribute": "core"
-                        },
-                        {
-                            "subject": "COM",
-                            "number": "292",
-                            "name": "Living in the Digital Age",
-                            "credits": 3,
-                            "requirement": "minor",
                             "attribute": "elective"
                         }
                     ]
