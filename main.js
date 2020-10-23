@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', (function () {
     }
 
     function initPlan() {
-        // @TODO: allow user input via localStorage?
+        // @TODO: allow user input via localStorage
         let request = new XMLHttpRequest();
         let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
 
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', (function () {
                     let semesterSection = getAll('.semester', yearSection)[semesterNum - 1];
                     let semesterHeader = get('.semester-num', semesterSection);
 
-                    // @TODO: show status (in progress/completed)
                     // @TODO: support summer/winter
                     let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
 
@@ -106,8 +105,9 @@ document.addEventListener('DOMContentLoaded', (function () {
                 }
 
                 function buildPill(parentNode, attr) {
-                    let pill = document.createElement('span');
+                    let pill = document.createElement('button');
 
+                    pill.setAttribute('type', 'button');
                     pill.classList.add('pill', attr);
                     pill.textContent = expandAbbrev(attr);
                     pill.addEventListener('click', highlightTiles(), false);
@@ -116,6 +116,30 @@ document.addEventListener('DOMContentLoaded', (function () {
                 }
 
                 function expandAbbrev(abbrev) {
+                    // accepted requirements:
+                    //
+                    // - gened
+                    // - major
+                    // - minor
+                    //
+                    // accepted attributes:
+                    //
+                    // - capstone
+                    // - complex
+                    // - core
+                    // - elective
+                    // - english
+                    // - ethics
+                    // - fye
+                    // - humanities
+                    // - i
+                    // - j
+                    // - math
+                    // - science
+                    // - social
+                    // - speaking
+                    // - writing
+
                     switch (abbrev) {
                         case 'gened':
                             return 'Gen. Ed.';
@@ -144,6 +168,9 @@ document.addEventListener('DOMContentLoaded', (function () {
                         case 'j':
                             return 'Diverse Communities';
                             break;
+                        case 'complex':
+                            return 'Complex Large-Scale Systems';
+                            break;
                         default:
                             return capitalizeFirstLetter(abbrev);
                     }
@@ -158,19 +185,18 @@ document.addEventListener('DOMContentLoaded', (function () {
                 return function () {
                     // if target pill is not already selected
                     if (this.classList.contains('selected') === false) {
-                        let courses = getAll('.tile.course');
+                        let semesters = getAll('.semesters');
                         let selectedPills = getAll('.pill.' + this.classList[1]);
 
                         // clear existing selections before highlighting new ones
+                        // (ie. only one selection at a time)
                         clearSelected();
 
-                        courses.forEach(course => {
-                            course.classList.add('deselected');
-                        });
+                        semesters.forEach(semester => semester.classList.add('filtered'));
 
                         selectedPills.forEach(pill => {
                             pill.classList.add('selected');
-                            pill.closest('.tile').classList.remove('deselected');
+                            pill.closest('.course').classList.add('selected');
                         });
                     }
                     // otherwise you're clicking a selected pill
@@ -181,10 +207,12 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                 function clearSelected() {
                     let selectedPills = getAll('.pill.selected');
-                    let deselectedCourses = getAll('.deselected');
+                    let selectedCourses = getAll('.course.selected');
+                    let filteredSems = getAll('.semesters.filtered');
 
                     selectedPills.forEach(pill => pill.classList.remove('selected'));
-                    deselectedCourses.forEach(course => course.classList.remove('deselected'));
+                    selectedCourses.forEach(course => course.classList.remove('selected'));
+                    filteredSems.forEach(semester => semester.classList.remove('filtered'));
                 }
             }
         }

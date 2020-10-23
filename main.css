@@ -1,4 +1,4 @@
-/* ***** fonts ***** */
+/* @TODO: host fonts locally */
 
 /* ***** basics ***** */
 
@@ -17,16 +17,18 @@ body {
     font: 1em/1.45 'IBM Plex Sans', sans-serif;
     background-color: #f3f3f3;
     margin: 0;
+    overflow-x: hidden; /* for .full-width */
 }
 
-header,
-main,
-footer {
-    max-width: 69em;
-    padding-left: 3em;
-    padding-right: 3em;
-    margin: auto;
+@media screen and (min-width: 1400px) {
+
+    html {
+        font-size: 17px;
+    }
+
 }
+
+/* ***** elements ***** */
 
 h1 {
     font-size: 2.4em;
@@ -46,7 +48,7 @@ h3 {
 }
 
 h4 {
-    font-size: 1.15em;
+    font-size: 1.1em;
     margin: 0 0 .4rem;
 }
 
@@ -59,7 +61,7 @@ section {
 }
 
 hr {
-    border: solid #ccc;
+    border: solid #ddd;
     border-width: 1px 0 0 0;
 }
 
@@ -74,26 +76,35 @@ abbr {
 
 @media screen and (max-width: 900px) {
 
-    header,
-    main,
-    footer {
-        padding-left: 10vw;
-        padding-right: 10vw;
-    }
-
-    /* @TODO: make h3 header sticky */
-
-}
-
-@media screen and (min-width: 1400px) {
-
-    html {
-        font-size: 17px;
+    h3 {
+        background-color: #f3f3f3;
+        -webkit-position: sticky;
+        position: sticky;
+        top: 0;
+        padding: .25em 0;
+        z-index: 10; /* header occasionally appears under course rows? */
     }
 
 }
 
 /* ***** reusable ***** */
+
+.constrained-width {
+    max-width: 69em;
+    padding-left: 3em;
+    padding-right: 3em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.full-width {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
 
 .subdued {
     color: #777;
@@ -101,27 +112,64 @@ abbr {
 
 .tile {
     display: flex;
-    background: white;
+    background-color: white;
     border-radius: .4em;
     padding: .8em 1.25em 1em;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
-    transition: .2s ease;
 }
 
-.tile.deselected {
-    opacity: .5;
+@media screen and (max-width: 500px) {
+
+    .constrained-width {
+        padding-left: 5vw;
+        padding-right: 5vw;
+    }
+
+}
+
+@media screen and (min-width: 501px) and (max-width: 900px) {
+
+    .constrained-width {
+        padding-left: 8vw;
+        padding-right: 8vw;
+    }
+
 }
 
 /* ***** header ***** */
 
 header {
+    display: flex;
+    justify-content: space-between;
     margin-top: 4em;
     margin-bottom: 4em;
     line-height: 1;
 }
 
-header h1:first-of-type {
+.header-text h1:first-of-type {
     margin-bottom: .2em;
+}
+
+.header-github {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-left: 1em;
+}
+
+.github-link {
+    color: white;
+    background-color: #222;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-weight: bold;
+    border-radius: .4em;
+    padding: .8em 1.2em;
+    text-decoration: none;
+    transition: .2s background-color ease;
+}
+
+.github-link:hover {
+    background-color: black;
 }
 
 /* ***** requirements ***** */
@@ -180,7 +228,12 @@ header h1:first-of-type {
 }
 
 .major-minor .tile + .tile {
-    margin-top: .75em;
+    margin-top: .6em;
+}
+
+/* summary */
+.summary .tile {
+    background-color: #eaeaea;
 }
 
 @media screen and (max-width: 900px) {
@@ -202,10 +255,6 @@ header h1:first-of-type {
 
 /* ***** semesters ***** */
 
-.year {
-    /* background: #aaa; */
-}
-
 .semesters {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -222,8 +271,20 @@ header h1:first-of-type {
 
 /* ***** courses ***** */
 
+.course {
+    transition: .2s ease;
+}
+
 .course + .course {
-    margin-top: .75em;
+    margin-top: .6em;
+}
+
+.filtered .course {
+    opacity: .5;
+}
+
+.filtered .course.selected {
+    opacity: 1;
 }
 
 .course-shorthand {
@@ -256,13 +317,26 @@ header h1:first-of-type {
     text-decoration: underline;
 }
 
+.course-credits {
+    display: flex;
+    font-size: .95em;
+    margin: auto;
+}
+
+/* ***** pills ***** */
+
 .pill {
     color: rgba(0, 0, 0, .75);
     background-color: #eee;
     font-size: .9em;
-    padding: .2em .5em;
-    border-radius: .3em;
+    padding: .2em .75em;
+    border-radius: 10em;
     transition: .2s ease;
+
+    /* reset default <button> styles */
+    border: none;
+    margin: 0;
+    font-family: inherit;
 }
 
 .pill:hover {
@@ -277,27 +351,19 @@ header h1:first-of-type {
 .pill.selected {
     color: #f8f8f8;
     background-color: #444;
-    /* background-color: #ddcff8; */
 }
 
 .pill.selected:hover {
     background-color: #222;
-    /* background-color: #d0c0eb; */
 }
 
 .pill.fake {
-    font-size: .95em;
+    font-size: .925em;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
     background-color: #e5e5e5;
-    padding: .175em .425em;
-    margin: 0 .1em;
+    padding: .175em .75em;
+    margin: 0 .05em;
     cursor: auto;
-}
-
-.course-credits {
-    display: flex;
-    font-size: .95em;
-    margin: auto;
 }
 
 /* ***** total ***** */
