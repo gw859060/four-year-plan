@@ -96,9 +96,7 @@
             "core": {
                 "attribute": "Core",
                 "number": 3
-            }
-        },
-        {
+            },
             "electives": {
                 "attribute": "Elective",
                 "number": 3
