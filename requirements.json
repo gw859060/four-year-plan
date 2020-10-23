@@ -1,0 +1,108 @@
+{
+    "gened": [
+        {
+            "academic": [
+                {
+                    "attribute": "fye",
+                    "number": 1
+                },
+                {
+                    "attribute": "english",
+                    "number": 2
+                },
+                {
+                    "attribute": "math",
+                    "number": 1
+                },
+                {
+                    "attribute": "i",
+                    "number": 1
+                },
+                {
+                    "attribute": "j",
+                    "number": 1
+                }
+            ],
+            "distributive": [
+                {
+                    "attribute": "science",
+                    "number": 2
+                },
+                {
+                    "attribute": "social",
+                    "number": 2
+                },
+                {
+                    "attribute": "humanities",
+                    "number": 2
+                },
+                {
+                    "attribute": "arts",
+                    "number": 1
+                }
+            ],
+            "additional": [
+                {
+                    "attribute": "writing",
+                    "number": 3
+                },
+                {
+                    "attribute": "speaking",
+                    "number": 3
+                },
+                {
+                    "attribute": "ethics",
+                    "number": 1
+                }
+            ]
+        }
+    ],
+    "major": [
+        {
+            "core": [
+                {
+                    "attribute": "core",
+                    "number": 8
+                },
+                {
+                    "attribute": "complex",
+                    "number": 1
+                },
+                {
+                    "attribute": "capstone",
+                    "number": 1
+                }
+            ],
+            "mathematics": [
+                {
+                    "attribute": "statistics",
+                    "number": 2
+                },
+                {
+                    "attribute": "calculus",
+                    "number": 1
+                }
+            ],
+            "electives": [
+                {
+                    "attribute": "elective",
+                    "number": 6
+                }
+            ]
+        }
+    ],
+    "minor": [
+        {
+            "core": {
+                "attribute": "Core",
+                "number": 3
+            }
+        },
+        {
+            "electives": {
+                "attribute": "Elective",
+                "number": 3
+            }
+        }
+    ]
+}
