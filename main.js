@@ -9,7 +9,158 @@ document.addEventListener('DOMContentLoaded', (function () {
         return scope.querySelectorAll(selector);
     }
 
-    function initPlan() {
+    function expandAbbrev(abbrev) {
+        switch (abbrev) {
+            case 'gened':
+                return 'Gen. Ed.';
+                break;
+            case 'fye':
+                return 'First Year Experience';
+                break;
+            case 'social':
+                return 'Behav. & Social Science';
+                break;
+            case 'math':
+                return 'Mathematics';
+                break;
+            case 'english':
+                return 'English Composition';
+                break;
+            case 'writing':
+                return 'Writing Emphasis';
+                break;
+            case 'speaking':
+                return 'Speaking Emphasis';
+                break;
+            case 'i':
+                return 'Interdisciplinary';
+                break;
+            case 'j':
+                return 'Diverse Communities';
+                break;
+            case 'complex':
+                return 'Complex Large-Scale Systems';
+                break;
+            default:
+                return capitalizeFirstLetter(abbrev);
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string[0].toUpperCase() + string.slice(1);
+        }
+    }
+
+    function initRequirements() {
+        // @TODO: allow user input via localStorage
+        let request = new XMLHttpRequest();
+        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/requirements.json';
+
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        request.addEventListener('load', function () {
+            buildRequirements();
+        });
+
+        function buildRequirements() {
+            /* ***** GEN EDS ***** */
+            let geneds = request.response.gened[0];
+            let academic = geneds.academic;
+            let distributive = geneds.distributive;
+            let additional = geneds.additional;
+
+            academic.forEach((attr, i) => {
+                let parentNode = get('.gened .academic');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            distributive.forEach((attr, i) => {
+                let parentNode = get('.gened .distributive');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            additional.forEach((attr, i) => {
+                let parentNode = get('.gened .additional');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            /* ***** MAJOR ***** */
+            let major = request.response.major[0];
+            let majorCore = major.core;
+            let majorMath = major.mathematics;
+            let majorElectives = major.electives;
+
+            majorCore.forEach((attr, i) => {
+                let parentNode = get('.major .core');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            majorMath.forEach((attr, i) => {
+                let parentNode = get('.major .mathematics');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            majorElectives.forEach((attr, i) => {
+                let parentNode = get('.major .electives');
+
+                buildAttrRow(attr, parentNode, i);
+            });
+
+            /* ***** MINOR ***** */
+            let minor = request.response.minor[0];
+            let minorCore = minor.core;
+            let minorCoreParent = get('.minor .core');
+            let minorElectives = minor.electives;
+            let minorElectiveParent = get('.minor .electives');
+
+            // only one attr in each section so no need for forEach
+            buildAttrRow(minorCore, minorCoreParent, 0);
+            buildAttrRow(minorElectives, minorElectiveParent, 0);
+        }
+
+        function buildAttrRow(attr, parentNode, i) {
+            let attrTemplate = get('.template-attribute').content.cloneNode(true);
+            let nameNode = get('.attribute-name', attrTemplate);
+            let courseNode = get('.attribute-course', attrTemplate);
+
+            if (i !== 0) parentNode.appendChild(document.createElement('hr'));
+            get('.attribute', attrTemplate).classList.add(attr.attribute);
+            parentNode.appendChild(attrTemplate);
+
+            nameNode.textContent = expandAbbrev(attr.attribute);
+            courseNode.textContent = '—';
+
+            if (attr.number !== 1) {
+                // only show number of courses required if more than one
+                let numberNode = document.createElement('span');
+
+                numberNode.classList.add('subdued');
+                numberNode.textContent = ' (' + attr.number + ')';
+                nameNode.appendChild(numberNode);
+
+                // create remaining rows
+                let rowCount = attr.number - 1;
+
+                while (rowCount > 0) {
+                    let attrTemplate = get('.template-attribute').content.cloneNode(true);
+                    let courseNode = get('.attribute-course', attrTemplate);
+
+                    get('.attribute', attrTemplate).classList.add(attr.attribute);
+                    courseNode.textContent = '—';
+                    parentNode.appendChild(attrTemplate);
+                    rowCount--;
+                }
+            }
+
+        }
+    }
+
+    function initSchedule() {
         // @TODO: allow user input via localStorage
         let request = new XMLHttpRequest();
         let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
@@ -18,12 +169,10 @@ document.addEventListener('DOMContentLoaded', (function () {
         request.responseType = 'json';
         request.send();
         request.addEventListener('load', function () {
-            buildSections();
-            cleanUp();
+            buildSchedule();
         });
 
-        function buildSections() {
-
+        function buildSchedule() {
             /* ***** YEARS ***** */
 
             let years = request.response.years;
@@ -114,71 +263,6 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                     parentNode.appendChild(pill);
                 }
-
-                function expandAbbrev(abbrev) {
-                    // accepted requirements:
-                    //
-                    // - gened
-                    // - major
-                    // - minor
-                    //
-                    // accepted attributes:
-                    //
-                    // - capstone
-                    // - complex
-                    // - core
-                    // - elective
-                    // - english
-                    // - ethics
-                    // - fye
-                    // - humanities
-                    // - i
-                    // - j
-                    // - math
-                    // - science
-                    // - social
-                    // - speaking
-                    // - writing
-
-                    switch (abbrev) {
-                        case 'gened':
-                            return 'Gen. Ed.';
-                            break;
-                        case 'fye':
-                            return 'First Year Experience';
-                            break;
-                        case 'social':
-                            return 'Behav. & Social Science';
-                            break;
-                        case 'math':
-                            return 'Mathematics';
-                            break;
-                        case 'english':
-                            return 'English Composition';
-                            break;
-                        case 'writing':
-                            return 'Writing Emphasis';
-                            break;
-                        case 'speaking':
-                            return 'Speaking Emphasis';
-                            break;
-                        case 'i':
-                            return 'Interdisciplinary';
-                            break;
-                        case 'j':
-                            return 'Diverse Communities';
-                            break;
-                        case 'complex':
-                            return 'Complex Large-Scale Systems';
-                            break;
-                        default:
-                            return capitalizeFirstLetter(abbrev);
-                    }
-                }
-
-                function capitalizeFirstLetter(string) {
-                    return string[0].toUpperCase() + string.slice(1);
-                }
             }
 
             function highlightTiles() {
@@ -216,12 +300,16 @@ document.addEventListener('DOMContentLoaded', (function () {
                 }
             }
         }
-
-        function cleanUp() {
-            get('noscript').remove();
-            getAll('template').forEach(template => template.remove());
-        }
     }
 
-    initPlan();
+    function cleanUp() {
+        get('noscript').remove();
+        getAll('template').forEach(template => template.remove());
+    }
+
+    initRequirements();
+    initSchedule();
+    // needs to wait until two inits are done
+    // <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function>
+    // cleanUp();
 })(), false);

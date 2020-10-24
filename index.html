@@ -4,295 +4,122 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Garrett's Four Year Plan – WCUPA</title>
+    <title>Garrett's Four Year Plan &ndash; WCUPA</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap">
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
 </head>
 
 <body>
-    <header>
-        <h1>Garrett's Four Year Plan</h1>
-        <h1 class="subdued">West Chester University of Pennsylvania</h1>
+    <header class="constrained-width">
+        <div class="header-text">
+            <h1>Garrett's Four Year Plan</h1>
+            <h1 class="subdued">West Chester University of Pennsylvania</h1>
+        </div>
+        <div class="header-github">
+            <a class="github-link" target="_blank" ref="noopener" href="https://github.com/gw859060/four-year-plan" title="View this repository on GitHub">View on GitHub</a>
+        </div>
     </header>
-    <main>
+    <main class="constrained-width">
         <noscript>This page will not work without JavaScript.</noscript>
-        <h2 class="degree-header">Degree Requirements</h2>
-        <p class="description">Still missing AP tests and their equivalencies.</p>
-        <!-- @TODO: show full class name on hover over shorthand -->
-        <section class="requirements gened">
-            <h3>General Education</h3>
-            <div class="tile requirement academic">
-                <h4>Academic Foundations</h4>
-                <div class="attribute">
-                    <div class="attribute-name">First Year Experience</div>
-                    <abbr class="attribute-course">FYE 100</abbr>
+        <!-- @TODO: add deadlines section à la https://www.inquirer.com/politics/election/ -->
+        <div class="degree-requirements">
+            <h2 class="degree-header">Degree Requirements</h2>
+            <p class="description">AP tests and their equivalencies not yet shown.</p>
+            <!-- @TODO: show tooltip w/ details on hover over course shorthand -->
+            <section class="requirements gened">
+                <h3>General Education</h3>
+                <div class="tile requirement academic">
+                    <h4>Academic Foundations</h4>
                 </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">English Composition <span class="subdued">(2)</span></div>
-                    <abbr class="attribute-course">&mdash;</abbr>
+                <div class="tile requirement distributive">
+                    <h4>Distributive Requirements</h4>
                 </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">WRT 200</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Mathematics</div>
-                    <abbr class="attribute-course">MAT 151</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Interdisciplinary</div>
-                    <abbr class="attribute-course">GEO 204</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Diverse Communities</div>
-                    <abbr class="attribute-course">GEO 204</abbr>
-                </div>
-            </div>
-            <div class="tile requirement distributive">
-                <h4>Distributive Requirements</h4>
-                <div class="attribute">
-                    <div class="attribute-name">Science with Lab <span class="subdued">(2)</span></div>
-                    <abbr class="attribute-course">ESS 101</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">BIO 110</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Behav. & Social Science <span class="subdued">(2)</span></div>
-                    <abbr class="attribute-course">ANT 103</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">GEO 101</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Humanities <span class="subdued">(2)</span></div>
-                    <abbr class="attribute-course">&mdash;</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">LNC 100</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Arts</div>
-                    <abbr class="attribute-course">ART 113</abbr>
-                </div>
-            </div>
-            <div class="tile requirement additional">
-                <h4>Additional Requirements</h4>
-                <div class="attribute">
-                    <div class="attribute-name">Writing Emphasis <span class="subdued">(3)</span></div>
-                    <abbr class="attribute-course">ENG 371</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">LNC 105</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">FLM 200</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Speaking Emphasis <span class="subdued">(3)</span></div>
-                    <abbr class="attribute-course">SPK 230</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">EIT 360</abbr>
-                </div>
-                <div class="attribute">
-                    <div class="attribute-name"></div>
-                    <abbr class="attribute-course">COM 206</abbr>
-                </div>
-                <hr />
-                <div class="attribute">
-                    <div class="attribute-name">Ethics</div>
-                    <abbr class="attribute-course">CSC 301</abbr>
-                </div>
-            </div>
-        </section>
-        <section class="requirements major-minor">
-            <section class="requirements major">
-                <h3>Major <span class="subdued">Computer Science</span></h3>
-                <div class="tile requirement core">
-                    <h4>Core Requirements</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">Computer Science Core <span class="subdued">(8)</span></div>
-                        <abbr class="attribute-course">CSC 141</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 142</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 220</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 231</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 240</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 241</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 301</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 345</abbr>
-                    </div>
-                    <hr />
-                    <div class="attribute">
-                        <div class="attribute-name">Complex Large-Scale Systems</div>
-                        <abbr class="attribute-course">CSC 417</abbr>
-                    </div>
-                    <hr />
-                    <div class="attribute">
-                        <div class="attribute-name">Capstone</div>
-                        <abbr class="attribute-course">CSC 402</abbr>
-                    </div>
-                </div>
-                <div class="tile requirement math">
-                    <h4>Mathematics</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">Statistics</div>
-                        <abbr class="attribute-course">MAT 121</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Calculus</div>
-                        <abbr class="attribute-course">MAT 161</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Statistics II / Calculus II</div>
-                        <abbr class="attribute-course">STA 200</abbr>
-                    </div>
-                </div>
-                <div class="tile requirement electives">
-                    <h4>Electives</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">Elective <span class="subdued">(6)</span></div>
-                        <abbr class="attribute-course">CSC 302</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 317</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 321</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 481</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 468</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSC 400</abbr>
-                    </div>
+                <div class="tile requirement additional">
+                    <h4>Additional Requirements</h4>
                 </div>
             </section>
-            <section class="requirements minor">
-                <h3>Minor <span class="subdued">Web Technology</span></h3>
-                <div class="tile requirement core">
-                    <h4>Core Requirements</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">Web Technology Core <span class="subdued">(3)</span></div>
-                        <abbr class="attribute-course">ART 113</abbr>
+            <section class="requirements major-minor">
+                <section class="requirements major">
+                    <h3>Major <span class="subdued">Computer Science</span></h3>
+                    <div class="tile requirement core">
+                        <h4>Core Requirements</h4>
                     </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">COM 201</abbr>
+                    <div class="tile requirement mathematics">
+                        <h4>Mathematics</h4>
                     </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSW 131</abbr>
+                    <div class="tile requirement electives">
+                        <h4>Electives</h4>
                     </div>
-                </div>
-                <div class="tile requirement electives">
-                    <h4>Electives</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">Elective <span class="subdued">(3)</span></div>
-                        <abbr class="attribute-course">ART 210</abbr>
+                </section>
+                <section class="requirements minor">
+                    <h3>Minor <span class="subdued">Undecided</span></h3>
+                    <div class="tile requirement core">
+                        <h4>Core Requirements</h4>
                     </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">CSW 315</abbr>
+                    <div class="tile requirement electives">
+                        <h4>Electives</h4>
                     </div>
-                    <div class="attribute">
-                        <div class="attribute-name"></div>
-                        <abbr class="attribute-course">COM 292</abbr>
+                </section>
+                <section class="requirements summary">
+                    <h3>Summary</h3>
+                    <div class="tile requirement core">
+                        <h4>Courses</h4>
+                        <div class="attribute">
+                            <div class="attribute-name">General Education courses</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-name">Major courses</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-name">Minor courses</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <hr />
+                        <div class="attribute">
+                            <div class="attribute-name">Total courses</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
                     </div>
-                </div>
+                    <div class="tile requirement core">
+                        <h4>Credits</h4>
+                        <div class="attribute">
+                            <div class="attribute-name">General Education credits</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-name">Major credits</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <div class="attribute">
+                            <div class="attribute-name">Minor credits</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                        <hr />
+                        <div class="attribute">
+                            <div class="attribute-name">Total credits</div>
+                            <abbr class="attribute-course">&mdash;</abbr>
+                        </div>
+                    </div>
+                </section>
             </section>
-            <section class="requirements summary">
-                <h3>Summary</h3>
-                <div class="tile requirement core">
-                    <h4>Courses</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">General Education courses</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Major courses</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Minor courses</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <hr />
-                    <div class="attribute">
-                        <div class="attribute-name">Total courses</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                </div>
-                <div class="tile requirement core">
-                    <h4>Credits</h4>
-                    <div class="attribute">
-                        <div class="attribute-name">General Education credits</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Major credits</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <div class="attribute">
-                        <div class="attribute-name">Minor credits</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                    <hr />
-                    <div class="attribute">
-                        <div class="attribute-name">Total credits</div>
-                        <abbr class="attribute-course">–</abbr>
-                    </div>
-                </div>
-            </section>
-        </section>
+        </div>
         <h2 class="year-header">Course Schedule</h2>
         <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses. Click again to clear the highlight.</p>
-        <!-- @TODO: ability to filter by prefix or by requirement -->
+        <!-- @TODO:
+            - ability to filter by prefix or by requirement (dropdowns)
+            - detailed/compact mode toggle to show class times and visual representation full-width
+            - vertical timeline-style layout with alternating sides (weekly schedule shown on opposite side from list of classes)
+        -->
     </main>
+    <template class="template-attribute">
+        <div class="attribute">
+            <div class="attribute-name"></div>
+            <abbr class="attribute-course"></abbr>
+        </div>
+    </template>
     <template class="template-year">
         <section class="year">
             <div class="semesters">
