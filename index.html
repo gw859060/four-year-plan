@@ -5,30 +5,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Garrett's Four Year Plan &ndash; WCUPA</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap">
+    <!-- @TODO: replace this with self-hosted fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;700&display=swap">
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
 </head>
 
 <body>
-    <header class="constrained-width">
-        <div class="header-text">
-            <h1>Garrett's Four Year Plan</h1>
-            <h1 class="subdued">West Chester University of Pennsylvania</h1>
-        </div>
-        <div class="header-github">
-            <a class="github-link" target="_blank" ref="noopener" href="https://github.com/gw859060/four-year-plan" title="View this repository on GitHub">View on GitHub</a>
+    <header>
+        <div class="header-container constrained-width">
+            <div class="header-text">
+                <h1>Garrett's Four Year Plan</h1>
+                <h1 class="subdued">West Chester University of Pennsylvania</h1>
+            </div>
+            <a class="github-link" target="_blank" ref="noopener" href="https://github.com/gw859060/four-year-plan">View on GitHub</a>
         </div>
     </header>
-    <main class="constrained-width">
+    <main>
         <noscript>This page will not work without JavaScript.</noscript>
         <!-- @TODO: add deadlines section à la https://www.inquirer.com/politics/election/ -->
-        <div class="degree-requirements">
+        <div class="degree-requirements constrained-width">
             <h2 class="degree-header">Degree Requirements</h2>
             <p class="description">AP tests and their equivalencies not yet shown.</p>
             <!-- @TODO: show tooltip w/ details on hover over course shorthand -->
+            <!-- @TODO: add green checkmark for requirements that have been satisfied -->
             <section class="requirements gened">
-                <h3>General Education</h3>
+                <h3 class="uppercase">General Education</h3>
                 <div class="tile requirement academic">
                     <h4>Academic Foundations</h4>
                 </div>
@@ -40,8 +42,8 @@
                 </div>
             </section>
             <section class="requirements major-minor">
-                <section class="requirements major">
-                    <h3>Major <span class="subdued">Computer Science</span></h3>
+                <div class="section-major">
+                    <h3 class="uppercase">Major <span class="subdued">Computer Science</span></h3>
                     <div class="tile requirement core">
                         <h4>Core Requirements</h4>
                     </div>
@@ -51,30 +53,30 @@
                     <div class="tile requirement electives">
                         <h4>Electives</h4>
                     </div>
-                </section>
-                <section class="requirements minor">
-                    <h3>Minor <span class="subdued">Undecided</span></h3>
+                </div>
+                <div class="section-minor">
+                    <h3 class="uppercase">Minor <span class="subdued">Undecided</span></h3>
                     <div class="tile requirement core">
                         <h4>Core Requirements</h4>
                     </div>
                     <div class="tile requirement electives">
                         <h4>Electives</h4>
                     </div>
-                </section>
-                <section class="requirements summary">
-                    <h3>Summary</h3>
+                </div>
+                <div class="section-summary">
+                    <h3 class="uppercase">Summary</h3>
                     <div class="tile requirement core">
                         <h4>Courses</h4>
                         <div class="attribute">
-                            <div class="attribute-name">General Education courses</div>
+                            <div class="attribute-name">General Education</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <div class="attribute">
-                            <div class="attribute-name">Major courses</div>
+                            <div class="attribute-name">Major</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <div class="attribute">
-                            <div class="attribute-name">Minor courses</div>
+                            <div class="attribute-name">Minor</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <hr />
@@ -86,15 +88,15 @@
                     <div class="tile requirement core">
                         <h4>Credits</h4>
                         <div class="attribute">
-                            <div class="attribute-name">General Education credits</div>
+                            <div class="attribute-name">General Education</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <div class="attribute">
-                            <div class="attribute-name">Major credits</div>
+                            <div class="attribute-name">Major</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <div class="attribute">
-                            <div class="attribute-name">Minor credits</div>
+                            <div class="attribute-name">Minor</div>
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                         <hr />
@@ -103,11 +105,15 @@
                             <abbr class="attribute-course">&mdash;</abbr>
                         </div>
                     </div>
-                </section>
+                </div>
             </section>
         </div>
-        <h2 class="year-header">Course Schedule</h2>
-        <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses. Click again to clear the highlight.</p>
+        <div class="course-schedule">
+            <div class="constrained-width">
+                <h2 class="year-header">Course Schedule</h2>
+                <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses. Click it again to clear the highlight.</p>
+            </div>
+        </div>
         <!-- @TODO:
             - ability to filter by prefix or by requirement (dropdowns)
             - detailed/compact mode toggle to show class times and visual representation full-width
@@ -117,35 +123,35 @@
     <template class="template-attribute">
         <div class="attribute">
             <div class="attribute-name"></div>
-            <abbr class="attribute-course"></abbr>
+            <abbr class="attribute-course monospace uppercase"></abbr>
         </div>
     </template>
     <template class="template-year">
         <section class="year">
             <div class="semesters">
                 <div class="semester">
-                    <h3 class="semester-num"></h3>
+                    <h3 class="semester-num uppercase"></h3>
                 </div>
                 <div class="semester">
-                    <h3 class="semester-num"></h3>
+                    <h3 class="semester-num uppercase"></h3>
                 </div>
             </div>
         </section>
     </template>
     <template class="template-course">
         <div class="tile course">
-            <abbr class="course-shorthand"></abbr>
+            <abbr class="course-shorthand monospace uppercase"></abbr>
             <div class="course-body">
                 <h4 class="course-name"></h4>
                 <div class="req-container"></div>
             </div>
-            <div class="course-credits subdued"></div>
+            <div class="course-credits monospace subdued"></div>
         </div>
     </template>
     <template class="template-total">
         <div class="total">
-            <div>Total</div>
-            <div class="credit-total subdued"></div>
+            <div class="monospace uppercase">Total</div>
+            <div class="credit-total monospace subdued"></div>
         </div>
     </template>
 </body>
