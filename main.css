@@ -290,6 +290,10 @@ header {
     grid-gap: 1.25em;
 }
 
+.semester {
+    min-width: 0; /* <https://css-tricks.com/flexbox-truncated-text/> */
+}
+
 @media screen and (max-width: 700px) {
 
     .semesters {
@@ -328,7 +332,7 @@ header {
 .course-body {
     flex: 1;
     margin-right: 1.1rem;
-    min-width: 0; /* for text-overflow: ellipsis */
+    min-width: 0; /* <https://css-tricks.com/flexbox-truncated-text/> */
 }
 
 .course-name {
@@ -345,6 +349,12 @@ header {
 
 .course-link:hover {
     text-decoration: underline;
+}
+
+/* @TODO: add a fadeout */
+.req-container {
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .course-credits {
