@@ -61,6 +61,7 @@ h4 {
 
 p {
     margin: 0 0 1em;
+    line-height: 1.5;
 }
 
 section + section {
@@ -134,7 +135,7 @@ abbr {
 .tile {
     background-color: white;
     border-radius: .4em;
-    padding: .7em 1.25em .9em;
+    padding: .7rem 1.25rem .9rem;
     /* box-shadow: 2px 2px 0 rgba(0,0,0,0.05); */
 }
 
@@ -147,6 +148,10 @@ abbr {
     .constrained-width {
         padding-left: 1em;
         padding-right: 1em;
+    }
+
+    .tile {
+        padding: .6rem 1rem .8rem;
     }
 
 }
@@ -329,6 +334,10 @@ header {
     margin-right: 1.1rem;
 }
 
+.course-shorthand2 {
+    display: none;
+}
+
 .course-body {
     flex: 1;
     margin-right: 1.1rem;
@@ -365,8 +374,20 @@ header {
 
 @media screen and (max-width: 900px) {
 
+    .course-name {
+        font-size: 1.05em;
+    }
+
     .course-shorthand {
         display: none;
+    }
+
+    .course-shorthand2 {
+        display: initial;
+    }
+
+    .course-link {
+        font-weight: normal;
     }
 
 }

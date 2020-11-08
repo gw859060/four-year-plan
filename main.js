@@ -276,11 +276,14 @@ document.addEventListener('DOMContentLoaded', (function () {
                     courses.forEach(course => {
                         let courseTemplate = get('.template-course').content.cloneNode(true);
                         let shorthandNode = get('.course-shorthand', courseTemplate);
+                        let shorthandNode2 = get('.course-shorthand2', courseTemplate);
                         let fullnameNode = get('.course-name', courseTemplate);
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
-                        shorthandNode.innerHTML = course.subject + ' ' + course.number;
+                        // shorthandNode is shown at large sizes, shorthandNode2 at small sizes
+                        shorthandNode.textContent = course.subject + ' ' + course.number;
+                        shorthandNode2.textContent = shorthandNode.textContent + ' ';
                         linkCourseName(fullnameNode, course.subject, course.number, course.name);
                         handleReq(reqContainer, course.requirement);
                         handleReq(reqContainer, course.attribute);
