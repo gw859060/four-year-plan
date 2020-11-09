@@ -435,7 +435,7 @@ header {
 
 /* ***** total ***** */
 
-.total {
+.semester-total {
     display: flex;
     justify-content: flex-end;
     letter-spacing: -0.05ch;

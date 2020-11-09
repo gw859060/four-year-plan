@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', (function () {
             nameNode.textContent = expandAbbrev(attr.attribute);
             courseNode.textContent = '—';
 
+            // handle requirements that require more than one course
             if (attr.number !== 1) {
-                // only show number of courses required if more than one
                 let numberNode = document.createElement('span');
 
                 numberNode.classList.add('subdued');
@@ -247,6 +247,14 @@ document.addEventListener('DOMContentLoaded', (function () {
             let years = request.response.years;
             let semesterYear = 2020; // for "Fall 2020", "Spring 2021"; I know it's a bad name
 
+            // req totals
+            let genedCourseTotal = 0;
+            let majorCourseTotal = 0;
+            let minorCourseTotal = 0;
+            let genedCreditTotal = 0;
+            let majorCreditTotal = 0;
+            let minorCreditTotal = 0;
+
             years.forEach(year => {
                 let yearTemplate = get('.template-year').content.cloneNode(true);
                 let yearNum = year.year;
@@ -271,9 +279,28 @@ document.addEventListener('DOMContentLoaded', (function () {
                     /* ***** COURSES ***** */
 
                     let courses = semester.courses;
-                    let creditTotal = 0;
+                    let semesterCreditTotal = 0;
 
                     courses.forEach(course => {
+                        // for Degree Requirements section
+                        handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
+
+                        switch (course.requirement) {
+                            case 'gened':
+                                genedCourseTotal++;
+                                genedCreditTotal += course.credits;
+                                break;
+                            case 'major':
+                                majorCourseTotal++;
+                                majorCreditTotal += course.credits;
+                                break;
+                            case 'minor':
+                                minorCourseTotal++;
+                                minorCreditTotal += course.credits;
+                                break;
+                        }
+
+                        // for Course Schedule section
                         let courseTemplate = get('.template-course').content.cloneNode(true);
                         let shorthandNode = get('.course-shorthand', courseTemplate);
                         let shorthandNode2 = get('.course-shorthand2', courseTemplate);
@@ -281,32 +308,48 @@ document.addEventListener('DOMContentLoaded', (function () {
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
-                        // add to Degree Requirements section
-                        handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
-
-                        // add to Course Schedule section
                         shorthandNode.textContent = course.subject + ' ' + course.number;
                         shorthandNode2.textContent = shorthandNode.textContent;
                         linkCourseName(fullnameNode, course.subject, course.number, course.name);
                         handlePill(reqContainer, course.requirement);
                         handlePill(reqContainer, course.attribute);
                         creditsNode.textContent = course.credits + ' cr.';
-                        creditTotal += course.credits;
+                        semesterCreditTotal += course.credits;
 
                         semesterSection.appendChild(courseTemplate);
                     });
 
-                    /* ***** TOTALS ***** */
+                    /* ***** SEMESTER TOTAL ***** */
 
-                    let totalTemplate = get('.template-total').content.cloneNode(true);
-                    let total = get('.credit-total', totalTemplate);
+                    let semesterTotalTemplate = get('.template-total').content.cloneNode(true);
+                    let semesterTotal = get('.credit-total', semesterTotalTemplate);
 
-                    total.textContent = creditTotal + ' cr.';
-                    semesterSection.appendChild(totalTemplate);
+                    semesterTotal.textContent = semesterCreditTotal + ' cr.';
+                    semesterSection.appendChild(semesterTotalTemplate);
 
                     if (semesterNum === 1) semesterYear++;
                 });
             });
+
+            /* ***** REQUIREMENT TOTALS ***** */
+
+            // subtotals
+            let reqTypes = ['gened', 'major', 'minor'];
+
+            reqTypes.forEach(type => {
+                let courseNode = get(`.requirement.courses .${type} .attribute-course`);
+                let creditNode = get(`.requirement.credits .${type} .attribute-course`);
+
+                courseNode.textContent = eval(type + 'CourseTotal');
+                creditNode.textContent = eval(type + 'CreditTotal');
+            });
+
+            // totals
+            let courseTotal = genedCourseTotal + majorCourseTotal + minorCourseTotal;
+            let creditTotal = genedCreditTotal + majorCreditTotal + minorCreditTotal;
+
+            get('.requirement.courses .total .attribute-course').textContent = courseTotal;
+            get('.requirement.credits .total .attribute-course').textContent = creditTotal;
         }
 
         function linkCourseName(parentNode, subject, number, name) {
@@ -321,53 +364,47 @@ document.addEventListener('DOMContentLoaded', (function () {
             parentNode.appendChild(link);
         }
 
-        // place course shorthand in Degree Requirements section
         function handleReq(requirement, attribute, subject, number, fullname) {
             // if course meets multiple requirements
             if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
-                    let filler = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
+                    let course = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
 
-                    // if attribute is already filled, move to the next one
-                    while (filler.textContent !== '—') {
-                        filler = get('.attribute-course', filler.parentNode.nextElementSibling);
-                    }
-
-                    filler.textContent = subject + ' ' + number;
+                    fillReq(course);
                 });
             }
             // if course meets multiple attributes
             else if (typeof attribute === 'object') {
                 attribute.forEach((attr, i) => {
-                    let filler = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`)
+                    let course = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`)
 
-                    // if attribute is already filled, move to the next one
-                    while (filler.textContent !== '—') {
-                        filler = get('.attribute-course', filler.parentNode.nextElementSibling);
-                    }
-
-                    filler.textContent = subject + ' ' + number;
+                    fillReq(course);
                 });
             }
             // otherwise course has a single requirement/attribute pair
             else {
-                let filler = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
+                let course = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
 
                 // handle major math here to allow them to keep the same pill text
                 if ((requirement === 'major') && (attribute === 'math')) {
                     if (fullname.includes('Statistics')) {
-                        filler = get(`.requirement-major .attribute.statistics .attribute-course`);
+                        course = get(`.requirement-major .attribute.statistics .attribute-course`);
                     } else if (fullname.includes('Calculus')) {
-                        filler = get(`.requirement-major .attribute.calculus .attribute-course`);
+                        course = get(`.requirement-major .attribute.calculus .attribute-course`);
                     }
                 }
 
+                fillReq(course);
+            }
+
+            function fillReq(element) {
                 // if attribute is already filled, move to the next one
-                while (filler.textContent !== '—') {
-                    filler = get('.attribute-course', filler.parentNode.nextElementSibling);
+                while (element.textContent !== '—') {
+                    element = get('.attribute-course', element.parentNode.nextElementSibling);
                 }
 
-                filler.textContent = subject + ' ' + number;
+                element.textContent = subject + ' ' + number;
+                element.setAttribute('title', subject + ' ' + number + ': ' + fullname);
             }
         }
 
