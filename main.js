@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', (function () {
 
         function buildRequirements() {
             /* ***** GEN EDS ***** */
+
             let geneds = request.response.gened[0];
             let academic = geneds.academic;
             let distributive = geneds.distributive;
@@ -139,6 +140,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             });
 
             /* ***** MAJOR ***** */
+
             let major = request.response.major[0];
             let majorCore = major.core;
             let majorMath = major.mathematics;
@@ -163,6 +165,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             });
 
             /* ***** MINOR ***** */
+
             let minor = request.response.minor[0];
             let minorCore = minor.core;
             let minorCoreParent = get('.section-minor .core');
@@ -181,10 +184,9 @@ document.addEventListener('DOMContentLoaded', (function () {
 
             if (i !== 0) parentNode.appendChild(document.createElement('hr'));
             get('.attribute', attrTemplate).classList.add(attr.attribute);
-            parentNode.appendChild(attrTemplate);
-
             nameNode.textContent = expandAbbrev(attr.attribute);
             courseNode.textContent = '—';
+            parentNode.appendChild(attrTemplate);
 
             // handle requirements that require more than one course
             if (attr.number !== 1) {
@@ -247,13 +249,19 @@ document.addEventListener('DOMContentLoaded', (function () {
             let years = request.response.years;
             let semesterYear = 2020; // for "Fall 2020", "Spring 2021"; I know it's a bad name
 
-            // req totals
-            let genedCourseTotal = 0;
-            let majorCourseTotal = 0;
-            let minorCourseTotal = 0;
-            let genedCreditTotal = 0;
-            let majorCreditTotal = 0;
-            let minorCreditTotal = 0;
+            // requirement totals
+            let courseTotals = {
+                gened: 0,
+                major: 0,
+                minor: 0,
+                total: 0
+            };
+            let creditTotals = {
+                gened: 0,
+                major: 0,
+                minor: 0,
+                total: 0
+            };
 
             years.forEach(year => {
                 let yearTemplate = get('.template-year').content.cloneNode(true);
@@ -284,21 +292,8 @@ document.addEventListener('DOMContentLoaded', (function () {
                     courses.forEach(course => {
                         // for Degree Requirements section
                         handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
-
-                        switch (course.requirement) {
-                            case 'gened':
-                                genedCourseTotal++;
-                                genedCreditTotal += course.credits;
-                                break;
-                            case 'major':
-                                majorCourseTotal++;
-                                majorCreditTotal += course.credits;
-                                break;
-                            case 'minor':
-                                minorCourseTotal++;
-                                minorCreditTotal += course.credits;
-                                break;
-                        }
+                        courseTotals[course.requirement]++;
+                        creditTotals[course.requirement] += course.credits;
 
                         // for Course Schedule section
                         let courseTemplate = get('.template-course').content.cloneNode(true);
@@ -333,23 +328,26 @@ document.addEventListener('DOMContentLoaded', (function () {
 
             /* ***** REQUIREMENT TOTALS ***** */
 
+            let reqs = ['gened', 'major', 'minor'];
+
             // subtotals
-            let reqTypes = ['gened', 'major', 'minor'];
+            reqs.forEach(req => {
+                let courseSubtotalNode = get(`.requirement.courses .${req} .attribute-course`);
+                let creditSubtotalNode = get(`.requirement.credits .${req} .attribute-course`);
 
-            reqTypes.forEach(type => {
-                let courseNode = get(`.requirement.courses .${type} .attribute-course`);
-                let creditNode = get(`.requirement.credits .${type} .attribute-course`);
+                courseSubtotalNode.textContent = courseTotals[req];
+                creditSubtotalNode.textContent = creditTotals[req];
 
-                courseNode.textContent = eval(type + 'CourseTotal');
-                creditNode.textContent = eval(type + 'CreditTotal');
+                courseTotals['total'] += courseTotals[req];
+                creditTotals['total'] += creditTotals[req];
             });
 
             // totals
-            let courseTotal = genedCourseTotal + majorCourseTotal + minorCourseTotal;
-            let creditTotal = genedCreditTotal + majorCreditTotal + minorCreditTotal;
+            let courseTotalNode = get('.requirement.courses .total .attribute-course');
+            let creditTotalNode = get('.requirement.credits .total .attribute-course')
 
-            get('.requirement.courses .total .attribute-course').textContent = courseTotal;
-            get('.requirement.credits .total .attribute-course').textContent = creditTotal;
+            courseTotalNode.textContent = courseTotals['total'];
+            creditTotalNode.textContent = creditTotals['total'];
         }
 
         function linkCourseName(parentNode, subject, number, name) {
