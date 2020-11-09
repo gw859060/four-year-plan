@@ -94,11 +94,11 @@
     "minor": [
         {
             "core": {
-                "attribute": "Core",
+                "attribute": "core",
                 "number": 3
             },
             "electives": {
-                "attribute": "Elective",
+                "attribute": "elective",
                 "number": 3
             }
         }
