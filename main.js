@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', (function () {
         request.send();
         request.addEventListener('load', function () {
             buildRequirements();
+            initSchedule();
         });
 
         function buildRequirements() {
@@ -120,19 +121,19 @@ document.addEventListener('DOMContentLoaded', (function () {
             let additional = geneds.additional;
 
             academic.forEach((attr, i) => {
-                let parentNode = get('.gened .academic');
+                let parentNode = get('.requirement-gened .academic');
 
                 buildAttrRow(attr, parentNode, i);
             });
 
             distributive.forEach((attr, i) => {
-                let parentNode = get('.gened .distributive');
+                let parentNode = get('.requirement-gened .distributive');
 
                 buildAttrRow(attr, parentNode, i);
             });
 
             additional.forEach((attr, i) => {
-                let parentNode = get('.gened .additional');
+                let parentNode = get('.requirement-gened .additional');
 
                 buildAttrRow(attr, parentNode, i);
             });
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             });
 
             majorElectives.forEach((attr, i) => {
-                let parentNode = get('.section-major .electives');
+                let parentNode = get('.section-major .elective');
 
                 buildAttrRow(attr, parentNode, i);
             });
@@ -166,7 +167,7 @@ document.addEventListener('DOMContentLoaded', (function () {
             let minorCore = minor.core;
             let minorCoreParent = get('.section-minor .core');
             let minorElectives = minor.electives;
-            let minorElectiveParent = get('.section-minor .electives');
+            let minorElectiveParent = get('.section-minor .elective');
 
             // only one attr in each section so no need for forEach
             buildAttrRow(minorCore, minorCoreParent, 0);
@@ -206,7 +207,6 @@ document.addEventListener('DOMContentLoaded', (function () {
                     rowCount--;
                 }
             }
-
         }
     }
 
@@ -281,12 +281,15 @@ document.addEventListener('DOMContentLoaded', (function () {
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
-                        // shorthandNode is shown at large sizes, shorthandNode2 at small sizes
+                        // add to Degree Requirements section
+                        handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
+
+                        // add to Course Schedule section
                         shorthandNode.textContent = course.subject + ' ' + course.number;
-                        shorthandNode2.textContent = shorthandNode.textContent + ' ';
+                        shorthandNode2.textContent = shorthandNode.textContent;
                         linkCourseName(fullnameNode, course.subject, course.number, course.name);
-                        handleReq(reqContainer, course.requirement);
-                        handleReq(reqContainer, course.attribute);
+                        handlePill(reqContainer, course.requirement);
+                        handlePill(reqContainer, course.attribute);
                         creditsNode.textContent = course.credits + ' cr.';
                         creditTotal += course.credits;
 
@@ -318,8 +321,58 @@ document.addEventListener('DOMContentLoaded', (function () {
             parentNode.appendChild(link);
         }
 
-        function handleReq(parentNode, abbrev) {
-            // if course contains multiple attributes
+        // place course shorthand in Degree Requirements section
+        function handleReq(requirement, attribute, subject, number, fullname) {
+            // if course meets multiple requirements
+            if (typeof requirement === 'object') {
+                requirement.forEach((req, i) => {
+                    let filler = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
+
+                    // if attribute is already filled, move to the next one
+                    while (filler.textContent !== '—') {
+                        filler = get('.attribute-course', filler.parentNode.nextElementSibling);
+                    }
+
+                    filler.textContent = subject + ' ' + number;
+                });
+            }
+            // if course meets multiple attributes
+            else if (typeof attribute === 'object') {
+                attribute.forEach((attr, i) => {
+                    let filler = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`)
+
+                    // if attribute is already filled, move to the next one
+                    while (filler.textContent !== '—') {
+                        filler = get('.attribute-course', filler.parentNode.nextElementSibling);
+                    }
+
+                    filler.textContent = subject + ' ' + number;
+                });
+            }
+            // otherwise course has a single requirement/attribute pair
+            else {
+                let filler = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
+
+                // handle major math here to allow them to keep the same pill text
+                if ((requirement === 'major') && (attribute === 'math')) {
+                    if (fullname.includes('Statistics')) {
+                        filler = get(`.requirement-major .attribute.statistics .attribute-course`);
+                    } else if (fullname.includes('Calculus')) {
+                        filler = get(`.requirement-major .attribute.calculus .attribute-course`);
+                    }
+                }
+
+                // if attribute is already filled, move to the next one
+                while (filler.textContent !== '—') {
+                    filler = get('.attribute-course', filler.parentNode.nextElementSibling);
+                }
+
+                filler.textContent = subject + ' ' + number;
+            }
+        }
+
+        function handlePill(parentNode, abbrev) {
+            // if course meets multiple requirements/attributes
             if (typeof abbrev === 'object') {
                 abbrev.forEach(attr => buildPill(parentNode, attr));
             } else {
@@ -376,5 +429,4 @@ document.addEventListener('DOMContentLoaded', (function () {
 
     // createCourses();
     initRequirements();
-    initSchedule();
 })(), false);

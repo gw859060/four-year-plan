@@ -219,7 +219,7 @@ header {
     column-gap: 1.25em;
 }
 
-.requirements.gened h3 {
+.requirement-gened h3 {
     grid-column: 1 / 4;
 }
 
@@ -237,10 +237,11 @@ header {
     align-items: flex-end;
     font-weight: bold;
     white-space: nowrap;
+    margin-left: 1ch;
 }
 
 /* major/minor */
-.major-minor .tile + .tile {
+.requirement-major.requirement-minor .tile + .tile {
     margin-top: .6em;
 }
 
@@ -260,7 +261,7 @@ header {
         row-gap: 1.25em;
     }
 
-    .requirements.gened h3 {
+    .requirement-gened h3 {
         grid-column: 1 / 2;
         margin-bottom: -0.5em;
     }
@@ -274,7 +275,7 @@ header {
         row-gap: 1.25em;
     }
 
-    .requirements.gened h3 {
+    .requirement-gened h3 {
         grid-column: 1 / 3;
         margin-bottom: -0.5em;
     }
@@ -336,6 +337,8 @@ header {
 
 .course-shorthand2 {
     display: none;
+    font-weight: normal;
+    margin-right: 1ch;
 }
 
 .course-body {
@@ -383,11 +386,7 @@ header {
     }
 
     .course-shorthand2 {
-        display: initial;
-    }
-
-    .course-link {
-        font-weight: normal;
+        display: inline;
     }
 
 }
