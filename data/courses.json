@@ -307,14 +307,6 @@
                             "credits": 6,
                             "requirement": "major",
                             "attribute": "elective"
-                        },
-                        {
-                            "subject": "WRT",
-                            "number": "200",
-                            "name": "Critical Writing and Research",
-                            "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "english"
                         }
                     ]
                 },
