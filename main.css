@@ -240,6 +240,9 @@ header {
     font-weight: bold;
     white-space: nowrap;
     margin-left: 1ch;
+}
+
+.attribute-course.linked {
     cursor: pointer;
 }
 
@@ -331,8 +334,11 @@ header {
     transition: opacity .25s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-/* for .course-highlight */
-.course::after {
+.course + .course {
+    margin-top: .6em;
+}
+
+.course.highlighted::after {
     content: '';
     position: absolute;
     top: 0;
@@ -340,16 +346,10 @@ header {
     right: 0;
     bottom: 0;
     pointer-events: none;
-}
 
-.course-highlight::after {
+    border: 3px solid #444;
     border-radius: .4em;
-    border: 3px solid #333;
     animation: fade-out 2.5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-}
-
-.course + .course {
-    margin-top: .6em;
 }
 
 .filtered .course {
@@ -410,12 +410,12 @@ header {
 
 @keyframes fade-out {
 
-    from,
+    0%,
     60% {
         opacity: 1;
     }
 
-    to {
+    100% {
         opacity: 0;
     }
 
@@ -433,6 +433,10 @@ header {
 
     .course-shorthand2 {
         display: inline;
+    }
+
+    .course-highlight::after {
+        border-width: 2px;
     }
 
 }

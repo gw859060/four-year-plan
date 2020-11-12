@@ -396,14 +396,15 @@ document.addEventListener('DOMContentLoaded', (function () {
                 element.textContent = subject + ' ' + number;
                 element.setAttribute('title', subject + ' ' + number + ': ' + fullname);
 
-                // jump to schedule and display a border highlight on click
+                // on click, jump to course schedule and display border highlight
+                element.classList.add('linked');
                 element.addEventListener('click', function () {
                     let clickedCourse = get(`#${subject}${number}`);
 
                     clickedCourse.parentNode.scrollIntoView({ behavior: 'smooth' });
-                    clickedCourse.classList.add('course-highlight');
+                    clickedCourse.classList.add('highlighted');
                     window.setTimeout(function () {
-                        clickedCourse.classList.remove('course-highlight');
+                        clickedCourse.classList.remove('highlighted');
                     }, 2500);
                 }, false);
             }
