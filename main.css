@@ -227,6 +227,7 @@ header {
 
 .attribute {
     display: flex;
+    align-items: flex-end;
     justify-content: space-between;
 }
 
@@ -235,15 +236,20 @@ header {
 }
 
 .attribute-course {
-    display: flex;
-    align-items: flex-end;
     font-weight: bold;
     white-space: nowrap;
-    margin-left: 1ch;
 }
 
 .attribute-course.linked {
+    margin: -0.1em -0.3em -0.1em -0.45em;
+    padding: .1em .3em .1em .45em;
+    border-radius: .35em;
+    transition: background-color .15s ease;
+}
+
+.attribute-course.linked:hover {
     cursor: pointer;
+    background-color: #eee;
 }
 
 /* major/minor */
@@ -331,27 +337,39 @@ header {
 .course {
     display: flex;
     position: relative;
-    transition: opacity .25s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: opacity .25s cubic-bezier(0.33, 1, 0.68, 1); /* for .filtered */
 }
 
 .course + .course {
     margin-top: .6em;
 }
 
-.course.highlighted::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-
-    border: 3px solid #444;
-    border-radius: .4em;
-    animation: fade-out 2.5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+/* when clicking on requirement to jump to schedule */
+.highlighted.course,
+.highlighted .pill,
+.highlighted .course-name, /* separate from .course-link so the ellipsis is colored */
+.highlighted .course-link,
+.highlighted .course-credits,
+.highlighted .course-shorthand {
+    animation: 2.5s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+.highlighted.course {
+    animation-name: fade-out-bg;
+}
+
+.highlighted .course-name,
+.highlighted .course-link,
+.highlighted .course-credits,
+.highlighted .course-shorthand {
+    animation-name: fade-out-text;
+}
+
+.highlighted .pill {
+    animation-name: fade-out-pill;
+}
+
+/* when clicking on pill to fade out courses */
 .filtered .course {
     opacity: .5;
 }
@@ -408,15 +426,30 @@ header {
     letter-spacing: -0.05ch;
 }
 
-@keyframes fade-out {
+@keyframes fade-out-bg {
 
     0%,
     60% {
-        opacity: 1;
+        background-color: #333;
     }
 
-    100% {
-        opacity: 0;
+}
+
+@keyframes fade-out-text {
+
+    0%,
+    60% {
+        color: #f1f1f1;
+    }
+
+}
+
+@keyframes fade-out-pill {
+
+    0%,
+    60% {
+        color: #e4e4e4;
+        background-color: #494949;
     }
 
 }
@@ -433,10 +466,6 @@ header {
 
     .course-shorthand2 {
         display: inline;
-    }
-
-    .course-highlight::after {
-        border-width: 2px;
     }
 
 }
