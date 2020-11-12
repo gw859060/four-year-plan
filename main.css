@@ -136,11 +136,13 @@ abbr {
     background-color: white;
     border-radius: .4em;
     padding: .7rem 1.25rem .9rem;
-    /* box-shadow: 2px 2px 0 rgba(0,0,0,0.05); */
 }
 
 .description {
     text-align: center;
+    max-width: 40em;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 500px) {
@@ -238,6 +240,7 @@ header {
     font-weight: bold;
     white-space: nowrap;
     margin-left: 1ch;
+    cursor: pointer;
 }
 
 /* major/minor */
@@ -282,15 +285,27 @@ header {
 
 }
 
+/* ***** deadlines ***** */
+
+.deadlines {
+    color: white;
+    background-color: #222;
+    margin-top: 5em;
+    padding: 3.5em 0 3em;
+}
+
+.deadlines .description {
+    color: #ddd;
+}
+
 /* ***** years/semesters ***** */
 
 .course-schedule {
-    background: #ededed;
     margin-top: 4em;
-    padding: 3em 0;
+    margin-bottom: 4em;
 }
 
-.semesters {
+.year {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 1.25em;
@@ -302,7 +317,7 @@ header {
 
 @media screen and (max-width: 700px) {
 
-    .semesters {
+    .year {
         grid-template-columns: none;
     }
 
@@ -312,7 +327,25 @@ header {
 
 .course {
     display: flex;
+    position: relative;
     transition: opacity .25s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* for .course-highlight */
+.course::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.course-highlight::after {
+    border-radius: .4em;
+    border: 3px solid #333;
+    animation: fade-out 2.5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
 }
 
 .course + .course {
@@ -363,7 +396,7 @@ header {
     text-decoration: underline;
 }
 
-/* @TODO: add a fadeout */
+/* @TODO: add a right-to-left fade when overflowing */
 .req-container {
     white-space: nowrap;
     overflow: hidden;
@@ -373,6 +406,19 @@ header {
     display: flex;
     margin: auto;
     letter-spacing: -0.05ch;
+}
+
+@keyframes fade-out {
+
+    from,
+    60% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+
 }
 
 @media screen and (max-width: 900px) {

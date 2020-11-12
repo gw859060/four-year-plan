@@ -22,12 +22,14 @@
         </div>
     </header>
     <main>
-        <!-- @TODO: add deadlines section à la https://www.inquirer.com/politics/election/ -->
+        <!-- @TODO: add deadlines section à la https://web.archive.org/web/20201019200256/https://www.inquirer.com/politics/election/ -->
         <div class="degree-requirements constrained-width">
             <h2 class="degree-header">Degree Requirements</h2>
-            <p class="description">AP tests and their equivalencies not yet shown.</p>
+            <p class="description">AP tests and their equivalencies are not yet shown. Hover over a course abbreviation to see its full name, or click to jump to its location in the four-year schedule.</p>
             <!-- @TODO: show tooltip w/ details on hover over course shorthand -->
             <!-- @TODO: add green checkmark for requirements that have been satisfied -->
+            <!-- @TODO: on click, scroll to class in schedule and highlight it temporarily
+                 <https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView> -->
             <section class="requirements requirement-gened">
                 <h3 class="uppercase">General Education</h3>
                 <div class="tile requirement academic">
@@ -107,11 +109,15 @@
                 </div>
             </section>
         </div>
-        <div class="course-schedule">
+        <div class="deadlines">
             <div class="constrained-width">
+                <h2 class="year-header">Deadlines</h2>
+                <p class="description">Placeholder text goes here. Click a Requirement to highlight similar courses. Click it again to clear the highlight. More placeholder text is right here. Placeholder text goes here. More placeholder text is right here. Placeholder text goes here. More placeholder text is right here. Placeholder text here.</p>
+            </div>
+        </div>
+        <div class="course-schedule constrained-width">
                 <h2 class="year-header">Course Schedule</h2>
                 <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses. Click it again to clear the highlight.</p>
-            </div>
         </div>
         <!-- @TODO:
             - ability to filter by prefix or by requirement (dropdowns)
@@ -127,13 +133,11 @@
     </template>
     <template class="template-year">
         <section class="year">
-            <div class="semesters">
-                <div class="semester">
-                    <h3 class="semester-num uppercase"></h3>
-                </div>
-                <div class="semester">
-                    <h3 class="semester-num uppercase"></h3>
-                </div>
+            <div class="semester">
+                <h3 class="semester-num uppercase"></h3>
+            </div>
+            <div class="semester">
+                <h3 class="semester-num uppercase"></h3>
             </div>
         </section>
     </template>

@@ -13,34 +13,24 @@ document.addEventListener('DOMContentLoaded', (function () {
         switch (abbrev) {
             case 'gened':
                 return 'Gen. Ed.';
-                break;
             case 'fye':
                 return 'First Year Experience';
-                break;
             case 'social':
                 return 'Behav. & Social Science';
-                break;
             case 'math':
                 return 'Mathematics';
-                break;
             case 'english':
                 return 'English Composition';
-                break;
             case 'writing':
                 return 'Writing Emphasis';
-                break;
             case 'speaking':
                 return 'Speaking Emphasis';
-                break;
             case 'i':
                 return 'Interdisciplinary';
-                break;
             case 'j':
                 return 'Diverse Communities';
-                break;
             case 'complex':
                 return 'Complex Large-Scale Systems';
-                break;
             default:
                 return capitalizeFirstLetter(abbrev);
         }
@@ -103,7 +93,7 @@ document.addEventListener('DOMContentLoaded', (function () {
     // @TODO: allow user input via localStorage
     function initRequirements() {
         let request = new XMLHttpRequest();
-        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/requirements.json';
+        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/requirements.json';
 
         request.open('GET', requestURL);
         request.responseType = 'json';
@@ -222,6 +212,7 @@ document.addEventListener('DOMContentLoaded', (function () {
     // @TODO: show a vertical timeline w/ dotted line, layout flipping sides every other year
     //        <https://css-tricks.com/building-a-conference-schedule-with-css-grid/>
     //        <https://codyhouse.co/demo/schedule-template/index.html>
+    //        <https://cssgrid-generator.netlify.app>
     //                        FALL 2020
     //         SEMESTER 1 YEAR 1     SEMESTER 2 YEAR 1
     //        [   course list   ]   [   course list   ]
@@ -234,7 +225,7 @@ document.addEventListener('DOMContentLoaded', (function () {
 
     function initSchedule() {
         let request = new XMLHttpRequest();
-        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
+        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/courses.json';
 
         request.open('GET', requestURL);
         request.responseType = 'json';
@@ -268,7 +259,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                 let yearNum = year.year;
                 let yearSection = get('.year', yearTemplate);
 
-                get('.course-schedule > *').appendChild(yearTemplate);
+                get('.course-schedule').appendChild(yearTemplate);
 
                 /* ***** SEMESTERS ***** */
 
@@ -303,6 +294,7 @@ document.addEventListener('DOMContentLoaded', (function () {
                         let reqContainer = get('.req-container', courseTemplate);
                         let creditsNode = get('.course-credits', courseTemplate);
 
+                        get('.course', courseTemplate).id = course.subject + course.number;
                         shorthandNode.textContent = course.subject + ' ' + course.number;
                         shorthandNode2.textContent = shorthandNode.textContent;
                         linkCourseName(fullnameNode, course.subject, course.number, course.name);
@@ -338,16 +330,16 @@ document.addEventListener('DOMContentLoaded', (function () {
                 courseSubtotalNode.textContent = courseTotals[req];
                 creditSubtotalNode.textContent = creditTotals[req];
 
-                courseTotals['total'] += courseTotals[req];
-                creditTotals['total'] += creditTotals[req];
+                courseTotals.total += courseTotals[req];
+                creditTotals.total += creditTotals[req];
             });
 
             // totals
             let courseTotalNode = get('.requirement.courses .total .attribute-course');
-            let creditTotalNode = get('.requirement.credits .total .attribute-course')
+            let creditTotalNode = get('.requirement.credits .total .attribute-course');
 
-            courseTotalNode.textContent = courseTotals['total'];
-            creditTotalNode.textContent = creditTotals['total'];
+            courseTotalNode.textContent = courseTotals.total;
+            creditTotalNode.textContent = creditTotals.total;
         }
 
         function linkCourseName(parentNode, subject, number, name) {
@@ -366,36 +358,36 @@ document.addEventListener('DOMContentLoaded', (function () {
             // if course meets multiple requirements
             if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
-                    let course = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
+                    let courseNode = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
 
-                    fillReq(course);
+                    fillReq(courseNode, subject, number);
                 });
             }
             // if course meets multiple attributes
             else if (typeof attribute === 'object') {
                 attribute.forEach((attr, i) => {
-                    let course = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`)
+                    let courseNode = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`);
 
-                    fillReq(course);
+                    fillReq(courseNode, subject, number);
                 });
             }
             // otherwise course has a single requirement/attribute pair
             else {
-                let course = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
+                let courseNode = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
 
                 // handle major math here to allow them to keep the same pill text
                 if ((requirement === 'major') && (attribute === 'math')) {
                     if (fullname.includes('Statistics')) {
-                        course = get(`.requirement-major .attribute.statistics .attribute-course`);
+                        courseNode = get(`.requirement-major .attribute.statistics .attribute-course`);
                     } else if (fullname.includes('Calculus')) {
-                        course = get(`.requirement-major .attribute.calculus .attribute-course`);
+                        courseNode = get(`.requirement-major .attribute.calculus .attribute-course`);
                     }
                 }
 
-                fillReq(course);
+                fillReq(courseNode, subject, number);
             }
 
-            function fillReq(element) {
+            function fillReq(element, subject, number) {
                 // if attribute is already filled, move to the next one
                 while (element.textContent !== '—') {
                     element = get('.attribute-course', element.parentNode.nextElementSibling);
@@ -403,6 +395,17 @@ document.addEventListener('DOMContentLoaded', (function () {
 
                 element.textContent = subject + ' ' + number;
                 element.setAttribute('title', subject + ' ' + number + ': ' + fullname);
+
+                // jump to schedule and display a border highlight on click
+                element.addEventListener('click', function () {
+                    let clickedCourse = get(`#${subject}${number}`);
+
+                    clickedCourse.parentNode.scrollIntoView({ behavior: 'smooth' });
+                    clickedCourse.classList.add('course-highlight');
+                    window.setTimeout(function () {
+                        clickedCourse.classList.remove('course-highlight');
+                    }, 2500);
+                }, false);
             }
         }
 
@@ -430,15 +433,14 @@ document.addEventListener('DOMContentLoaded', (function () {
             return function () {
                 // if target pill is not already selected
                 if (this.classList.contains('selected') === false) {
-                    let semesters = getAll('.semesters');
-                    let selectedPills = getAll('.pill.' + this.classList[1]);
-
                     // clear existing selections before highlighting new ones
                     // (ie. only one selection at a time)
                     clearSelected();
 
-                    semesters.forEach(semester => semester.classList.add('filtered'));
+                    let years = getAll('.year');
+                    let selectedPills = getAll('.pill.' + this.classList[1]);
 
+                    years.forEach(year => year.classList.add('filtered'));
                     selectedPills.forEach(pill => {
                         pill.classList.add('selected');
                         pill.closest('.course').classList.add('selected');
@@ -448,16 +450,11 @@ document.addEventListener('DOMContentLoaded', (function () {
                 else {
                     clearSelected();
                 }
-            }
+            };
 
             function clearSelected() {
-                let selectedPills = getAll('.pill.selected');
-                let selectedCourses = getAll('.course.selected');
-                let filteredSems = getAll('.semesters.filtered');
-
-                selectedPills.forEach(pill => pill.classList.remove('selected'));
-                selectedCourses.forEach(course => course.classList.remove('selected'));
-                filteredSems.forEach(semester => semester.classList.remove('filtered'));
+                getAll('.selected').forEach(el => el.classList.remove('selected'));
+                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
             }
         }
     }
