@@ -22,14 +22,9 @@
         </div>
     </header>
     <main>
-        <!-- @TODO: add deadlines section à la https://web.archive.org/web/20201019200256/https://www.inquirer.com/politics/election/ -->
         <div class="degree-requirements constrained-width">
             <h2 class="degree-header">Degree Requirements</h2>
-            <p class="description">AP tests and their equivalencies are not yet shown. Hover over a course abbreviation to see its full name, or click to jump to its location in the four-year schedule.</p>
-            <!-- @TODO: show tooltip w/ details on hover over course shorthand -->
-            <!-- @TODO: add green checkmark for requirements that have been satisfied -->
-            <!-- @TODO: on click, scroll to class in schedule and highlight it temporarily
-                 <https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView> -->
+            <p class="description">Hover over a course shorthand to see its full name. Click the course shorthand to jump to its location in the four-year schedule.</p>
             <section class="requirements requirement-gened">
                 <h3 class="uppercase">General Education</h3>
                 <div class="tile requirement academic">
@@ -109,6 +104,7 @@
                 </div>
             </section>
         </div>
+        <!-- @TODO: deadlines section à la https://web.archive.org/web/20201019200256/https://www.inquirer.com/politics/election/ -->
         <div class="deadlines">
             <div class="constrained-width">
                 <h2 class="year-header">Deadlines</h2>
@@ -117,7 +113,7 @@
         </div>
         <div class="course-schedule constrained-width">
                 <h2 class="year-header">Course Schedule</h2>
-                <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses. Click it again to clear the highlight.</p>
+                <p class="description">Click a <span class="pill fake">Requirement</span> to highlight other courses with the same requirement. Click it again to clear the highlight.</p>
         </div>
         <!-- @TODO:
             - ability to filter by prefix or by requirement (dropdowns)
@@ -130,6 +126,11 @@
             <div class="attribute-name"></div>
             <abbr class="attribute-course monospace uppercase"></abbr>
         </div>
+    </template>
+    <template class="template-checkmark">
+        <span class="checkmark">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+        </span>
     </template>
     <template class="template-year">
         <section class="year">

@@ -8,37 +8,6 @@ function getAll(selector, scope = document) {
     return scope.querySelectorAll(selector);
 }
 
-function expandAbbrev(abbrev) {
-    switch (abbrev) {
-        case 'gened':
-            return 'Gen. Ed.';
-        case 'fye':
-            return 'First Year Experience';
-        case 'social':
-            return 'Behav. & Social Science';
-        case 'math':
-            return 'Mathematics';
-        case 'english':
-            return 'English Composition';
-        case 'writing':
-            return 'Writing Emphasis';
-        case 'speaking':
-            return 'Speaking Emphasis';
-        case 'i':
-            return 'Interdisciplinary';
-        case 'j':
-            return 'Diverse Communities';
-        case 'complex':
-            return 'Complex Large-Scale Systems';
-        default:
-            return capitalizeFirstLetter(abbrev);
-    }
-
-    function capitalizeFirstLetter(string) {
-        return string[0].toUpperCase() + string.slice(1);
-    }
-}
-
 function createCourses() {
     let request = new XMLHttpRequest();
     let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
@@ -90,6 +59,7 @@ function createCourses() {
 
 // @TODO: make this await createCourses
 // @TODO: allow user input via localStorage
+// @TODO: show "Loading..." maybe with animated progress bar as placeholder
 function initRequirements() {
     let request = new XMLHttpRequest();
     let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/requirements.json';
@@ -253,7 +223,7 @@ function initSchedule() {
             total: 0
         };
 
-        years.forEach(year => {
+        for (let year of years) {
             let yearTemplate = get('.template-year').content.cloneNode(true);
             let yearNum = year.year;
             let yearSection = get('.year', yearTemplate);
@@ -264,7 +234,7 @@ function initSchedule() {
 
             let semesters = year.semesters;
 
-            semesters.forEach(semester => {
+            for (let semester of semesters) {
                 let semesterNum = semester.semester;
                 let semesterSection = getAll('.semester', yearSection)[semesterNum - 1];
                 let semesterHeader = get('.semester-num', semesterSection);
@@ -279,7 +249,7 @@ function initSchedule() {
                 let courses = semester.courses;
                 let semesterCreditTotal = 0;
 
-                courses.forEach(course => {
+                for (let course of courses) {
                     // for Degree Requirements section
                     handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
                     courseTotals[course.requirement]++;
@@ -303,7 +273,7 @@ function initSchedule() {
                     semesterCreditTotal += course.credits;
 
                     semesterSection.appendChild(courseTemplate);
-                });
+                }
 
                 /* ***** SEMESTER TOTAL ***** */
 
@@ -314,15 +284,13 @@ function initSchedule() {
                 semesterSection.appendChild(semesterTotalTemplate);
 
                 if (semesterNum === 1) semesterYear++;
-            });
-        });
+            }
+        }
 
         /* ***** REQUIREMENT TOTALS ***** */
 
-        let reqs = ['gened', 'major', 'minor'];
-
         // subtotals
-        reqs.forEach(req => {
+        for (let req of ['gened', 'major', 'minor']) {
             let courseSubtotalNode = get(`.requirement.courses .${req} .attribute-course`);
             let creditSubtotalNode = get(`.requirement.credits .${req} .attribute-course`);
 
@@ -331,7 +299,7 @@ function initSchedule() {
 
             courseTotals.total += courseTotals[req];
             creditTotals.total += creditTotals[req];
-        });
+        }
 
         // totals
         let courseTotalNode = get('.requirement.courses .total .attribute-course');
@@ -339,6 +307,9 @@ function initSchedule() {
 
         courseTotalNode.textContent = courseTotals.total;
         creditTotalNode.textContent = creditTotals.total;
+
+        // add checkmark to completed tiles
+        checkReqCompletion();
     }
 
     function linkCourseName(parentNode, subject, number, name) {
@@ -404,7 +375,7 @@ function initSchedule() {
                 clickedCourse.classList.add('highlighted');
                 window.setTimeout(function () {
                     clickedCourse.classList.remove('highlighted');
-                }, 2500);
+                }, 3000);
             }, false);
         }
     }
@@ -423,13 +394,13 @@ function initSchedule() {
             pill.setAttribute('type', 'button');
             pill.classList.add('pill', attr);
             pill.textContent = expandAbbrev(attr);
-            pill.addEventListener('click', highlightTiles(), false);
+            pill.addEventListener('click', filterTiles(), false);
 
             parentNode.appendChild(pill);
         }
     }
 
-    function highlightTiles() {
+    function filterTiles() {
         return function () {
             // if target pill is not already selected
             if (this.classList.contains('selected') === false) {
@@ -440,11 +411,12 @@ function initSchedule() {
                 let years = getAll('.year');
                 let selectedPills = getAll('.pill.' + this.classList[1]);
 
-                years.forEach(year => year.classList.add('filtered'));
-                selectedPills.forEach(pill => {
+                for (let year of years) year.classList.add('filtered');
+
+                for (let pill of selectedPills) {
                     pill.classList.add('selected');
                     pill.closest('.course').classList.add('selected');
-                });
+                }
             }
             // otherwise you're clicking a selected pill
             else {
@@ -456,6 +428,62 @@ function initSchedule() {
             getAll('.selected').forEach(el => el.classList.remove('selected'));
             getAll('.filtered').forEach(el => el.classList.remove('filtered'));
         }
+    }
+
+    function checkReqCompletion() {
+        let tiles = getAll(':not(.section-summary) > .tile.requirement');
+
+        for (let tile of tiles) {
+            let attributes = getAll('.attribute-course', tile);
+            let abort = false;
+
+            for (let attribute of attributes) {
+                // break if tile has an unfilled attribute
+                if (attribute.textContent === '—') {
+                    abort = true;
+                    break;
+                }
+            }
+
+            if (abort === true) continue;
+
+            // add checkmark when this tile's requirements are filled
+            let checkmark = get('.template-checkmark').content.cloneNode(true);
+
+            get('.checkmark', checkmark).setAttribute('title', 'This section\'s requirements have been filled');
+            get('h4', tile).appendChild(checkmark);
+        }
+    }
+}
+
+function expandAbbrev(abbrev) {
+    switch (abbrev) {
+        case 'gened':
+            return 'Gen. Ed.';
+        case 'fye':
+            return 'First Year Experience';
+        case 'social':
+            return 'Behav. & Social Science';
+        case 'math':
+            return 'Mathematics';
+        case 'english':
+            return 'English Composition';
+        case 'writing':
+            return 'Writing Emphasis';
+        case 'speaking':
+            return 'Speaking Emphasis';
+        case 'i':
+            return 'Interdisciplinary';
+        case 'j':
+            return 'Diverse Communities';
+        case 'complex':
+            return 'Complex Large-Scale Systems';
+        default:
+            return capitalizeFirstLetter(abbrev);
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string[0].toUpperCase() + string.slice(1);
     }
 }
 
