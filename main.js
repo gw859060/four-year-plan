@@ -271,8 +271,18 @@ function initSchedule() {
                     handlePill(reqContainer, course.attribute);
                     creditsNode.textContent = course.credits + ' cr.';
                     semesterCreditTotal += course.credits;
-
                     semesterSection.appendChild(courseTemplate);
+
+                    // fade out overflowing pills
+                    let reqObserver = new ResizeObserver(function () {
+                        if (reqContainer.scrollWidth > reqContainer.offsetWidth) {
+                            reqContainer.classList.add('fade-overflow');
+                        } else if (reqContainer.classList.contains('fade-overflow')) {
+                            reqContainer.classList.remove('fade-overflow');
+                        }
+                    });
+
+                    reqObserver.observe(reqContainer);
                 }
 
                 /* ***** SEMESTER TOTAL ***** */
@@ -447,7 +457,7 @@ function initSchedule() {
 
             if (abort === true) continue;
 
-            // add checkmark when this tile's requirements are filled
+            // add checkmark if all requirements in this tile are filled
             let checkmark = get('.template-checkmark').content.cloneNode(true);
 
             get('.checkmark', checkmark).setAttribute('title', 'This section\'s requirements have been filled');

@@ -1,10 +1,21 @@
 /* ***** variables ***** */
 
 :root {
-    --bg: #222;
+    --bg-01: #222;
+    --bg-03: #414141;
+    --bg-05: #eee;
+    --bg-06: #f3f3f3;
+    --bg-07: #fff;
 
-    --column-gap: 1.25em;
-    --row-gap: .75em;
+    --txt-01: #fff;
+    --txt-02: #f3f3f3;
+    --txt-03: #ddd;
+    --txt-04: #777;
+    --txt-05: #222;
+
+    --gap-large: 1.25em;
+    --gap-small: .6em;
+
     --duration: .2s;
 }
 
@@ -21,9 +32,9 @@ html {
 }
 
 body {
-    color: #222;
+    color: var(--txt-05);
     font: 1em/1.45 'IBM Plex Sans Condensed', sans-serif;
-    background-color: #f3f3f3;
+    background-color: var(--bg-06);
     margin: 0;
     overflow-x: hidden; /* for .full-width */
 }
@@ -130,11 +141,11 @@ abbr {
 }
 
 .subdued {
-    color: #777;
+    color: var(--txt-04);
 }
 
 .tile {
-    background-color: white;
+    background-color: var(--bg-07);
     border-radius: .4em;
     padding: .7rem 1.25rem .9rem;
 }
@@ -170,8 +181,8 @@ abbr {
 /* ***** header ***** */
 
 header {
-    background-color: #222;
-    color: white;
+    background-color: var(--bg-01);
+    color: var(--txt-01);
 }
 
 .header-container {
@@ -192,21 +203,20 @@ header {
 }
 
 .github-link {
-    color: white;
-    background-color: #444;
+    color: var(--txt-01);
+    background-color: var(--bg-03);
     font-weight: bold;
+    text-decoration: none;
     border-radius: .4em;
     white-space: nowrap;
-    text-decoration: none;
 
-    position: relative;
     margin-left: 1em;
     padding: .8em 1.2em;
-    transition: background-color .25s ease;
+    transition: filter var(--duration) ease;
 }
 
 .github-link:hover {
-    background-color: #515151;
+    filter: brightness(1.1);
 }
 
 /* ***** requirements ***** */
@@ -218,7 +228,7 @@ header {
 .requirements {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    column-gap: 1.25em;
+    column-gap: var(--gap-large);
 }
 
 .requirement-gened h3 {
@@ -244,17 +254,17 @@ header {
     margin: -0.1em -0.3em -0.1em -0.45em;
     padding: .1em .3em .1em .45em;
     border-radius: .35em;
-    transition: background-color .15s ease;
+    transition: background-color var(--duration) ease;
 }
 
 .attribute-course.linked:hover {
     cursor: pointer;
-    background-color: #eee;
+    background-color: var(--bg-05);
 }
 
 /* major/minor */
 .requirement-major .tile + .tile {
-    margin-top: .6em;
+    margin-top: var(--gap-small);
 }
 
 /* summary */
@@ -267,11 +277,10 @@ header {
 }
 
 .checkmark {
-    display: inline-block;
     position: relative;
     top: .15em;
+    color: #489c3d;
     font-size: .85em;
-    color: #1c810f;
     margin-left: .1em;
 }
 
@@ -279,7 +288,7 @@ header {
 
     .requirements {
         grid-template-columns: none;
-        row-gap: 1.25em;
+        row-gap: var(--gap-large);
     }
 
     .requirement-gened h3 {
@@ -293,7 +302,7 @@ header {
 
     .requirements {
         grid-template-columns: repeat(2, 1fr);
-        row-gap: 1.25em;
+        row-gap: var(--gap-large);
     }
 
     .requirement-gened h3 {
@@ -305,7 +314,7 @@ header {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-column: 1 / 3;
-        column-gap: 1.25em;
+        column-gap: var(--gap-large);
     }
 
     .section-summary h3 {
@@ -321,14 +330,14 @@ header {
 /* ***** deadlines ***** */
 
 .deadlines {
-    color: white;
-    background-color: #222;
+    color: var(--txt-01);
+    background-color: var(--bg-01);
     margin-top: 5em;
     padding: 3.5em 0 3em;
 }
 
 .deadlines .description {
-    color: #ddd;
+    color: var(--txt-03);
 }
 
 /* ***** years/semesters ***** */
@@ -341,7 +350,7 @@ header {
 .year {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1.25em;
+    grid-gap: var(--gap-large);
 }
 
 .semester {
@@ -360,46 +369,11 @@ header {
 
 .course {
     display: flex;
-    position: relative;
-    transition: opacity .25s cubic-bezier(0.33, 1, 0.68, 1); /* for .filtered */
+    transition: opacity var(--duration) cubic-bezier(0.33, 1, 0.68, 1); /* for .filtered */
 }
 
 .course + .course {
-    margin-top: .6em;
-}
-
-/* when clicking on requirement to jump to schedule */
-.highlighted.course,
-.highlighted .pill,
-.highlighted .course-name, /* separate from .course-link so the ellipsis is colored */
-.highlighted .course-link,
-.highlighted .course-credits,
-.highlighted .course-shorthand {
-    animation: 3s cubic-bezier(0.33, 1, 0.68, 1);
-}
-
-.highlighted.course {
-    animation-name: fade-out-bg;
-}
-
-.highlighted .course-name,
-.highlighted .course-link,
-.highlighted .course-credits,
-.highlighted .course-shorthand {
-    animation-name: fade-out-text;
-}
-
-.highlighted .pill {
-    animation-name: fade-out-pill;
-}
-
-/* when clicking on pill to fade out courses */
-.filtered .course {
-    opacity: .5;
-}
-
-.filtered .course.selected {
-    opacity: 1;
+    margin-top: var(--gap-small);
 }
 
 .course-shorthand {
@@ -430,7 +404,7 @@ header {
 }
 
 .course-link {
-    color: #222;
+    color: var(--txt-05);
     text-decoration: none;
 }
 
@@ -438,10 +412,31 @@ header {
     text-decoration: underline;
 }
 
-/* @TODO: add a right-to-left fade when overflowing */
 .req-container {
+    position: relative;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.fade-overflow::before,
+.fade-overflow::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+/* can't animate between gradients, so hack using opacity is needed */
+.fade-overflow::before {
+    background: linear-gradient(to left, var(--bg-07), rgba(255, 255, 255, 0) 30px);
+}
+
+.fade-overflow::after {
+    background: linear-gradient(to left, var(--bg-03), rgba(65, 65, 65, 0) 30px);
+    opacity: 0;
 }
 
 .course-credits {
@@ -450,11 +445,56 @@ header {
     letter-spacing: -0.05ch;
 }
 
+/* when clicking on requirement to jump to schedule */
+.highlighted.course,
+.highlighted .pill,
+.highlighted .course-name, /* separate from .course-link so the ellipsis is colored */
+.highlighted .course-link,
+.highlighted .course-credits,
+.highlighted .course-shorthand,
+.highlighted .fade-overflow::before,
+.highlighted .fade-overflow::after {
+    animation: 3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.highlighted.course {
+    animation-name: fade-out-bg;
+}
+
+.highlighted .course-name,
+.highlighted .course-link,
+.highlighted .course-credits,
+.highlighted .course-shorthand {
+    animation-name: fade-out-text;
+}
+
+/* can't animate between gradients, so ugly opacity hack is needed */
+.highlighted .fade-overflow::before {
+    animation-name: fade-in-opacity;
+}
+
+.highlighted .fade-overflow::after {
+    animation-name: fade-out-opacity;
+}
+
+.highlighted .pill {
+    animation-name: fade-out-pill;
+}
+
+/* when clicking on pill to fade out courses */
+.filtered .course {
+    opacity: .5;
+}
+
+.filtered .course.selected {
+    opacity: 1;
+}
+
 @keyframes fade-out-bg {
 
     0%,
     50% {
-        background-color: #333;
+        background-color: var(--bg-03);
     }
 
 }
@@ -463,7 +503,33 @@ header {
 
     0%,
     50% {
-        color: #f1f1f1;
+        color: var(--txt-02);
+    }
+
+}
+
+@keyframes fade-out-opacity {
+
+    0%,
+    46% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+
+}
+
+@keyframes fade-in-opacity {
+
+    0%,
+    46% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
     }
 
 }
@@ -472,8 +538,8 @@ header {
 
     0%,
     50% {
-        color: #e4e4e4;
-        background-color: #444;
+        color: var(--txt-02);
+        background-color: #535353;
     }
 
 }
@@ -497,12 +563,13 @@ header {
 /* ***** pills ***** */
 
 .pill {
-    color: rgba(0, 0, 0, .75);
-    background-color: #eee;
+    color: #494949;
+    background-color: var(--bg-05);
     font-size: .9em;
     padding: .2em .7em;
     border-radius: 10em;
-    transition: background-color .2s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: var(--duration) cubic-bezier(0.33, 1, 0.68, 1);
+    transition-property: filter, color, background-color;
 
     /* reset default <button> styles */
     border: none;
@@ -511,7 +578,7 @@ header {
 }
 
 .pill:hover {
-    background-color: #dfdfdf;
+    filter: brightness(.95);
     cursor: pointer;
 }
 
@@ -520,12 +587,12 @@ header {
 }
 
 .pill.selected {
-    color: #f8f8f8;
-    background-color: #444;
+    color: var(--txt-02);
+    background-color: var(--bg-03);
 }
 
 .pill.selected:hover {
-    background-color: #222;
+    filter: brightness(1.1);
 }
 
 .pill.fake {
