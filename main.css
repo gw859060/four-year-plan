@@ -1,3 +1,43 @@
+/* ***** fonts ***** */
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('IBMPlexMono'),
+         url('fonts/IBMPlexMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('IBMPlexMono-Bold'),
+         url('fonts/IBMPlexMono-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans Condensed';
+    font-style: normal;
+    font-stretch: condensed;
+    font-weight: 400;
+    font-display: swap;
+    src: local('IBMPlexSansCondensed'),
+         url('fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans Condensed';
+    font-style: normal;
+    font-stretch: condensed;
+    font-weight: 700;
+    font-display: swap;
+    src: local('IBMPlexSansCondensed-Bold'),
+         url('fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
+}
+
 /* ***** variables ***** */
 
 :root {
@@ -33,7 +73,7 @@ html {
 
 body {
     color: var(--txt-05);
-    font: 1em/1.45 'IBM Plex Sans Condensed', sans-serif;
+    font: 1em/1.45 'IBM Plex Sans Condensed', system-ui, sans-serif;
     background-color: var(--bg-06);
     margin: 0;
     overflow-x: hidden; /* for .full-width */
@@ -137,7 +177,7 @@ abbr {
 
 .monospace {
     font-size: .9em;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
 .subdued {
