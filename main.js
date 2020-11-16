@@ -474,7 +474,7 @@ function initDeadlines() {
         let diffNode = document.createElement('div');
         let timeDiff = timeBetween(new Date(), new Date(time));
 
-        diffNode.classList.add('event-diff', 'uppercase', 'subdued');
+        diffNode.classList.add('event-diff', 'uppercase', 'monospace', 'subdued');
         get('.event-time', eventNode).appendChild(diffNode);
 
         // today and tomorrow
