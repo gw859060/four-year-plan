@@ -384,34 +384,31 @@ header {
     margin-top: 4em;
 }
 
-.important-dates .tile {
-    padding: 3em 2em;
-    border-radius: .65em;
-}
-
 .timeline {
     position: relative;
     list-style: none;
-    max-width: 35em;
-    padding: 50px 0 40px;
-    margin: 1em auto 0;
+    max-width: 45em;
+    padding: 2.5em 1.5em;
+    margin: 2em auto 0;
+    border-radius: .6em;
 }
 
 /* vertical line */
 .timeline::before {
     --line-width: 2px;
+    --line-gap: 15px;
 
     content: '';
     position: absolute;
-    top: 0;
-    left: calc(50% - var(--line-width) / 2);
+    top: var(--line-gap);
+    left: calc(50% - var(--line-width) / 2); /* ÷2 because it otherwise starts at left edge */
     width: var(--line-width);
-    height: 100%;
+    height: calc(100% - var(--line-gap) * 2); /* x2 to subtract gap at top and bottom */
     background:
-        linear-gradient(to bottom, var(--bg-01), var(--bg-03) 30px) top no-repeat,
-        linear-gradient(to top, var(--bg-01), var(--bg-03) 30px) bottom no-repeat;
+        linear-gradient(to bottom, var(--bg-01), var(--bg-03) 25px) top,
+        linear-gradient(to top, var(--bg-01), var(--bg-03) 25px) bottom;
+    background-repeat: no-repeat;
     background-size: 100% 50%;
-    z-index: 0;
 }
 
 .timeline li + li {
@@ -425,10 +422,11 @@ header {
 
 /* dot */
 .event::before {
-    --dot-size: 24px;
+    --dot-size: 22px;
 
     content: '';
     position: absolute;
+    top: 1px;
     left: calc(50% - var(--dot-size) / 2);
     width: var(--dot-size);
     height: var(--dot-size);
@@ -447,28 +445,30 @@ header {
 }
 
 .event-year {
-    font-size: 1.7em;
+    font-size: 2em;
     text-align: center;
-    line-height: 1.15;
+    line-height: 1.1;
     background-color: var(--bg-01);
+    margin-top: .25em;
     isolation: isolate; /* needed to position h3 above line */
 }
 
-.event + .event-year {
-    margin-top: 2.5rem;
-}
-
 .event-year h3 {
-    padding-bottom: .125em; /* balance out gap between timeline line and header */
+    font-weight: normal;
+    padding-bottom: .1em; /* balance out bottom gap between header and timeline line */
     margin-bottom: 0;
 }
 
+.event + .event-year {
+    margin-top: 2rem;
+}
+
 .event-time {
-    flex: 1;
-    font-size: 1.15em;
+    width: 50%;
+    font-size: 1.1em;
     font-weight: bold;
     text-align: right;
-    margin: -0.15em 1.5em 0 0;
+    margin: -0.1em 1.5em 0 0;
 }
 
 .event-diff {
@@ -478,11 +478,11 @@ header {
 }
 
 .event-name {
-    flex: 1;
-    font-size: 1.15em;
+    width: 50%;
+    font-size: 1.1em;
     font-weight: normal;
     line-height: 1.2;
-    margin: 0 0 0 1.75em;
+    margin: 0 0 0 1.5em;
 }
 
 /* ***** years/semesters ***** */
