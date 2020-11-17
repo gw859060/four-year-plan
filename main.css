@@ -6,7 +6,7 @@
     font-weight: 400;
     font-display: swap;
     src: local('IBMPlexMono'),
-         url('fonts/IBMPlexMono-Regular.ttf') format('truetype');
+         url('../fonts/IBMPlexMono-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -15,7 +15,7 @@
     font-weight: 700;
     font-display: swap;
     src: local('IBMPlexMono-Bold'),
-         url('fonts/IBMPlexMono-Bold.ttf') format('truetype');
+         url('../fonts/IBMPlexMono-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -25,7 +25,7 @@
     font-weight: 400;
     font-display: swap;
     src: local('IBMPlexSansCondensed'),
-         url('fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
+         url('../fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -35,7 +35,7 @@
     font-weight: 700;
     font-display: swap;
     src: local('IBMPlexSansCondensed-Bold'),
-         url('fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
+         url('../fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
 }
 
 /* ***** variables ***** */
@@ -385,57 +385,56 @@ header {
 }
 
 .timeline {
+    --padding: 2.25em;
+
     position: relative;
     list-style: none;
     max-width: 45em;
-    padding: 2.5em 1.5em;
+    padding: var(--padding) 1.5em;
     margin: 2em auto 0;
     border-radius: .6em;
 }
 
-/* vertical line */
+/* the vertical line */
 .timeline::before {
     --line-width: 2px;
-    --line-gap: 15px;
 
     content: '';
     position: absolute;
-    top: var(--line-gap);
-    left: calc(50% - var(--line-width) / 2); /* ÷2 because it otherwise starts at left edge */
+    top: var(--padding);
+    left: calc(45% - var(--line-width) / 2);
     width: var(--line-width);
-    height: calc(100% - var(--line-gap) * 2); /* x2 to subtract gap at top and bottom */
-    background:
-        linear-gradient(to bottom, var(--bg-01), var(--bg-03) 25px) top,
-        linear-gradient(to top, var(--bg-01), var(--bg-03) 25px) bottom;
-    background-repeat: no-repeat;
-    background-size: 100% 50%;
+    height: calc(100% - var(--padding) * 2 + 10px);
+    background: linear-gradient(to top, var(--bg-01), var(--bg-03) 25px) bottom no-repeat;
 }
 
 .timeline li + li {
-    margin-top: 1rem;
+    margin-top: .8rem;
 }
 
 .event {
     display: flex;
     position: relative;
+    transition: filter var(--duration) ease;
 }
 
-/* dot */
+/* the dot */
 .event::before {
     --dot-size: 22px;
+    --border-width: 5px;
 
     content: '';
     position: absolute;
     top: 1px;
-    left: calc(50% - var(--dot-size) / 2);
+    left: calc(45% - (var(--dot-size) + var(--border-width)) / 2);
     width: var(--dot-size);
     height: var(--dot-size);
     background-color: #ccc;
-    border: 5px solid var(--bg-01);
+    border: var(--border-width) solid var(--bg-01);
     border-radius: 50%;
 }
 
-/* fade everything except the ::before dot */
+/* opacity everything except the dot, because otherwise the line will show through */
 .event.past > * {
     opacity: .5;
 }
@@ -445,26 +444,25 @@ header {
 }
 
 .event-year {
-    font-size: 2em;
+    font-size: 1.8em;
     text-align: center;
     line-height: 1.1;
     background-color: var(--bg-01);
-    margin-top: .25em;
+    margin-left: -0.35em;
     isolation: isolate; /* needed to position h3 above line */
 }
 
 .event-year h3 {
-    font-weight: normal;
     padding-bottom: .1em; /* balance out bottom gap between header and timeline line */
     margin-bottom: 0;
 }
 
 .event + .event-year {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
 .event-time {
-    width: 50%;
+    width: 44%;
     font-size: 1.1em;
     font-weight: bold;
     text-align: right;
@@ -478,11 +476,16 @@ header {
 }
 
 .event-name {
-    width: 50%;
+    width: 56%;
     font-size: 1.1em;
     font-weight: normal;
     line-height: 1.2;
     margin: 0 0 0 1.5em;
+}
+
+.event.celebrate:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
 }
 
 /* ***** years/semesters ***** */

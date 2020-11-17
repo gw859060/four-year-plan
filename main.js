@@ -470,9 +470,9 @@ function initDeadlines() {
     let events = getAll('.event');
 
     for (let eventNode of events) {
-        let time = get('.event-time', eventNode).textContent;
-        let diffNode = document.createElement('div');
+        let time = get('.event-time', eventNode).dataset.time;
         let timeDiff = timeBetween(new Date(), new Date(time));
+        let diffNode = document.createElement('div');
 
         diffNode.classList.add('event-diff', 'uppercase', 'monospace', 'subdued');
         get('.event-time', eventNode).appendChild(diffNode);
@@ -497,6 +497,12 @@ function initDeadlines() {
         else {
             // add 1 day because function doesn't round up days + hours
             diffNode.textContent = `${timeDiff.days + 1} days away`;
+        }
+
+        if (eventNode.classList.contains('celebrate')) {
+            eventNode.addEventListener('click', function () {
+                confetti.start(4000);
+            }, false);
         }
     }
 
