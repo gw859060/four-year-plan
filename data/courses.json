@@ -1,313 +1,335 @@
 {
-    "year1": [
+    "years": [
         {
-            "semester1": [
+            "year": 1,
+            "semesters": [
                 {
-                    "subject": "CSC",
-                    "number": "141",
-                    "name": "Computer Science I",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "141",
+                            "name": "Computer Science I",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "MAT",
+                            "number": "151",
+                            "name": "Introduction to Discrete Mathematics",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "math"
+                        },
+                        {
+                            "subject": "ESS",
+                            "number": "101",
+                            "name": "Introduction to Geology",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "science"
+                        },
+                        {
+                            "subject": "FYE",
+                            "number": "100",
+                            "name": "First Year Experience",
+                            "credits": 4,
+                            "requirement": "gened",
+                            "attribute": "fye"
+                        },
+                        {
+                            "subject": "GEO",
+                            "number": "204",
+                            "name": "Introduction to Urban Studies",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": [
+                                    "i",
+                                    "j"
+                                ]
+                        }
+                    ]
                 },
                 {
-                    "subject": "MAT",
-                    "number": "151",
-                    "name": "Introduction to Discrete Mathematics",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "math"
-                },
-                {
-                    "subject": "ESS",
-                    "number": "101",
-                    "name": "Introduction to Geology",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "science"
-                },
-                {
-                    "subject": "FYE",
-                    "number": "100",
-                    "name": "First Year Experience",
-                    "credits": 4,
-                    "requirement": "gened",
-                    "attribute": "fye"
-                },
-                {
-                    "subject": "GEO",
-                    "number": "204",
-                    "name": "Introduction to Urban Studies",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": [
-                            "i",
-                            "j"
-                        ]
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "142",
+                            "name": "Computer Science II",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "MAT",
+                            "number": "143",
+                            "name": "Brief Calculus",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "math"
+                        },
+                        {
+                            "subject": "BIO",
+                            "number": "110",
+                            "name": "General Biology",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "science"
+                        },
+                        {
+                            "subject": "LNC",
+                            "number": "100",
+                            "name": "Discover the World on Film",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "humanities"
+                        },
+                        {
+                            "subject": "ANT",
+                            "number": "103",
+                            "name": "Introduction to Archaeology",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "social"
+                        }
+                    ]
                 }
             ]
         },
         {
-            "semester2": [
+            "year": 2,
+            "semesters": [
                 {
-                    "subject": "CSC",
-                    "number": "142",
-                    "name": "Computer Science II",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "240",
+                            "name": "Computer Science III",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "231",
+                            "name": "Computer Systems",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "MAT",
+                            "number": "121",
+                            "name": "Introduction to Statistics I",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "math"
+                        },
+                        {
+                            "subject": "FLM",
+                            "number": "200",
+                            "name": "Introduction to Film",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        },
+                        {
+                            "subject": "GEO",
+                            "number": "101",
+                            "name": "World Geography",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "social"
+                        }
+                    ]
                 },
                 {
-                    "subject": "MAT",
-                    "number": "143",
-                    "name": "Brief Calculus",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "math"
-                },
-                {
-                    "subject": "BIO",
-                    "number": "110",
-                    "name": "General Biology",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "science"
-                },
-                {
-                    "subject": "LNC",
-                    "number": "100",
-                    "name": "Discover the World on Film",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "humanities"
-                },
-                {
-                    "subject": "ANT",
-                    "number": "103",
-                    "name": "Introduction to Archaeology",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "social"
-                }
-            ]
-        }
-    ],
-    "year2": [
-        {
-            "semester1": [
-                {
-                    "subject": "CSC",
-                    "number": "240",
-                    "name": "Computer Science III",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
-                },
-                {
-                    "subject": "CSC",
-                    "number": "231",
-                    "name": "Computer Systems",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
-                },
-                {
-                    "subject": "MAT",
-                    "number": "121",
-                    "name": "Introduction to Statistics I",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "math"
-                },
-                {
-                    "subject": "FLM",
-                    "number": "200",
-                    "name": "Introduction to Film",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "writing"
-                },
-                {
-                    "subject": "GEO",
-                    "number": "101",
-                    "name": "World Geography",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "social"
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "241",
+                            "name": "Data Structures & Algorithms",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "220",
+                            "name": "Foundations of Computer Science",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "STA",
+                            "number": "200",
+                            "name": "Introduction to Statistics II",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "math"
+                        },
+                        {
+                            "subject": "EIT",
+                            "number": "360",
+                            "name": "Italian Cinema",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        }
+                    ]
                 }
             ]
         },
         {
-            "semester2": [
+            "year": 3,
+            "semesters": [
                 {
-                    "subject": "CSC",
-                    "number": "241",
-                    "name": "Data Structures & Algorithms",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "301",
+                            "name": "Computer Security & Ethics",
+                            "credits": 3,
+                            "requirement": [
+                                    "major",
+                                    "gened"
+                                ],
+                            "attribute": [
+                                    "core",
+                                    "ethics"
+                                ]
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "345",
+                            "name": "Programming Language Concepts/Paradigms",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "core"
+                        },
+                        {
+                            "subject": "ENG",
+                            "number": "371",
+                            "name": "Technical Writing",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        },
+                        {
+                            "subject": "COM",
+                            "number": "206",
+                            "name": "Argumentation",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        }
+                    ]
                 },
                 {
-                    "subject": "CSC",
-                    "number": "220",
-                    "name": "Foundations of Computer Science",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
-                },
-                {
-                    "subject": "STA",
-                    "number": "200",
-                    "name": "Introduction to Statistics II",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "math"
-                },
-                {
-                    "subject": "EIT",
-                    "number": "360",
-                    "name": "Italian Cinema",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "speaking"
-                }
-            ]
-        }
-    ],
-    "year3": [
-        {
-            "semester1": [
-                {
-                    "subject": "CSC",
-                    "number": "301",
-                    "name": "Computer Security & Ethics",
-                    "credits": 3,
-                    "requirement": [
-                            "major",
-                            "gened"
-                        ],
-                    "attribute": [
-                            "core",
-                            "ethics"
-                        ]
-                },
-                {
-                    "subject": "CSC",
-                    "number": "345",
-                    "name": "Programming Language Concepts/Paradigms",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "core"
-                },
-                {
-                    "subject": "ENG",
-                    "number": "371",
-                    "name": "Technical Writing",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "writing"
-                },
-                {
-                    "subject": "COM",
-                    "number": "206",
-                    "name": "Argumentation",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "speaking"
-                }
-            ]
-        },
-        {
-            "semester2": [
-                {
-                    "subject": "CSC",
-                    "number": "402",
-                    "name": "Software Engineering",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "capstone"
-                },
-                {
-                    "subject": "CSC",
-                    "number": "321",
-                    "name": "Database Management Systems",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "elective"
-                },
-                {
-                    "subject": "CSC",
-                    "number": "335",
-                    "name": "Data Communications and Networking I",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "elective"
-                },
-                {
-                    "subject": "SPK",
-                    "number": "230",
-                    "name": "Business and Professional Speech Communication",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "speaking"
-                },
-                {
-                    "subject": "LNC",
-                    "number": "105",
-                    "name": "Global Science Fiction",
-                    "credits": 3,
-                    "requirement": "gened",
-                    "attribute": "writing"
-                }
-            ]
-        }
-    ],
-    "year4": [
-        {
-            "semester1": [
-                {
-                    "subject": "CSC",
-                    "number": "468",
-                    "name": "Introduction to Cloud Computing",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "elective"
-                },
-                {
-                    "subject": "CSC",
-                    "number": "302",
-                    "name": "Computer Security",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "elective"
-                },
-                {
-                    "subject": "CSC",
-                    "number": "400",
-                    "name": "Internship",
-                    "credits": 6,
-                    "requirement": "major",
-                    "attribute": "elective"
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "402",
+                            "name": "Software Engineering",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "capstone"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "321",
+                            "name": "Database Management Systems",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "SPK",
+                            "number": "230",
+                            "name": "Business and Professional Speech Communication",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "speaking"
+                        },
+                        {
+                            "subject": "LNC",
+                            "number": "105",
+                            "name": "Global Science Fiction",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        }
+                    ]
                 }
             ]
         },
         {
-            "semester2": [
+            "year": 4,
+            "semesters": [
                 {
-                    "subject": "CSC",
-                    "number": "417",
-                    "name": "User Interfaces",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "complex"
+                    "semester": 1,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "468",
+                            "name": "Introduction to Cloud Computing",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "302",
+                            "name": "Computer Security",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "400",
+                            "name": "Internship",
+                            "credits": 6,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        }
+                    ]
                 },
                 {
-                    "subject": "CSC",
-                    "number": "481",
-                    "name": "Artificial Intelligence",
-                    "credits": 3,
-                    "requirement": "major",
-                    "attribute": "elective"
+                    "semester": 2,
+                    "courses": [
+                        {
+                            "subject": "CSC",
+                            "number": "417",
+                            "name": "User Interfaces",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "complex"
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "481",
+                            "name": "Artificial Intelligence",
+                            "credits": 3,
+                            "requirement": "major",
+                            "attribute": "elective"
+                        }
+                    ]
                 }
             ]
         }
