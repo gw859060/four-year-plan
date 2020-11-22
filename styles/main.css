@@ -44,6 +44,7 @@
     --bg-01: #222;
     --bg-02: #2f2f2f;
     --bg-03: #414141;
+    --bg-04: #ddd;
     --bg-05: #eee;
     --bg-06: #f3f3f3;
     --bg-07: #fff;
@@ -52,6 +53,7 @@
     --txt-02: #f3f3f3;
     --txt-03: #ddd;
     --txt-05: #777;
+    --txt-06: #4d4d4d;
     --txt-07: #222;
 
     --gap-large: 1.25em;
@@ -108,7 +110,7 @@ h3 {
 
 h4 {
     font-size: 1.1em;
-    margin: 0 0 .4rem;
+    margin: 0 0 .3em;
 }
 
 p {
@@ -122,7 +124,7 @@ section + section {
 }
 
 hr {
-    border: solid #ddd;
+    border: solid var(--bg-04);
     border-width: 1px 0 0 0;
 }
 
@@ -188,8 +190,8 @@ abbr {
 }
 
 .tile.dark {
-    color: var(--txt-03);
-    background-color: var(--bg-01);
+    color: var(--txt-02);
+    background-color: var(--bg-03);
 }
 
 .tile.dark p:last-of-type {
@@ -304,13 +306,13 @@ header {
 .attribute-course.linked {
     margin: -0.1em -0.3em -0.1em -0.45em;
     padding: .1em .3em .1em .45em;
-    border-radius: .35em;
     transition: background-color var(--duration) ease;
 }
 
 .attribute-course.linked:hover {
     cursor: pointer;
     background-color: var(--bg-05);
+    border-radius: .35em;
 }
 
 /* major/minor */
@@ -384,15 +386,21 @@ header {
     margin-top: 4em;
 }
 
-.timeline {
-    --padding: 2.25em;
+.timeline.tile {
+    --timeline-bg: var(--bg-01);
+    --top-padding: 2em;
+    --date-width: 43%;
+    --name-width: calc(100% - var(--date-width));
+    --line-offset: calc(var(--date-width) + 1%);
 
     position: relative;
     list-style: none;
-    max-width: 45em;
-    padding: var(--padding) 1.5em;
-    margin: 2em auto 0;
+    color: var(--txt-03);
+    background-color: var(--timeline-bg);
     border-radius: .6em;
+    padding: var(--top-padding) 1.5em calc(var(--top-padding) * 1.2);
+    margin: 2em auto 0;
+    max-width: 43em;
 }
 
 /* the vertical line */
@@ -401,21 +409,19 @@ header {
 
     content: '';
     position: absolute;
-    top: var(--padding);
-    left: calc(45% - var(--line-width) / 2);
+    left: calc(var(--line-offset) - var(--line-width) / 2);
     width: var(--line-width);
-    height: calc(100% - var(--padding) * 2 + 10px);
-    background: linear-gradient(to top, var(--bg-01), var(--bg-03) 25px) bottom no-repeat;
+    height: calc(100% - var(--top-padding) * 2 + 10px);
+    background: linear-gradient(to top, var(--timeline-bg), var(--bg-03) 20px) no-repeat;
 }
 
 .timeline li + li {
-    margin-top: .8rem;
+    margin-top: 1rem;
 }
 
 .event {
     display: flex;
     position: relative;
-    transition: filter var(--duration) ease;
 }
 
 /* the dot */
@@ -425,16 +431,15 @@ header {
 
     content: '';
     position: absolute;
-    top: 1px;
-    left: calc(45% - (var(--dot-size) + var(--border-width)) / 2);
+    left: calc(var(--line-offset) - (var(--dot-size) + var(--border-width)) / 2);
     width: var(--dot-size);
     height: var(--dot-size);
-    background-color: #ccc;
-    border: var(--border-width) solid var(--bg-01);
+    background-color: var(--bg-04);
+    border: var(--border-width) solid var(--timeline-bg);
     border-radius: 50%;
 }
 
-/* opacity everything except the dot, because otherwise the line will show through */
+/* fade everything except the dot, otherwise the line will show through */
 .event.past > * {
     opacity: .5;
 }
@@ -444,16 +449,17 @@ header {
 }
 
 .event-year {
-    font-size: 1.8em;
+    color: var(--txt-02);
+    font-size: 1.85em;
     text-align: center;
     line-height: 1.1;
-    background-color: var(--bg-01);
-    margin-left: -0.35em;
+    background-color: var(--timeline-bg);
     isolation: isolate; /* needed to position h3 above line */
 }
 
 .event-year h3 {
-    padding-bottom: .1em; /* balance out bottom gap between header and timeline line */
+    padding-bottom: .05em; /* balance out bottom gap between header and timeline line */
+    margin-left: -0.2em;
     margin-bottom: 0;
 }
 
@@ -461,26 +467,43 @@ header {
     margin-top: 1.5rem;
 }
 
-.event-time {
-    width: 44%;
-    font-size: 1.1em;
+.event-date {
+    width: var(--date-width);
+    font-size: 1.05em;
     font-weight: bold;
     text-align: right;
-    margin: -0.1em 1.5em 0 0;
+    line-height: 1.2;
+    margin: 0 1.5em 0 0;
 }
 
 .event-diff {
     font-size: .7em;
     font-weight: normal;
     color: #ababab;
+    margin-top: .25em;
 }
 
 .event-name {
-    width: 56%;
-    font-size: 1.1em;
+    width: var(--name-width);
+    font-size: 1.05em;
     font-weight: normal;
     line-height: 1.2;
     margin: 0 0 0 1.5em;
+}
+
+.event mark {
+    color: inherit;
+    color: var(--txt-07);
+    font-size: .95em;
+    background-color: var(--bg-03);
+    background-color: var(--bg-04);
+    padding: .1em .35em;
+    margin-left: -0.35em;
+    border-radius: .25em;
+}
+
+.event.celebrate {
+    transition: filter var(--duration) ease;
 }
 
 .event.celebrate:hover {
@@ -563,6 +586,9 @@ header {
 .req-container {
     position: relative;
     white-space: nowrap;
+}
+
+.fade-overflow {
     overflow: hidden;
 }
 
@@ -687,7 +713,7 @@ header {
     0%,
     50% {
         color: var(--txt-03);
-        background-color: var(--bg-03);
+        background-color: #494949;
     }
 
 }
@@ -711,7 +737,7 @@ header {
 /* ***** pills ***** */
 
 .pill {
-    color: #494949;
+    color: var(--txt-06);
     background-color: var(--bg-05);
     font-size: .9em;
     padding: .2em .7em;
@@ -760,4 +786,37 @@ header {
 
 .credit-total {
     margin-left: 1.25ch;
+}
+
+/* ***** errors ***** */
+
+.tile.error {
+    --offset: 2em;
+
+    position: fixed;
+    left: 50%;
+    bottom: var(--offset);
+    animation: slide-up 1s cubic-bezier(0.25, 1, 0.5, 1) both;
+    animation-delay: .75s;
+
+    font-weight: bold;
+    background-color: #be1d0c;
+    padding: .75em 1.5em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .09),
+                0 4px 8px rgba(0, 0, 0, .10),
+                0 8px 16px rgba(0, 0, 0, .11),
+                0 16px 32px rgba(0, 0, 0, .12);
+    cursor: pointer;
+}
+
+@keyframes slide-up {
+
+    from {
+        transform: translate(-50.5%, calc(100% + var(--offset)));
+    }
+
+    to {
+        transform: translate(-50.5%, 0);
+    }
+
 }
