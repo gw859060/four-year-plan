@@ -12,18 +12,22 @@
                     if (response.ok) {
                         return response.json();
                     } else {
-                        throw new Error(file + ' failed to load.');
+                        throw new Error(`HTTP ${response.status}: ${file} failed to load.`);
                     }
                 })
                 .catch(error => {
-                    let popup = document.createElement('div');
+                    if (!get('.tile.error')) {
+                        let warning = document.createElement('div');
 
-                    popup.classList.add('tile', 'dark', 'error');
-                    popup.textContent = error + ' Click here to refresh the page.';
-                    popup.addEventListener('click', function () {
-                        window.location.reload();
-                    });
-                    get('main').appendChild(popup);
+                        warning.classList.add('tile', 'dark', 'error');
+                        warning.textContent = 'Parts of this page failed to load. Click here to try again.';
+                        warning.addEventListener('click', function () {
+                            window.location.reload();
+                        });
+                        get('main').appendChild(warning);
+                    }
+
+                    console.log(error);
                 })
             );
         }
