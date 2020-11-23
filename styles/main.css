@@ -329,12 +329,18 @@ header {
     border-color: #cfcfcf;
 }
 
-.checkmark {
+.icon {
+    display: inline-block;
     position: relative;
     top: .15em;
-    color: #489c3d;
+    width: 1em;
+    height: 1em;
+}
+
+.checkmark {
+    background: url('../images/checkmark.svg') no-repeat;
     font-size: .85em;
-    margin-left: .1em;
+    margin-left: .25em;
 }
 
 @media screen and (max-width: 500px) {
@@ -440,6 +446,14 @@ header {
     border-radius: 50%;
 }
 
+.exclamation::before {
+    --dot-size: 28px;
+
+    background: url('../images/exclamation.svg') no-repeat;
+    background-color: var(--bg-01);
+    top: -3px;
+}
+
 /* fade everything except the dot, otherwise the line will show through */
 .event.past > * {
     opacity: .5;
@@ -490,17 +504,6 @@ header {
     font-weight: normal;
     line-height: 1.2;
     margin: 0 0 0 1.5em;
-}
-
-.event mark {
-    color: inherit;
-    color: var(--txt-07);
-    font-size: .95em;
-    background-color: var(--bg-03);
-    background-color: var(--bg-04);
-    padding: .1em .35em;
-    margin-left: -0.35em;
-    border-radius: .25em;
 }
 
 .event.celebrate {

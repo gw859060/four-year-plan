@@ -364,12 +364,12 @@
                 element.textContent = subject + ' ' + number;
                 element.setAttribute('title', subject + ' ' + number + ': ' + fullname);
 
-                // on click, jump to course schedule and display border highlight
+                // on click, jump to course schedule and highlight the course
                 element.classList.add('linked');
                 element.addEventListener('click', function () {
                     let clickedCourse = get(`#${subject}${number}`);
 
-                    clickedCourse.parentNode.scrollIntoView({ behavior: 'smooth' });
+                    clickedCourse.closest('.semester').scrollIntoView({ behavior: 'smooth' });
                     clickedCourse.classList.add('highlighted');
                     window.setTimeout(function () {
                         clickedCourse.classList.remove('highlighted');
@@ -436,20 +436,21 @@
                 let abort = false;
 
                 for (let attribute of attributes) {
-                    // break if tile has an unfilled attribute
                     if (attribute.textContent === '—') {
                         abort = true;
                         break;
                     }
                 }
 
+                // skip this tile if it has an unfilled attribute
                 if (abort === true) continue;
 
                 // add checkmark if all requirements in this tile are filled
-                let checkmark = get('.template-checkmark').content.cloneNode(true);
+                let check = document.createElement('span');
 
-                get('.checkmark', checkmark).setAttribute('title', 'This section\'s requirements have been filled');
-                get('h4', tile).appendChild(checkmark);
+                check.setAttribute('title', 'This section\'s requirements have been filled');
+                check.classList.add('icon', 'checkmark');
+                get('h4', tile).appendChild(check);
             }
         }
     }
