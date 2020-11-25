@@ -1,9 +1,17 @@
 (function () {
     'use strict';
 
+    function get(selector, scope = document) {
+        return scope.querySelector(selector);
+    }
+
+    function getAll(selector, scope = document) {
+        return scope.querySelectorAll(selector);
+    }
+
     function fetchData() {
         let base = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/';
-        let files = ['requirements.json', 'courses.json'];
+        let files = ['requirements.json', 'courses.jason'];
         let promises = [];
 
         for (let file of files) {
@@ -33,101 +41,101 @@
         }
 
         Promise.all(promises).then(data => {
-            initRequirements(data[0]);
-            initSchedule(data[1]);
+            let requirements = data[0];
+            let courses = createCourses(data[1]);
+
+            buildRequirements(requirements);
+            fillRequirements(courses);
+            buildSchedule(courses);
         })
         .catch(console.log);
     }
 
-    function createCourses() {
-        let request = new XMLHttpRequest();
-        let requestURL = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/courses.json';
+    function createCourses(json) {
+        let courseObjects = [];
+        let years = json.years;
 
-        request.open('GET', requestURL);
-        request.responseType = 'json';
-        request.send();
-        request.addEventListener('load', function () {
-            createCourseObjects();
-        });
+        for (let year of years) {
+            let semesters = year.semesters;
 
-        function createCourseObjects() {
-            let crsArray = [];
-            let crs = request.response.years[0].semesters[0].courses[0];
-            let crs2 = request.response.years[0].semesters[0].courses[1];
+            for (let semester of semesters) {
+                let courses = semester.courses;
 
-            let course1 = new Course(crs.subject, crs.number, crs.name, crs.requirement, crs.attribute, crs.credits, 1, 1);
-            let course2 = new Course(crs.subject, crs.number, crs.name, crs.requirement, crs.attribute, crs.credits, 1, 1);
+                for (let course of courses) {
+                    let obj = new Course(
+                        course.subject,
+                        course.number,
+                        course.name,
+                        course.requirement,
+                        course.attribute,
+                        course.credits,
+                        year.year,
+                        semester.semester
+                    );
 
-            crsArray.push('course1', 'course2');
-
-            console.log(course1.shorthand());
-
-            // let found1 = crsArray.find(course => {
-            //     course.name.subject === 'CSC';
-            // });
-
-            // crsArray.forEach((obj, i) => {
-            //     console.log(obj);
-            // });
+                    courseObjects.push(obj);
+                }
+            }
         }
 
-        function Course(subject, number, fullname, requirement, attribute, credits, year, semester) {
+        return courseObjects;
+
+        function Course(subject, number, title, requirement, attribute, credits, year, semester) {
             this.name = {
                 'subject': subject,
                 'number': number,
-                'fullname': fullname
+                'title': title,
+                'shorthand': subject + ' ' + number,
+                'id': subject + number
             };
-            this.shorthand = function () {
-                return this.name.subject + ' ' + this.name.number;
+            this.reqs = {
+                'requirement': requirement,
+                'attribute': attribute
             };
-            this.requirement = requirement;
-            this.attribute = attribute;
             this.credits = credits;
             this.year = year;
             this.semester = semester;
+            // this.tooltip = function () {
+            //     let tooltip = document.createElement('div');
+            //
+            //     tooltip.classList.add('tooltip');
+            //     tooltip.textContent = 'test';
+            //     return tooltip;
+            // }
         }
     }
 
-    // note that the requirement rows are only created here; they are filled in in buildSchedule
-    // @TODO: allow user input via localStorage
-    function initRequirements(json) {
-        buildRequirements(json);
+    function buildRequirements(json) {
+        /* ***** GEN EDS ***** */
+        let geneds = json.gened[0];
+        let genedTypes = ['academic', 'distributive', 'additional'];
 
-        function buildRequirements(json) {
-            /* ***** GEN EDS ***** */
+        for (let type of genedTypes) {
+            geneds[type].forEach((attr, i) => {
+                let parentNode = get('.requirement-gened .' + type);
 
-            let geneds = json.gened[0];
-            let genedTypes = ['academic', 'distributive', 'additional'];
-
-            for (let type of genedTypes) {
-                geneds[type].forEach((attr, i) => {
-                    let parentNode = get('.requirement-gened .' + type);
-
-                    buildAttrRow(attr, parentNode, i);
-                });
-            }
-
-            /* ***** MAJOR ***** */
-
-            let major = json.major[0];
-            let majorTypes = ['core', 'mathematics', 'electives'];
-
-            for (let type of majorTypes) {
-                major[type].forEach((attr, i) => {
-                    let parentNode = get('.section-major .' + type);
-
-                    buildAttrRow(attr, parentNode, i);
-                });
-            }
-
-            /* ***** MINOR ***** */
-
-            let minor = json.minor[0];
-
-            // only one attr in each section so no need for forEach
-            buildAttrRow(minor.core, get('.section-minor .core'), 0);
-            buildAttrRow(minor.electives, get('.section-minor .elective'), 0);
+                buildAttrRow(attr, parentNode, i);
+            });
         }
+
+        /* ***** MAJOR ***** */
+        let major = json.major[0];
+        let majorTypes = ['core', 'mathematics', 'electives'];
+
+        for (let type of majorTypes) {
+            major[type].forEach((attr, i) => {
+                let parentNode = get('.section-major .' + type);
+
+                buildAttrRow(attr, parentNode, i);
+            });
+        }
+
+        /* ***** MINOR ***** */
+        let minor = json.minor[0];
+
+        // only one attr in each section so no need for forEach
+        buildAttrRow(minor.core, get('.section-minor .core'), 0);
+        buildAttrRow(minor.electives, get('.section-minor .elective'), 0);
 
         function buildAttrRow(attr, parentNode, i) {
             let attrTemplate = get('.template-attribute').content.cloneNode(true);
@@ -164,6 +172,102 @@
         }
     }
 
+    function fillRequirements(courses) {
+        // fill in courses
+        for (let course of courses) {
+            let requirement = course.reqs.requirement;
+            let attribute = course.reqs.attribute;
+
+            // if course meets multiple requirements
+            // eg. CSC 301 is major and gen ed
+            if (typeof requirement === 'object') {
+                requirement.forEach((value, i) => {
+                    let reqNode = get(`.requirement-${value} .attribute.${attribute[i]} .attribute-course`);
+
+                    doThing(course, reqNode);
+                });
+            }
+            // if course meets multiple attributes
+            // eg. GEO 204 is interdisciplinary and diverse communities
+            else if (typeof attribute === 'object') {
+                attribute.forEach(value => {
+                    let reqNode = get(`.requirement-${requirement} .attribute.${value} .attribute-course`);
+
+                    doThing(course, reqNode);
+                });
+            }
+            // otherwise course has a single requirement/attribute pair
+            else {
+                let reqNode = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
+
+                // handle math separately to allow them to keep the same pill text
+                if (requirement === 'major' && attribute === 'math') {
+                    let math;
+
+                    if (course.name.title.includes('Statistics')) math = 'statistics';
+                    if (course.name.title.includes('Calculus')) math = 'calculus';
+
+                    reqNode = get(`.requirement-major .attribute.${math} .attribute-course`);
+                }
+
+                doThing(course, reqNode);
+            }
+        }
+
+        // fill in summary section
+        let reqTypes = ['gened', 'major', 'minor'];
+        let courseTotal = 0;
+        let creditTotal = 0;
+
+        for (let type of reqTypes) {
+            let filteredCourses = courses.filter(c => c.reqs.requirement.includes(type));
+            let courseSubtotal = 0;
+            let creditSubtotal = 0;
+
+            for (let c of filteredCourses) {
+                courseSubtotal += 1;
+                creditSubtotal += c.credits;
+            }
+
+            // subtotals
+            let courseNode = get(`.requirement.courses .${type} .attribute-course`);
+            let creditNode = get(`.requirement.credits .${type} .attribute-course`);
+
+            courseNode.textContent = courseSubtotal;
+            creditNode.textContent = creditSubtotal;
+            creditTotal += creditSubtotal;
+        }
+
+        // totals
+        let courseNode = get(`.requirement.courses .total .attribute-course`);
+        let creditNode = get(`.requirement.credits .total .attribute-course`);
+
+        courseNode.textContent = courses.length; // doesn't count overlap between types
+        creditNode.textContent = creditTotal;
+
+        function doThing(course, node) {
+            // if attribute is already filled, move to the next one
+            while (node.textContent !== '—') {
+                node = get('.attribute-course', node.parentNode.nextElementSibling);
+            }
+
+            node.textContent = course.name.shorthand;
+            node.setAttribute('title', course.name.shorthand + ': ' + course.name.title);
+
+            // on click, jump to course schedule and highlight the course
+            node.classList.add('linked');
+            node.addEventListener('click', function () {
+                let clickedCourse = get('#' + course.name.id);
+
+                clickedCourse.closest('.semester').scrollIntoView({ behavior: 'smooth' });
+                clickedCourse.classList.add('highlighted');
+                window.setTimeout(function () {
+                    clickedCourse.classList.remove('highlighted');
+                }, 3000);
+            }, false);
+        }
+    }
+
     // @TODO: use WCUPA "api"?
     //        <https://catalog.wcupa.edu/js/courseleaf.js>
     //        <https://catalog.wcupa.edu/ribbit/index.cgi?page=getcourse.rjs&code=CSC%20142>
@@ -188,213 +292,140 @@
     //        [   course list   ]   [   course list   ]
     //        [ hourly schedule ]   [ hourly schedule ]
 
-    function initSchedule(json) {
-        buildSchedule(json);
+    function buildSchedule(courses) {
+        // starting year for "Fall 2020" headers; I know it's a bad name
+        let semesterYear = 2020;
 
-        function buildSchedule(json) {
-            /* ***** YEARS ***** */
+        // get list of year numbers (most likely 1, 2, 3, 4)
+        let yearList = [];
 
-            let years = json.years;
-            let semesterYear = 2020; // for "Fall 2020", "Spring 2021"; I know it's a bad name
-
-            // requirement totals
-            let courseTotals = {
-                gened: 0,
-                major: 0,
-                minor: 0,
-                total: 0
-            };
-            let creditTotals = {
-                gened: 0,
-                major: 0,
-                minor: 0,
-                total: 0
-            };
-
-            for (let year of years) {
-                let yearTemplate = get('.template-year').content.cloneNode(true);
-                let yearNum = year.year;
-                let yearSection = get('.year', yearTemplate);
-
-                get('.course-schedule').appendChild(yearTemplate);
-
-                /* ***** SEMESTERS ***** */
-
-                let semesters = year.semesters;
-
-                for (let semester of semesters) {
-                    let semesterNum = semester.semester;
-                    let semesterSection = getAll('.semester', yearSection)[semesterNum - 1];
-                    let semesterHeader = get('.semester-num', semesterSection);
-
-                    // @TODO: support summer/winter
-                    let season = ((semesterNum === 1) ? 'Fall' : 'Spring');
-
-                    semesterHeader.innerHTML = 'Year ' + yearNum + ' <span class="subdued">' + season + ' ' + semesterYear + '</span>';
-
-                    /* ***** COURSES ***** */
-
-                    let courses = semester.courses;
-                    let semesterCreditTotal = 0;
-
-                    for (let course of courses) {
-                        // for Degree Requirements section
-                        handleReq(course.requirement, course.attribute, course.subject, course.number, course.name);
-                        courseTotals[course.requirement]++;
-                        creditTotals[course.requirement] += course.credits;
-
-                        // for Course Schedule section
-                        let courseTemplate = get('.template-course').content.cloneNode(true);
-                        let shorthandNode = get('.course-shorthand', courseTemplate);
-                        let shorthandNode2 = get('.course-shorthand2', courseTemplate);
-                        let fullnameNode = get('.course-name', courseTemplate);
-                        let reqContainer = get('.req-container', courseTemplate);
-                        let creditsNode = get('.course-credits', courseTemplate);
-
-                        get('.course', courseTemplate).id = course.subject + course.number;
-                        shorthandNode.textContent = course.subject + ' ' + course.number;
-                        shorthandNode2.textContent = shorthandNode.textContent;
-                        linkCourseName(fullnameNode, course.subject, course.number, course.name);
-                        handlePill(reqContainer, course.requirement);
-                        handlePill(reqContainer, course.attribute);
-                        creditsNode.textContent = course.credits + ' cr.';
-                        semesterCreditTotal += course.credits;
-                        semesterSection.appendChild(courseTemplate);
-
-                        // fade out overflowing pills
-                        let reqObserver = new ResizeObserver(function () {
-                            if (reqContainer.scrollWidth > reqContainer.offsetWidth) {
-                                reqContainer.classList.add('fade-overflow');
-                            } else if (reqContainer.classList.contains('fade-overflow')) {
-                                reqContainer.classList.remove('fade-overflow');
-                            }
-                        });
-
-                        reqObserver.observe(reqContainer);
-                    }
-
-                    /* ***** SEMESTER TOTAL ***** */
-
-                    let semesterTotalTemplate = get('.template-total').content.cloneNode(true);
-                    let semesterTotal = get('.credit-total', semesterTotalTemplate);
-
-                    semesterTotal.textContent = semesterCreditTotal + ' cr.';
-                    semesterSection.appendChild(semesterTotalTemplate);
-
-                    if (semesterNum === 1) semesterYear++;
-                }
-            }
-
-            /* ***** REQUIREMENT TOTALS ***** */
-
-            // subtotals
-            for (let req of ['gened', 'major', 'minor']) {
-                let courseSubtotalNode = get(`.requirement.courses .${req} .attribute-course`);
-                let creditSubtotalNode = get(`.requirement.credits .${req} .attribute-course`);
-
-                courseSubtotalNode.textContent = courseTotals[req];
-                creditSubtotalNode.textContent = creditTotals[req];
-
-                courseTotals.total += courseTotals[req];
-                creditTotals.total += creditTotals[req];
-            }
-
-            // totals
-            let courseTotalNode = get('.requirement.courses .total .attribute-course');
-            let creditTotalNode = get('.requirement.credits .total .attribute-course');
-
-            courseTotalNode.textContent = courseTotals.total;
-            creditTotalNode.textContent = creditTotals.total;
-
-            // add checkmark to completed tiles
-            checkReqCompletion();
+        for (let course of courses) {
+            if (yearList.includes(course.year) === false) yearList.push(course.year);
         }
 
-        function linkCourseName(parentNode, subject, number, name) {
+        for (let year of yearList) {
+            // create empty year section
+            let yearNode = document.createElement('section');
+
+            yearNode.classList.add('year');
+            get('.course-schedule').appendChild(yearNode);
+
+            // get list of semester numbers (most likely 1, 2) for given year
+            let semList = [];
+
+            for (let course of courses.filter(c => c.year === year)) {
+                if (semList.includes(course.semester) === false) semList.push(course.semester);
+            }
+
+            // fill year with semesters
+            for (let semester of semList) {
+                // create empty semester section
+                let semTemplate = get('.template-semester').content.cloneNode(true);
+                let semHeader = get('.semester-num', semTemplate);
+                let season = '';
+                let semCreditTotal = 0;
+
+                switch (semester) {
+                    case 1:
+                        season = 'Fall';
+                        break;
+                    case 2:
+                        season = 'Spring';
+                        break;
+                    case 3:
+                        season = 'Summer';
+                        break;
+                    case 4:
+                        season = 'Winter';
+                        break;
+                }
+
+                semHeader.innerHTML = `Year ${year} <span class="subdued">${season} ${semesterYear}</span>`;
+                if (semester === 1) semesterYear++;
+
+                // fill semester with courses
+                let courseList = courses
+                                .filter(c => c.year === year)
+                                .filter(c => c.semester === semester);
+
+                for (let course of courseList) {
+                    let courseTemplate = get('.template-course').content.cloneNode(true),
+                        courseNode = get('.course', courseTemplate),
+                        shortNode = get('.course-shorthand', courseTemplate),
+                        shortNodeAlt = get('.course-shorthand-alt', courseTemplate),
+                        titleNode = get('.course-name', courseTemplate),
+                        reqContainer = get('.req-container', courseTemplate),
+                        creditsNode = get('.course-credits', courseTemplate);
+
+                    courseNode.id = course.name.id;
+                    shortNode.textContent = course.name.shorthand;
+                    shortNodeAlt.textContent = course.name.shorthand;
+                    linkCourse(titleNode, course);
+                    handlePill(reqContainer, course.reqs.requirement);
+                    handlePill(reqContainer, course.reqs.attribute);
+                    creditsNode.textContent = course.credits + ' cr.';
+                    semCreditTotal += course.credits;
+                    course.node = function () {
+                        return courseNode;
+                    };
+                    get('.semester', semTemplate).appendChild(courseTemplate);
+                    // @TODO: on hover, add tooltip element
+
+                    // fade out overflowing pills
+                    let reqObserver = new ResizeObserver(function () {
+                        if (reqContainer.scrollWidth > reqContainer.offsetWidth) {
+                            reqContainer.classList.add('fade-overflow');
+                        } else if (reqContainer.classList.contains('fade-overflow')) {
+                            reqContainer.classList.remove('fade-overflow');
+                        }
+                    });
+
+                    reqObserver.observe(reqContainer);
+                }
+
+                // create semester total
+                let semTotalTemplate = get('.template-total').content.cloneNode(true);
+                let semTotalNode = get('.credit-total', semTotalTemplate);
+
+                semTotalNode.textContent = semCreditTotal + ' cr.';
+                get('.semester', semTemplate).appendChild(semTotalTemplate);
+
+                yearNode.appendChild(semTemplate);
+            }
+        }
+
+        // add checkmark to filled tiles
+        checkRequirements();
+
+        function linkCourse(container, course) {
             let link = document.createElement('a');
 
             link.classList.add('course-link');
             link.setAttribute('target', '_blank');
-            link.setAttribute('ref', 'noopener');
+            link.setAttribute('rel', 'noopener');
             link.setAttribute('title', `Open in course catalog on wcupa.edu`);
-            link.href = `https://catalog.wcupa.edu/search/?P=${subject}+${number}`;
-            link.textContent = name;
-            parentNode.appendChild(link);
+            link.href = `https://catalog.wcupa.edu/search/?P=${course.name.subject}+${course.name.number}`;
+            link.textContent = course.name.title;
+            container.appendChild(link);
         }
 
-        function handleReq(requirement, attribute, subject, number, fullname) {
-            // if course meets multiple requirements
-            if (typeof requirement === 'object') {
-                requirement.forEach((req, i) => {
-                    let courseNode = get(`.requirement-${req} .attribute.${attribute[i]} .attribute-course`);
-
-                    fillReq(courseNode, subject, number);
-                });
-            }
-            // if course meets multiple attributes
-            else if (typeof attribute === 'object') {
-                attribute.forEach((attr, i) => {
-                    let courseNode = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`);
-
-                    fillReq(courseNode, subject, number);
-                });
-            }
-            // otherwise course has a single requirement/attribute pair
-            else {
-                let courseNode = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
-
-                // handle major math here to allow them to keep the same pill text
-                if ((requirement === 'major') && (attribute === 'math')) {
-                    if (fullname.includes('Statistics')) {
-                        courseNode = get(`.requirement-major .attribute.statistics .attribute-course`);
-                    } else if (fullname.includes('Calculus')) {
-                        courseNode = get(`.requirement-major .attribute.calculus .attribute-course`);
-                    }
-                }
-
-                fillReq(courseNode, subject, number);
-            }
-
-            function fillReq(element, subject, number) {
-                // if attribute is already filled, move to the next one
-                while (element.textContent !== '—') {
-                    element = get('.attribute-course', element.parentNode.nextElementSibling);
-                }
-
-                element.textContent = subject + ' ' + number;
-                element.setAttribute('title', subject + ' ' + number + ': ' + fullname);
-
-                // on click, jump to course schedule and highlight the course
-                element.classList.add('linked');
-                element.addEventListener('click', function () {
-                    let clickedCourse = get(`#${subject}${number}`);
-
-                    clickedCourse.closest('.semester').scrollIntoView({ behavior: 'smooth' });
-                    clickedCourse.classList.add('highlighted');
-                    window.setTimeout(function () {
-                        clickedCourse.classList.remove('highlighted');
-                    }, 3000);
-                }, false);
-            }
-        }
-
-        function handlePill(parentNode, abbrev) {
+        function handlePill(container, req) {
             // if course meets multiple requirements/attributes
-            if (typeof abbrev === 'object') {
-                abbrev.forEach(attr => buildPill(parentNode, attr));
+            if (typeof req === 'object') {
+                req.forEach(attr => buildPill(container, attr));
             } else {
-                buildPill(parentNode, abbrev);
+                buildPill(container, req);
             }
 
-            function buildPill(parentNode, attr) {
+            function buildPill(container, req) {
                 let pill = document.createElement('button');
 
                 pill.setAttribute('type', 'button');
-                pill.classList.add('pill', attr);
-                pill.textContent = expandAbbrev(attr);
+                pill.classList.add('pill', req);
+                pill.textContent = expandAbbrev(req);
                 pill.addEventListener('click', filterTiles(), false);
 
-                parentNode.appendChild(pill);
+                container.appendChild(pill);
             }
         }
 
@@ -428,7 +459,7 @@
             }
         }
 
-        function checkReqCompletion() {
+        function checkRequirements() {
             let tiles = getAll(':not(.section-summary) > .tile.requirement');
 
             for (let tile of tiles) {
@@ -514,14 +545,6 @@
         }
     }
 
-    function get(selector, scope = document) {
-        return scope.querySelector(selector);
-    }
-
-    function getAll(selector, scope = document) {
-        return scope.querySelectorAll(selector);
-    }
-
     function expandAbbrev(abbrev) {
         switch (abbrev) {
             case 'gened':
@@ -553,7 +576,6 @@
         }
     }
 
-    // createCourses();
     fetchData();
     initDeadlines();
 }());

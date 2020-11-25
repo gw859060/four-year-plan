@@ -446,12 +446,12 @@ header {
     border-radius: 50%;
 }
 
-.exclamation::before {
-    --dot-size: 28px;
+.event.exclamation::before {
+    --dot-size: 30px;
 
     background: url('../images/exclamation.svg') no-repeat;
     background-color: var(--bg-01);
-    top: -3px;
+    top: -4px;
 }
 
 /* fade everything except the dot, otherwise the line will show through */
@@ -559,7 +559,7 @@ header {
     margin-right: 1.1rem;
 }
 
-.course-shorthand2 {
+.course-shorthand-alt {
     display: none;
     font-weight: normal;
     margin-right: 1ch;
@@ -732,7 +732,7 @@ header {
         display: none;
     }
 
-    .course-shorthand2 {
+    .course-shorthand-alt {
         display: inline;
     }
 
