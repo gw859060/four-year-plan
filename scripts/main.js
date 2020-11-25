@@ -135,7 +135,7 @@
 
         // only one attr in each section so no need for forEach
         buildAttrRow(minor.core, get('.section-minor .core'), 0);
-        buildAttrRow(minor.electives, get('.section-minor .elective'), 0);
+        buildAttrRow(minor.electives, get('.section-minor .electives'), 0);
 
         function buildAttrRow(attr, parentNode, i) {
             let attrTemplate = get('.template-attribute').content.cloneNode(true);
@@ -181,8 +181,12 @@
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
             if (typeof requirement === 'object') {
-                requirement.forEach((value, i) => {
-                    let reqNode = get(`.requirement-${value} .attribute.${attribute[i]} .attribute-course`);
+                requirement.forEach((req, i) => {
+                    let sectionNode = '';
+
+                    if (req !== 'gened') sectionNode = '.section-' + req;
+
+                    let reqNode = get(`.requirement-${req} ${sectionNode} .attribute.${attribute[i]} .attribute-course`);
 
                     doThing(course, reqNode);
                 });
@@ -190,15 +194,19 @@
             // if course meets multiple attributes
             // eg. GEO 204 is interdisciplinary and diverse communities
             else if (typeof attribute === 'object') {
-                attribute.forEach(value => {
-                    let reqNode = get(`.requirement-${requirement} .attribute.${value} .attribute-course`);
+                attribute.forEach(attr => {
+                    let reqNode = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`);
 
                     doThing(course, reqNode);
                 });
             }
             // otherwise course has a single requirement/attribute pair
             else {
-                let reqNode = get(`.requirement-${requirement} .attribute.${attribute} .attribute-course`);
+                let sectionNode = '';
+
+                if (requirement !== 'gened') sectionNode = '.section-' + requirement;
+
+                let reqNode = get(`.requirement-${requirement} ${sectionNode} .attribute.${attribute} .attribute-course`);
 
                 // handle math separately to allow them to keep the same pill text
                 if (requirement === 'major' && attribute === 'math') {
@@ -229,7 +237,7 @@
                 creditSubtotal += c.credits;
             }
 
-            // subtotals
+            // fill in subtotals
             let courseNode = get(`.requirement.courses .${type} .attribute-course`);
             let creditNode = get(`.requirement.credits .${type} .attribute-course`);
 
@@ -238,12 +246,16 @@
             creditTotal += creditSubtotal;
         }
 
-        // totals
+        // fill in totals
         let courseNode = get(`.requirement.courses .total .attribute-course`);
         let creditNode = get(`.requirement.credits .total .attribute-course`);
 
         courseNode.textContent = courses.length; // doesn't count overlap between types
+        courseNode.title = 'May be less than the total of the numbers shown above, due to overlap between requirements.'
         creditNode.textContent = creditTotal;
+
+        // add checkmark to filled tiles
+        checkRequirements();
 
         function doThing(course, node) {
             // if attribute is already filled, move to the next one
@@ -265,6 +277,32 @@
                     clickedCourse.classList.remove('highlighted');
                 }, 3000);
             }, false);
+        }
+
+        function checkRequirements() {
+            let tiles = getAll(':not(.section-summary) > .tile.requirement');
+
+            for (let tile of tiles) {
+                let attributes = getAll('.attribute-course', tile);
+                let abort = false;
+
+                for (let attribute of attributes) {
+                    if (attribute.textContent === '—') {
+                        abort = true;
+                        break;
+                    }
+                }
+
+                // skip this tile if it has an unfilled attribute
+                if (abort === true) continue;
+
+                // add checkmark if all requirements in this tile are filled
+                let check = document.createElement('span');
+
+                check.setAttribute('title', 'This section\'s requirements have been filled');
+                check.classList.add('icon', 'checkmark');
+                get('h4', tile).appendChild(check);
+            }
         }
     }
 
@@ -394,9 +432,6 @@
             }
         }
 
-        // add checkmark to filled tiles
-        checkRequirements();
-
         function linkCourse(container, course) {
             let link = document.createElement('a');
 
@@ -456,32 +491,6 @@
             function clearSelected() {
                 getAll('.selected').forEach(el => el.classList.remove('selected'));
                 getAll('.filtered').forEach(el => el.classList.remove('filtered'));
-            }
-        }
-
-        function checkRequirements() {
-            let tiles = getAll(':not(.section-summary) > .tile.requirement');
-
-            for (let tile of tiles) {
-                let attributes = getAll('.attribute-course', tile);
-                let abort = false;
-
-                for (let attribute of attributes) {
-                    if (attribute.textContent === '—') {
-                        abort = true;
-                        break;
-                    }
-                }
-
-                // skip this tile if it has an unfilled attribute
-                if (abort === true) continue;
-
-                // add checkmark if all requirements in this tile are filled
-                let check = document.createElement('span');
-
-                check.setAttribute('title', 'This section\'s requirements have been filled');
-                check.classList.add('icon', 'checkmark');
-                get('h4', tile).appendChild(check);
             }
         }
     }
