@@ -11,7 +11,7 @@
 
     function fetchData() {
         let base = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/';
-        let files = ['requirements.json', 'courses.jason'];
+        let files = ['requirements.json', 'courses.json'];
         let promises = [];
 
         for (let file of files) {
