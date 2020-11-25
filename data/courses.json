@@ -240,6 +240,14 @@
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": "speaking"
+                        },
+                        {
+                            "subject": "CLS",
+                            "number": "304",
+                            "name": "Women and Film",
+                            "credits": 3,
+                            "requirement": "minor",
+                            "attribute": "elective"
                         }
                     ]
                 },
