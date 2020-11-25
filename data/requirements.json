@@ -95,11 +95,11 @@
         {
             "core": {
                 "attribute": "core",
-                "number": 3
+                "number": 1
             },
             "electives": {
                 "attribute": "elective",
-                "number": 3
+                "number": 5
             }
         }
     ]

@@ -133,8 +133,14 @@
                             "number": "200",
                             "name": "Introduction to Film",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirement": [
+                                    "gened",
+                                    "minor"
+                                ],
+                            "attribute": [
+                                    "writing",
+                                    "core"
+                                ]
                         },
                         {
                             "subject": "GEO",
@@ -178,8 +184,14 @@
                             "number": "360",
                             "name": "Italian Cinema",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "speaking"
+                            "requirement": [
+                                    "gened",
+                                    "minor"
+                                ],
+                            "attribute": [
+                                    "speaking",
+                                    "elective"
+                                ]
                         }
                     ]
                 }
@@ -267,12 +279,18 @@
                             "attribute": "speaking"
                         },
                         {
-                            "subject": "LNC",
-                            "number": "105",
-                            "name": "Global Science Fiction",
+                            "subject": "CLS",
+                            "number": "369",
+                            "name": "Literature and Film",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirement": [
+                                    "gened",
+                                    "minor"
+                                ],
+                            "attribute": [
+                                "writing",
+                                "elective"
+                                ]
                         }
                     ]
                 }
@@ -307,6 +325,14 @@
                             "credits": 6,
                             "requirement": "major",
                             "attribute": "elective"
+                        },
+                        {
+                            "subject": "EFR",
+                            "number": "350",
+                            "name": "French Cinema",
+                            "credits": 3,
+                            "requirement": "minor",
+                            "attribute": "elective"
                         }
                     ]
                 },
@@ -327,6 +353,14 @@
                             "name": "Artificial Intelligence",
                             "credits": 3,
                             "requirement": "major",
+                            "attribute": "elective"
+                        },
+                        {
+                            "subject": "ESP",
+                            "number": "305",
+                            "name": "Spanish Cinema",
+                            "credits": 3,
+                            "requirement": "minor",
                             "attribute": "elective"
                         }
                     ]
