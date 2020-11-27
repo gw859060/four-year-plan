@@ -95,7 +95,6 @@
             this.credits = credits;
             this.year = year;
             this.semester = semester;
-            // @TODO: reposition tooltip when it goes offscreen
             this.tooltip = function () {
                 let tooltip = document.createElement('div');
 
@@ -104,34 +103,54 @@
                 let header = document.createElement('div');
 
                 header.classList.add('tooltip-title');
-                header.textContent = title;
+                header.textContent = this.name.shorthand + ': ' + title;
                 tooltip.appendChild(header);
 
                 let details = document.createElement('div');
 
                 details.classList.add('tooltip-details');
-                handleReq(details, requirement);
-                handleReq(details, attribute);
+                handleReq(details, requirement, attribute);
                 tooltip.appendChild(details);
 
                 return tooltip;
 
-                function handleReq(container, requirement) {
-                    // if course meets multiple requirements/attributes
+                // @TODO: use this in buildSchedule()
+                function handleReq(container, requirement, attribute) {
+                    // if course meets multiple requirements
                     if (typeof requirement === 'object') {
-                        requirement.forEach(req => buildPill(container, req));
+                        requirement.forEach((req, i) => {
+                            buildReq(container, req, attribute[i])
+                        });
+                    }
+                    // if course meets multiple attributes
+                    else if (typeof attribute === 'object') {
+                        attribute.forEach((attr, i) => {
+                            if (i === 0) {
+                                buildReq(container, requirement, attr);
+                            }
+                            // only add remaining attr, not a duplicate requirement + attr
+                            else {
+                                buildReq(container, '', attr);
+                            }
+                        });
                     } else {
-                        buildPill(container, requirement);
+                        buildReq(container, requirement, attribute);
                     }
+                }
 
-                    function buildPill(container, req) {
-                        let pill = document.createElement('span');
+                // we want corresponding attr to directly follow req
+                // instead of [req1] [req2] [attr1] [attr2]
+                function buildReq(container, req, attr) {
+                    [req, attr].forEach(item => {
+                        if (item !== '') {
+                            let pill = document.createElement('span');
 
-                        pill.classList.add('tooltip-req', req);
-                        pill.textContent = expandAbbrev(req);
+                            pill.classList.add('tooltip-req');
+                            pill.textContent = expandAbbrev(item);
 
-                        container.appendChild(pill);
-                    }
+                            container.appendChild(pill);
+                        }
+                    });
                 }
             }
         }
@@ -306,23 +325,39 @@
         }
 
         function addRow(course, node) {
-            // if attribute is already filled, move to the next one
+            let tooltip = course.tooltip();
+
+            // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
             }
 
             node.textContent = course.name.shorthand;
-            node.appendChild(course.tooltip());
+            node.appendChild(tooltip);
+
+            // allow both mouse and touch events to reveal tooltip
             ['mouseenter', 'touchstart'].forEach(event => {
                 node.addEventListener(event, function () {
-                    get('.tooltip', node).classList.add('show');
+                    tooltip.classList.add('show');
                 }, false);
             });
             ['mouseleave', 'touchend'].forEach(event => {
                 node.addEventListener(event, function () {
-                    get('.tooltip', node).classList.remove('show');
+                    tooltip.classList.remove('show');
                 }, false);
             });
+
+            // reposition tooltip if it goes offscreen
+            // @TODO: use ResizeObserver
+            let rect = tooltip.getBoundingClientRect(),
+                rightOverflow = document.body.clientWidth - rect.right;
+
+            if (rightOverflow < 0) {
+                let distance = rightOverflow - 5; // 5px margin between tooltip and window edge
+
+                tooltip.style.left = distance + 'px';
+                tooltip.style.setProperty('--arrow-pos', `calc(${-distance}px + 3.5ch + .35em)`);
+            }
 
             // on click, jump to course schedule and highlight the course
             node.classList.add('linked');
@@ -427,11 +462,13 @@
                     };
 
                     // fade out overflowing pills
-                    let reqObserver = new ResizeObserver(function () {
-                        if (reqContainer.scrollWidth > reqContainer.offsetWidth) {
-                            reqContainer.classList.add('fade-overflow');
-                        } else if (reqContainer.classList.contains('fade-overflow')) {
-                            reqContainer.classList.remove('fade-overflow');
+                    let reqObserver = new ResizeObserver(entries => {
+                        for (let entry of entries) {
+                            if (entry.target.scrollWidth > entry.target.offsetWidth) {
+                                entry.target.classList.add('fade-overflow');
+                            } else if (entry.target.classList.contains('fade-overflow')) {
+                                entry.target.classList.remove('fade-overflow');
+                            }
                         }
                     });
 
@@ -512,7 +549,7 @@
         }
     }
 
-    function initDeadlines() {
+    function buildDeadlines() {
         let events = getAll('.event');
 
         for (let eventNode of events) {
@@ -616,5 +653,5 @@
     }
 
     fetchData();
-    initDeadlines();
+    buildDeadlines();
 }());

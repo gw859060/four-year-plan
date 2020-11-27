@@ -349,6 +349,8 @@ main {
 }
 
 .tooltip {
+    --arrow-pos: calc(7ch / 2 + .375em); /* half of attribute width plus its padding */
+
     position: absolute;
     left: 0;
     bottom: calc(100% + 7px);
@@ -360,7 +362,7 @@ main {
     font-weight: normal;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
     text-transform: none;
-    padding: .45em .75em;
+    padding: .4em .7em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
                 0 4px 8px rgba(0, 0, 0, .12),
                 0 8px 16px rgba(0, 0, 0, .13);
@@ -370,7 +372,7 @@ main {
     content: '';
     position: absolute;
     top: 100%;
-    left: calc(7ch / 2 + .375em); /* half of attribute width plus its padding */
+    left: var(--arrow-pos);
     border: 7px solid transparent;
     border-top-color: var(--bg-03);
 }
@@ -390,16 +392,13 @@ main {
 }
 
 .tooltip-details {
-    font-size: .85em;
+    font-size: .9em;
     opacity: .85;
 }
 
-.tooltip-req + .tooltip-req {
-    margin-left: .3em;
-}
-
 .tooltip-req + .tooltip-req::before {
-    content: '• ';
+    content: '•';
+    margin: 0 .25em;
 }
 
 /* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
@@ -660,6 +659,7 @@ main {
 .req-container {
     position: relative;
     white-space: nowrap;
+    margin-top: -0.15em;
 }
 
 .fade-overflow {
@@ -814,8 +814,8 @@ main {
 .pill {
     color: var(--txt-06);
     background-color: var(--bg-05);
-    font-size: .9em;
-    padding: .2em .7em;
+    font-size: .85em;
+    padding: .175em .6em;
     border-radius: 10em;
     transition: var(--duration) var(--ease);
     transition-property: filter, color, background-color;
@@ -832,7 +832,7 @@ main {
 }
 
 .pill + .pill {
-    margin-left: .4em;
+    margin-left: .3em;
 }
 
 .pill.selected {
