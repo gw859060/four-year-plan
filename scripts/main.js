@@ -95,18 +95,44 @@
             this.credits = credits;
             this.year = year;
             this.semester = semester;
+            // @TODO: reposition tooltip when it goes offscreen
             this.tooltip = function () {
                 let tooltip = document.createElement('div');
-                let details = document.createElement('div');
 
                 tooltip.classList.add('tooltip', 'tile', 'dark');
-                tooltip.textContent = `${this.name.shorthand}: ${title}`;
+
+                let header = document.createElement('div');
+
+                header.classList.add('tooltip-title');
+                header.textContent = title;
+                tooltip.appendChild(header);
+
+                let details = document.createElement('div');
 
                 details.classList.add('tooltip-details');
-                details.textContent = `Year ${year}, ${expandSemester(semester)} Semester`;
+                handleReq(details, requirement);
+                handleReq(details, attribute);
                 tooltip.appendChild(details);
 
                 return tooltip;
+
+                function handleReq(container, requirement) {
+                    // if course meets multiple requirements/attributes
+                    if (typeof requirement === 'object') {
+                        requirement.forEach(req => buildPill(container, req));
+                    } else {
+                        buildPill(container, requirement);
+                    }
+
+                    function buildPill(container, req) {
+                        let pill = document.createElement('span');
+
+                        pill.classList.add('tooltip-req', req);
+                        pill.textContent = expandAbbrev(req);
+
+                        container.appendChild(pill);
+                    }
+                }
             }
         }
     }
@@ -287,6 +313,16 @@
 
             node.textContent = course.name.shorthand;
             node.appendChild(course.tooltip());
+            ['mouseenter', 'touchstart'].forEach(event => {
+                node.addEventListener(event, function () {
+                    get('.tooltip', node).classList.add('show');
+                }, false);
+            });
+            ['mouseleave', 'touchend'].forEach(event => {
+                node.addEventListener(event, function () {
+                    get('.tooltip', node).classList.remove('show');
+                }, false);
+            });
 
             // on click, jump to course schedule and highlight the course
             node.classList.add('linked');
@@ -538,7 +574,7 @@
     function expandAbbrev(abbrev) {
         switch (abbrev) {
             case 'gened':
-                return 'Gen. Ed.';
+                return 'Gen Ed';
             case 'fye':
                 return 'First Year Experience';
             case 'social':

@@ -60,6 +60,7 @@
     --gap-small: .6em;
 
     --duration: .2s;
+    --ease: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* ***** basics ***** */
@@ -186,7 +187,7 @@ abbr {
 .tile {
     background-color: var(--bg-07);
     border-radius: .4em;
-    padding: .7rem 1.25rem .9rem;
+    padding: .6rem 1.2rem .8rem;
 }
 
 .tile.dark {
@@ -274,6 +275,10 @@ header {
 
 /* ***** requirements ***** */
 
+main {
+    overflow: hidden; /* prevent tooltips from resizing page */
+}
+
 .degree-requirements {
     margin-top: 3em;
 }
@@ -310,12 +315,6 @@ header {
     transition: background-color var(--duration) ease;
 }
 
-.attribute-course.linked:hover {
-    cursor: pointer;
-    background-color: var(--bg-05);
-    border-radius: .35em;
-}
-
 /* major/minor */
 .requirement-major .tile + .tile {
     margin-top: var(--gap-small);
@@ -350,32 +349,68 @@ header {
 }
 
 .tooltip {
-    display: none;
     position: absolute;
     left: 0;
-    bottom: calc(100% + 4px);
+    bottom: calc(100% + 7px);
+    max-width: 20em;
+    opacity: 0;
     pointer-events: none;
     z-index: 1; /* otherwise appears under checkmarks */
 
+    font-weight: normal;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
     text-transform: none;
-    padding: .375em .75em;
+    padding: .45em .75em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
                 0 4px 8px rgba(0, 0, 0, .12),
                 0 8px 16px rgba(0, 0, 0, .13);
-    max-width: 22em;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: calc(7ch / 2 + .375em); /* half of attribute width plus its padding */
+    border: 7px solid transparent;
+    border-top-color: var(--bg-03);
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+.tooltip-title {
+    font-weight: bold;
+}
+
+.tooltip-title,
+.tooltip-details {
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.attribute-course:hover .tooltip {
-    display: block;
+.tooltip-details {
+    font-size: .85em;
+    opacity: .85;
 }
 
-.tooltip-details {
-    font-weight: normal;
-    margin-top: -0.1em;
-    opacity: .85;
+.tooltip-req + .tooltip-req {
+    margin-left: .3em;
+}
+
+.tooltip-req + .tooltip-req::before {
+    content: '• ';
+}
+
+/* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
+@media screen and (hover: hover) {
+
+    .attribute-course.linked:hover {
+        cursor: pointer;
+        background-color: var(--bg-05);
+        border-radius: .35em;
+    }
+
 }
 
 @media screen and (max-width: 500px) {
@@ -579,7 +614,7 @@ header {
 
 .course {
     display: flex;
-    transition: opacity var(--duration) cubic-bezier(0.33, 1, 0.68, 1); /* for .filtered */
+    transition: opacity var(--duration) var(--ease); /* for .filtered */
 }
 
 .course + .course {
@@ -591,7 +626,7 @@ header {
     align-items: center;
     width: 3.05ch;
     line-height: 1.2;
-    margin-right: 1.1rem;
+    margin-right: .9rem;
 }
 
 .course-shorthand-alt {
@@ -782,7 +817,7 @@ header {
     font-size: .9em;
     padding: .2em .7em;
     border-radius: 10em;
-    transition: var(--duration) cubic-bezier(0.33, 1, 0.68, 1);
+    transition: var(--duration) var(--ease);
     transition-property: filter, color, background-color;
 
     /* reset default <button> styles */
@@ -821,7 +856,7 @@ header {
     display: flex;
     justify-content: flex-end;
     letter-spacing: -0.05ch;
-    margin: .75em 1.25em 0 0;
+    margin: .75em 1.2em 0 0;
 }
 
 .credit-total {
