@@ -325,17 +325,17 @@
         }
 
         function addRow(course, node) {
-            let tooltip = course.tooltip();
-
             // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
             }
 
             node.textContent = course.name.shorthand;
-            node.appendChild(tooltip);
 
-            // allow both mouse and touch events to reveal tooltip
+            // add tooltip
+            let tooltip = course.tooltip();
+
+            node.appendChild(tooltip);
             ['mouseenter', 'touchstart'].forEach(event => {
                 node.addEventListener(event, function () {
                     tooltip.classList.add('show');
@@ -348,16 +348,20 @@
             });
 
             // reposition tooltip if it goes offscreen
-            // @TODO: use ResizeObserver
-            let rect = tooltip.getBoundingClientRect(),
-                rightOverflow = document.body.clientWidth - rect.right;
+            let intersect = new IntersectionObserver(entry => {
+                let el = entry[0];
+                let overflow = el.intersectionRect.right - el.boundingClientRect.right;
 
-            if (rightOverflow < 0) {
-                let distance = rightOverflow - 5; // 5px margin between tooltip and window edge
+                if (overflow < 0) {
+                    let marginRight = 10;
+                    let distance = overflow - marginRight;
 
-                tooltip.style.left = distance + 'px';
-                tooltip.style.setProperty('--arrow-pos', `calc(${-distance}px + 3.5ch + .35em)`);
-            }
+                    el.target.style.left = distance + 'px';
+                    el.target.style.setProperty('--arrow-pos', `calc(${-distance}px + 3.5ch + .35em)`);
+                }
+            }, { root: get('body') });
+
+            intersect.observe(tooltip);
 
             // on click, jump to course schedule and highlight the course
             node.classList.add('linked');
@@ -462,13 +466,13 @@
                     };
 
                     // fade out overflowing pills
-                    let reqObserver = new ResizeObserver(entries => {
-                        for (let entry of entries) {
-                            if (entry.target.scrollWidth > entry.target.offsetWidth) {
-                                entry.target.classList.add('fade-overflow');
-                            } else if (entry.target.classList.contains('fade-overflow')) {
-                                entry.target.classList.remove('fade-overflow');
-                            }
+                    let reqObserver = new ResizeObserver(entry => {
+                        let el = entry[0];
+
+                        if (el.target.scrollWidth > el.target.offsetWidth) {
+                            el.target.classList.add('fade-overflow');
+                        } else if (el.target.classList.contains('fade-overflow')) {
+                            el.target.classList.remove('fade-overflow');
                         }
                     });
 
