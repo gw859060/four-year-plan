@@ -273,15 +273,17 @@ header {
     filter: brightness(1.15);
 }
 
+/* ***** main ***** */
+
+main > div {
+    margin-top: 4em;
+}
+
+main > div:last-of-type {
+    margin-bottom: 4em;
+}
+
 /* ***** requirements ***** */
-
-main {
-    overflow: hidden; /* prevent tooltips from resizing page */
-}
-
-.degree-requirements {
-    margin-top: 3em;
-}
 
 .requirements {
     display: grid;
@@ -349,7 +351,7 @@ main {
 }
 
 .tooltip {
-    --arrow-pos: calc(7ch / 2 + .375em); /* half of attribute width plus its padding */
+    --arrow-pos: calc(7ch / 2 + .35em); /* half of attribute width plus its padding */
 
     position: absolute;
     left: 0;
@@ -457,10 +459,6 @@ main {
 }
 
 /* ***** important dates ***** */
-
-.important-dates {
-    margin-top: 4em;
-}
 
 .timeline.tile {
     --timeline-bg: var(--bg-01);
@@ -585,11 +583,6 @@ main {
 }
 
 /* ***** years/semesters ***** */
-
-.course-schedule {
-    margin-top: 4em;
-    margin-bottom: 4em;
-}
 
 .year {
     display: grid;

@@ -136,21 +136,21 @@
                     } else {
                         buildReq(container, requirement, attribute);
                     }
-                }
 
-                // we want corresponding attr to directly follow req
-                // instead of [req1] [req2] [attr1] [attr2]
-                function buildReq(container, req, attr) {
-                    [req, attr].forEach(item => {
-                        if (item !== '') {
-                            let pill = document.createElement('span');
+                    // we want corresponding attr to directly follow req
+                    // instead of [req1] [req2] [attr1] [attr2]
+                    function buildReq(container, req, attr) {
+                        [req, attr].forEach(item => {
+                            if (item !== '') {
+                                let pill = document.createElement('span');
 
-                            pill.classList.add('tooltip-req');
-                            pill.textContent = expandAbbrev(item);
+                                pill.classList.add('tooltip-req');
+                                pill.textContent = expandAbbrev(item);
 
-                            container.appendChild(pill);
-                        }
-                    });
+                                container.appendChild(pill);
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -348,18 +348,21 @@
             });
 
             // reposition tooltip if it goes offscreen
-            let intersect = new IntersectionObserver(entry => {
-                let el = entry[0];
-                let overflow = el.intersectionRect.right - el.boundingClientRect.right;
+            // @TODO: make this update when window is resized
+            // @TODO: fix overflow randomly being more than 15px away from right edge???
+            //        possibly because of an issue with load order
+            let intersect = new IntersectionObserver(entries => {
+                let entry = entries[0];
+                let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
 
                 if (overflow < 0) {
-                    let marginRight = 10;
-                    let distance = overflow - marginRight;
-
-                    el.target.style.left = distance + 'px';
-                    el.target.style.setProperty('--arrow-pos', `calc(${-distance}px + 3.5ch + .35em)`);
+                    entry.target.style.left = overflow + 'px';
+                    entry.target.style.setProperty('--arrow-pos', `calc(${-overflow}px + 3.5ch + .35em)`);
                 }
-            }, { root: get('body') });
+            }, {
+                root: get('body'),
+                rootMargin: '-15px'
+            });
 
             intersect.observe(tooltip);
 
@@ -461,9 +464,6 @@
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
                     get('.semester', semTemplate).appendChild(courseTemplate);
-                    course.tile = function () {
-                        return courseNode;
-                    };
 
                     // fade out overflowing pills
                     let reqObserver = new ResizeObserver(entry => {
@@ -516,39 +516,30 @@
                 pill.setAttribute('type', 'button');
                 pill.classList.add('pill', req);
                 pill.textContent = expandAbbrev(req);
-                pill.addEventListener('click', filterTiles(), false);
+                pill.addEventListener('click', function () {
+                    if (this.classList.contains('selected') === false) {
+                        clearSelected();
+
+                        let years = getAll('.year');
+                        let selectedPills = getAll('.pill.' + this.classList[1]);
+
+                        for (let year of years) year.classList.add('filtered');
+
+                        for (let pill of selectedPills) {
+                            pill.classList.add('selected');
+                            pill.closest('.course').classList.add('selected');
+                        }
+                    } else {
+                        clearSelected();
+                    }
+
+                    function clearSelected() {
+                        getAll('.selected').forEach(el => el.classList.remove('selected'));
+                        getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+                    }
+                }, false);
 
                 container.appendChild(pill);
-            }
-        }
-
-        function filterTiles() {
-            return function () {
-                // if target pill is not already selected
-                if (this.classList.contains('selected') === false) {
-                    // clear existing selections before highlighting new ones
-                    // (ie. only one selection at a time)
-                    clearSelected();
-
-                    let years = getAll('.year');
-                    let selectedPills = getAll('.pill.' + this.classList[1]);
-
-                    for (let year of years) year.classList.add('filtered');
-
-                    for (let pill of selectedPills) {
-                        pill.classList.add('selected');
-                        pill.closest('.course').classList.add('selected');
-                    }
-                }
-                // otherwise you're clicking a selected pill
-                else {
-                    clearSelected();
-                }
-            };
-
-            function clearSelected() {
-                getAll('.selected').forEach(el => el.classList.remove('selected'));
-                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
             }
         }
     }
