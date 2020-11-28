@@ -224,10 +224,15 @@
     }
 
     function fillRequirements(courses) {
+        let creditTotal = 0;
+
         /* ***** fill in courses ***** */
         for (let course of courses) {
             let requirement = course.reqs.requirement;
             let attribute = course.reqs.attribute;
+
+            // for summary section
+            creditTotal += course.credits;
 
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
@@ -269,8 +274,6 @@
 
         /* ***** fill in summary section ***** */
         let reqTypes = ['gened', 'major', 'minor'];
-        let courseTotal = 0;
-        let creditTotal = 0;
 
         for (let type of reqTypes) {
             let filteredCourses = courses.filter(c => c.reqs.requirement.includes(type));
@@ -288,16 +291,17 @@
 
             courseNode.textContent = courseSubtotal;
             creditNode.textContent = creditSubtotal;
-            creditTotal += creditSubtotal;
         }
 
         // fill in totals
         let courseNode = get(`.requirement.courses .total .attribute-course`);
         let creditNode = get(`.requirement.credits .total .attribute-course`);
+        let notice = 'May be less than the sum of the numbers above due to overlap between requirements.';
 
         courseNode.textContent = courses.length; // don't count overlap between types
-        courseNode.title = 'May be less than the total of the numbers shown above, due to overlap between requirements.'
+        courseNode.title = notice;
         creditNode.textContent = creditTotal;
+        creditNode.title = notice;
 
         /* ***** add checkmark to filled tiles ***** */
         let tiles = getAll(':not(.section-summary) > .tile.requirement');
