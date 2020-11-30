@@ -335,8 +335,23 @@
             }
 
             node.textContent = course.name.shorthand;
+            addTooltip(course, node);
 
-            // add tooltip
+            // on click, jump to course schedule and highlight the course
+            node.classList.add('linked');
+            node.addEventListener('click', function () {
+                let clickedCourse = get('#' + course.name.id);
+                let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
+
+                clickedCourse.closest('.semester').scrollIntoView({ behavior: motion });
+                clickedCourse.classList.add('highlighted');
+                window.setTimeout(function () {
+                    clickedCourse.classList.remove('highlighted');
+                }, 3000);
+            }, false);
+        }
+
+        function addTooltip(course, node) {
             let tooltip = course.tooltip();
 
             node.appendChild(tooltip);
@@ -353,35 +368,27 @@
 
             // reposition tooltip if it goes offscreen
             // @TODO: make this update when window is resized
-            // @TODO: fix overflow randomly being more than 15px away from right edge???
-            //        possibly because of an issue with load order
             let intersect = new IntersectionObserver(entries => {
                 let entry = entries[0];
-                let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
 
-                if (overflow < 0) {
+                if (entry.intersectionRatio < 1) {
+                    let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
+
                     entry.target.style.left = overflow + 'px';
                     entry.target.style.setProperty('--arrow-pos', `calc(${-overflow}px + 3.5ch + .35em)`);
                 }
+
+                intersect.unobserve(tooltip);
             }, {
-                root: get('body'),
-                rootMargin: '-15px'
+                root: get('body'), // not sure why it doesn't work without this
+                rootMargin: '0 -15px 0 0'
             });
 
-            intersect.observe(tooltip);
-
-            // on click, jump to course schedule and highlight the course
-            node.classList.add('linked');
-            node.addEventListener('click', function () {
-                let clickedCourse = get('#' + course.name.id);
-                let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
-
-                clickedCourse.closest('.semester').scrollIntoView({ behavior: motion });
-                clickedCourse.classList.add('highlighted');
-                window.setTimeout(function () {
-                    clickedCourse.classList.remove('highlighted');
-                }, 3000);
-            }, false);
+            // delay repositioning to fix tooltip randomly being more than 15px away
+            // from right edge, possibly because DOM hasn't fully loaded
+            window.setTimeout(function () {
+                intersect.observe(tooltip);
+            }, 500);
         }
     }
 

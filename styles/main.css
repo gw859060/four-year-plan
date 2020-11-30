@@ -305,6 +305,10 @@ main > div:last-of-type {
     margin-top: .275em;
 }
 
+.attribute-name {
+    margin-right: .5em;
+}
+
 .attribute-course {
     font-weight: bold;
     white-space: nowrap;
@@ -376,7 +380,7 @@ main > div:last-of-type {
     position: absolute;
     top: 100%;
     left: var(--arrow-pos);
-    border: 7px solid transparent;
+    border: 6px solid transparent;
     border-top-color: var(--bg-03);
 }
 
