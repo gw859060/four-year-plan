@@ -381,7 +381,7 @@
                 intersect.unobserve(tooltip);
             }, {
                 root: get('body'), // not sure why it doesn't work without this
-                rootMargin: '0 -15px 0 0'
+                rootMargin: '0px -15px 0px 0px'
             });
 
             // delay repositioning to fix tooltip randomly being more than 15px away
