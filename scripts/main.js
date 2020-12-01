@@ -119,7 +119,7 @@
                     // if course meets multiple requirements
                     if (typeof requirement === 'object') {
                         requirement.forEach((req, i) => {
-                            buildReq(container, req, attribute[i])
+                            buildReq(container, req, attribute[i]);
                         });
                     }
                     // if course meets multiple attributes
@@ -152,7 +152,20 @@
                         });
                     }
                 }
-            }
+            };
+        }
+    }
+
+    function buildNavigation() {
+        let links = getAll('.nav-link');
+
+        for (let link of links) {
+            link.addEventListener('click', function () {
+                let section = link.dataset.section;
+                let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
+
+                get('.' + section).scrollIntoView({ behavior: motion });
+            }, false);
         }
     }
 
@@ -659,5 +672,6 @@
     }
 
     fetchData();
+    buildNavigation();
     buildDeadlines();
 }());

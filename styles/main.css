@@ -104,6 +104,16 @@ h2 {
     text-align: center;
 }
 
+/* <https://css-tricks.com/hash-tag-links-padding/> */
+h2::before {
+    content: '';
+    display: block;
+    height: 2.5em;
+    margin-top: -2.5em;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 h3 {
     font-size: 1.2em;
     margin: 0 0 .3em;
@@ -137,21 +147,21 @@ p + section {
     margin-top: 2.5em;
 }
 
-a {
-    color: inherit;
-    transition: filter var(--duration) ease;
-}
-
-a:hover {
-    filter: brightness(.85);
-}
-
 abbr {
     font-variant: none; /* override default styles */
     text-decoration: none;
 }
 
 /* ***** reusable classes ***** */
+
+.link {
+    color: inherit;
+    transition: filter var(--duration) ease;
+}
+
+.link:hover {
+    filter: brightness(.85);
+}
 
 .constrained-width {
     max-width: 69em;
@@ -240,40 +250,76 @@ header {
 }
 
 .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding-top: 5em;
     padding-bottom: 5em;
     line-height: 1;
+
+    /* change .constrained-width */
+    max-width: 50rem;
 }
 
-.header-text h1:first-of-type {
+.header-container h1:first-of-type {
     margin-bottom: .2em;
 }
 
-.header-text .subdued {
+.header-container .subdued {
     color: #c6c6c6;
 }
 
-.github-link {
-    color: var(--txt-01);
-    background-color: var(--bg-03);
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: .4em;
-    white-space: nowrap;
+/* ***** navigation ***** */
 
-    margin-left: 1em;
-    padding: .8em 1.2em;
-    transition: filter var(--duration) ease;
+nav {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    color: var(--txt-02);
+    background-color: var(--bg-02);
 }
 
-.github-link:hover {
-    filter: brightness(1.15);
+.nav-list {
+    --nav-padding: .9em;
+
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: var(--nav-padding);
+    padding-bottom: var(--nav-padding);
+
+    /* change .constrained-width */
+    max-width: 50rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10em;
+    padding: .2em .8em .275em;
+    margin: -0.2em -0.8em -0.275em;
+    transition: .3s var(--ease);
+    transition-property: color, background-color;
+}
+
+.nav-link:hover {
+    color: var(--txt-01);
+    background-color: #484848;
+}
+
+@media screen and (max-width: 650px) {
+
+    nav {
+        display: none;
+    }
+
 }
 
 /* ***** main ***** */
+
+main {
+    overflow-x: hidden; /* prevent tooltips from expanding page */
+}
 
 main > div {
     margin-top: 4em;
@@ -316,8 +362,9 @@ main > div:last-of-type {
 }
 
 .attribute-course.linked {
-    margin: -0.1em -0.3em -0.1em -0.45em;
-    padding: .1em .3em .1em .45em;
+    border-radius: 10em;
+    padding: .1em .5em .1em .575em;
+    margin: -0.1em -0.5em -0.1em -0.575em;
     transition: background-color var(--duration) ease;
 }
 
@@ -414,7 +461,6 @@ main > div:last-of-type {
     .attribute-course.linked:hover {
         cursor: pointer;
         background-color: var(--bg-05);
-        border-radius: .35em;
     }
 
 }
@@ -596,7 +642,12 @@ main > div:last-of-type {
 }
 
 .semester {
-    min-width: 0; /* <https://css-tricks.com/flexbox-truncated-text/> */
+    /* <https://css-tricks.com/flexbox-truncated-text/> */
+    min-width: 0;
+
+    /* <https://css-tricks.com/hash-tag-links-padding/> */
+    padding-top: 4.5em;
+    margin-top: -4.5em;
 }
 
 @media screen and (max-width: 700px) {
@@ -657,7 +708,7 @@ main > div:last-of-type {
 .req-container {
     position: relative;
     white-space: nowrap;
-    margin-top: -0.15em;
+    margin-top: -0.1em;
 }
 
 .fade-overflow {
@@ -741,7 +792,7 @@ main > div:last-of-type {
 
     0%,
     50% {
-        background-color: var(--bg-02);
+        background-color: var(--bg-03);
     }
 
 }
@@ -786,7 +837,7 @@ main > div:last-of-type {
     0%,
     50% {
         color: var(--txt-03);
-        background-color: #494949;
+        background-color: #4e4e4e;
     }
 
 }
@@ -812,7 +863,7 @@ main > div:last-of-type {
 .pill {
     color: var(--txt-06);
     background-color: var(--bg-05);
-    font-size: .85em;
+    font-size: .875em;
     padding: .175em .6em;
     border-radius: 10em;
     transition: var(--duration) var(--ease);
@@ -843,7 +894,7 @@ main > div:last-of-type {
 }
 
 .pill.fake {
-    font-size: .925em;
+    font-size: .9em;
     background-color: #e3e3e3;
     cursor: auto;
 }
