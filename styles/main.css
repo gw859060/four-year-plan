@@ -271,10 +271,11 @@ header {
 nav {
     position: -webkit-sticky;
     position: sticky;
-    top: 0;
-    z-index: 2;
+    top: -1px;
     color: var(--txt-02);
-    background-color: var(--bg-02);
+    background-color: var(--bg-01);
+    border-top: 1px solid #494949;
+    z-index: 1; /* appear above checkmarks */
 }
 
 .nav-list {
@@ -295,16 +296,23 @@ nav {
 .nav-link {
     text-decoration: none;
     cursor: pointer;
+    transition: .25s ease;
+    transition-property: color, background-color, font-weight;
+
     border-radius: 10em;
-    padding: .2em .8em .275em;
-    margin: -0.2em -0.8em -0.275em;
-    transition: .3s var(--ease);
-    transition-property: color, background-color;
+    padding: .1em .8em .175em;
+    margin: -0.1em -0.8em -0.175em;
+    white-space: nowrap;
 }
 
-.nav-link:hover {
-    color: var(--txt-01);
-    background-color: #484848;
+@media screen and (hover: hover) {
+
+    .nav-link:hover {
+        font-weight: bold;
+        color: var(--txt-07);
+        background-color: var(--bg-05);
+    }
+
 }
 
 @media screen and (max-width: 650px) {
@@ -411,7 +419,7 @@ main > div:last-of-type {
     max-width: 20em;
     opacity: 0;
     pointer-events: none;
-    z-index: 1; /* otherwise appears under checkmarks */
+    z-index: 1; /* appear above checkmarks */
 
     font-weight: normal;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
@@ -512,7 +520,7 @@ main > div:last-of-type {
 /* ***** important dates ***** */
 
 .timeline.tile {
-    --timeline-bg: var(--bg-01);
+    --timeline-bg: var(--bg-02);
     --top-padding: 2em;
     --date-width: 43%;
     --name-width: calc(100% - var(--date-width));
