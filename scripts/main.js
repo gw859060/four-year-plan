@@ -107,55 +107,19 @@
                 tooltip.appendChild(header);
 
                 let details = document.createElement('div');
+                let yearDiff = (semester === 1 || semester === 4) ? year - 1 : year;
 
                 details.classList.add('tooltip-details');
-                handleReq(details, requirement, attribute);
+                details.textContent = `${expandYear(year)} Year • `;
+                details.textContent += `${expandSemester(semester)} ${2020 + yearDiff}`;
                 tooltip.appendChild(details);
 
                 return tooltip;
-
-                // @TODO: use this in buildSchedule()
-                function handleReq(container, requirement, attribute) {
-                    // if course meets multiple requirements
-                    if (typeof requirement === 'object') {
-                        requirement.forEach((req, i) => {
-                            buildReq(container, req, attribute[i]);
-                        });
-                    }
-                    // if course meets multiple attributes
-                    else if (typeof attribute === 'object') {
-                        attribute.forEach((attr, i) => {
-                            if (i === 0) {
-                                buildReq(container, requirement, attr);
-                            }
-                            // only add remaining attr, not a duplicate requirement + attr
-                            else {
-                                buildReq(container, '', attr);
-                            }
-                        });
-                    } else {
-                        buildReq(container, requirement, attribute);
-                    }
-
-                    // we want corresponding attr to directly follow req
-                    // instead of [req1] [req2] [attr1] [attr2]
-                    function buildReq(container, req, attr) {
-                        [req, attr].forEach(item => {
-                            if (item !== '') {
-                                let pill = document.createElement('span');
-
-                                pill.classList.add('tooltip-req');
-                                pill.textContent = expandAbbrev(item);
-
-                                container.appendChild(pill);
-                            }
-                        });
-                    }
-                }
             };
         }
     }
 
+    // @TODO: make background slide on hover
     function buildNavigation() {
         let links = getAll('.nav-link');
 
@@ -483,8 +447,7 @@
                     shortNode.textContent = course.name.shorthand;
                     shortNodeAlt.textContent = course.name.shorthand;
                     linkTitle(titleNode, course);
-                    handlePill(reqContainer, course.reqs.requirement);
-                    handlePill(reqContainer, course.reqs.attribute);
+                    handlePill(reqContainer, course.reqs.requirement, course.reqs.attribute);
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
                     get('.semester', semTemplate).appendChild(courseTemplate);
@@ -526,44 +489,64 @@
             container.appendChild(link);
         }
 
-        function handlePill(container, requirement) {
-            // if course meets multiple requirements/attributes
+        function handlePill(container, requirement, attribute) {
+            // if course meets multiple requirements
+            // eg. CSC 301 is major and gen ed
             if (typeof requirement === 'object') {
-                requirement.forEach(req => buildPill(container, req));
+                requirement.forEach((req, i) => {
+                    buildPill(container, req, attribute[i]);
+                });
+            }
+            // if course meets multiple attributes
+            // eg. GEO 204 is interdisciplinary and diverse communities
+            else if (typeof attribute === 'object') {
+                attribute.forEach((attr, i) => {
+                    if (i === 0) {
+                        buildPill(container, requirement, attr);
+                    }
+                    // only add remaining attr, not a duplicate requirement + attr
+                    else {
+                        buildPill(container, '', attr);
+                    }
+                });
             } else {
-                buildPill(container, requirement);
+                buildPill(container, requirement, attribute);
             }
 
-            function buildPill(container, req) {
-                let pill = document.createElement('button');
+            function buildPill(container, req, attr) {
+                [req, attr].forEach(type => {
+                    if (type !== '') {
+                        let pill = document.createElement('button');
 
-                pill.setAttribute('type', 'button');
-                pill.classList.add('pill', req);
-                pill.textContent = expandAbbrev(req);
-                pill.addEventListener('click', function () {
-                    if (this.classList.contains('selected') === false) {
-                        clearSelected();
+                        pill.setAttribute('type', 'button');
+                        pill.classList.add('pill', type);
+                        pill.textContent = expandAbbrev(type);
+                        pill.addEventListener('click', function () {
+                            if (this.classList.contains('selected') === false) {
+                                clearSelected();
 
-                        let years = getAll('.year');
-                        let selectedPills = getAll('.pill.' + this.classList[1]);
+                                let years = getAll('.year');
+                                let selectedPills = getAll('.pill.' + this.classList[1]);
 
-                        for (let year of years) year.classList.add('filtered');
+                                for (let year of years) year.classList.add('filtered');
 
-                        for (let pill of selectedPills) {
-                            pill.classList.add('selected');
-                            pill.closest('.course').classList.add('selected');
-                        }
-                    } else {
-                        clearSelected();
+                                for (let pill of selectedPills) {
+                                    pill.classList.add('selected');
+                                    pill.closest('.course').classList.add('selected');
+                                }
+                            } else {
+                                clearSelected();
+                            }
+
+                            function clearSelected() {
+                                getAll('.selected').forEach(el => el.classList.remove('selected'));
+                                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+                            }
+                        }, false);
+
+                        container.appendChild(pill);
                     }
-
-                    function clearSelected() {
-                        getAll('.selected').forEach(el => el.classList.remove('selected'));
-                        getAll('.filtered').forEach(el => el.classList.remove('filtered'));
-                    }
-                }, false);
-
-                container.appendChild(pill);
+                });
             }
         }
     }
@@ -608,7 +591,7 @@
 
             if (eventNode.classList.contains('celebrate')) {
                 eventNode.addEventListener('click', function () {
-                    confetti.start(4000);
+                    confetti.start(3000);
                 }, false);
             }
         }
@@ -668,6 +651,19 @@
                 return 'Summer';
             case 4:
                 return 'Winter';
+        }
+    }
+
+    function expandYear(year) {
+        switch (year) {
+            case 1:
+                return 'Freshman';
+            case 2:
+                return 'Sophomore';
+            case 3:
+                return 'Junior';
+            case 4:
+                return 'Senior';
         }
     }
 
