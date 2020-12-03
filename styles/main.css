@@ -697,6 +697,7 @@ main > div:last-of-type {
 }
 
 .course-name {
+    color: var(--txt-07);
     line-height: 1.2;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -704,7 +705,7 @@ main > div:last-of-type {
 }
 
 .course-link {
-    color: var(--txt-07);
+    color: inherit;
     text-decoration: none;
 }
 
@@ -735,13 +736,13 @@ main > div:last-of-type {
 
 /* can't animate between gradients, so hack using opacity is needed */
 .fade-overflow::before {
-    background: linear-gradient(to left, var(--bg-07), rgba(255, 255, 255, 0) 30px);
-    z-index: 1;
+    background: linear-gradient(to left, var(--bg-02), rgba(65, 65, 65, 0) 30px);
+    opacity: 0;
 }
 
 .fade-overflow::after {
-    background: linear-gradient(to left, var(--bg-02), rgba(65, 65, 65, 0) 30px);
-    opacity: 0;
+    background: linear-gradient(to left, var(--bg-07), rgba(255, 255, 255, 0) 30px);
+    opacity: 1;
 }
 
 .course-credits {
@@ -750,40 +751,52 @@ main > div:last-of-type {
     letter-spacing: -0.05ch;
 }
 
-/* when clicking on requirement to jump to schedule */
-.highlighted.course,
-.highlighted .pill,
-.highlighted .course-name, /* separate from .course-link so the ellipsis is colored */
-.highlighted .course-link,
-.highlighted .course-credits,
-.highlighted .course-shorthand,
-.highlighted .fade-overflow::before,
-.highlighted .fade-overflow::after {
-    animation: 3s cubic-bezier(0.33, 1, 0.68, 1);
+/* animation when clicking on requirement to jump to schedule */
+.fade-out.course,
+.fade-out .course-name,
+.fade-out .course-credits,
+.fade-out .course-shorthand,
+.fade-out .pill {
+    transition: 2s var(--ease); /* duration is difference between two setTimeouts in addRow() */
 }
 
+.fade-out .fade-overflow::before,
+.fade-out .fade-overflow::after {
+    transition: 2.7s var(--ease); /* duration needs to be longer than above to visually match */
+}
+
+/* override existing transition on .pill when animating in */
+.no-fade .pill {
+    transition: none;
+}
+
+/* styles for when course is highlighted */
 .highlighted.course {
-    animation-name: fade-out-bg;
+    background-color: var(--bg-02);
 }
 
 .highlighted .course-name,
-.highlighted .course-link,
 .highlighted .course-credits,
 .highlighted .course-shorthand {
-    animation-name: fade-out-text;
+    color: var(--txt-02);
 }
 
-/* can't animate between gradients, so ugly opacity hack is needed */
 .highlighted .fade-overflow::before {
-    animation-name: fade-in-opacity;
+    opacity: 1;
 }
 
 .highlighted .fade-overflow::after {
-    animation-name: fade-out-opacity;
+    opacity: 0;
 }
 
 .highlighted .pill {
-    animation-name: fade-out-pill;
+    color: var(--txt-03);
+    background-color: #474747;
+}
+
+.highlighted .pill.selected {
+    color: var(--txt-06);
+    background-color: var(--bg-05);
 }
 
 /* when clicking on pill to fade out courses */
@@ -793,60 +806,6 @@ main > div:last-of-type {
 
 .filtered .course.selected {
     opacity: 1;
-}
-
-@keyframes fade-out-bg {
-
-    0%,
-    50% {
-        background-color: var(--bg-02);
-    }
-
-}
-
-@keyframes fade-out-text {
-
-    0%,
-    50% {
-        color: var(--txt-02);
-    }
-
-}
-
-@keyframes fade-out-opacity {
-
-    0%,
-    46% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-
-}
-
-@keyframes fade-in-opacity {
-
-    0%,
-    46% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-
-}
-
-@keyframes fade-out-pill {
-
-    0%,
-    50% {
-        color: var(--txt-03);
-        background-color: #474747;
-    }
-
 }
 
 @media screen and (max-width: 900px) {

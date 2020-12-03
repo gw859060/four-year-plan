@@ -322,9 +322,15 @@
 
                 clickedCourse.closest('.semester').scrollIntoView({ behavior: motion });
                 clickedCourse.classList.add('highlighted');
+                get('.req-container', clickedCourse).classList.add('no-fade'); // .pill has an existing transition property that we don't want to appear when jumping to course
                 window.setTimeout(function () {
+                    get('.req-container', clickedCourse).classList.remove('no-fade');
                     clickedCourse.classList.remove('highlighted');
-                }, 3000);
+                    clickedCourse.classList.add('fade-out');
+                }, 1500);
+                window.setTimeout(function () {
+                    clickedCourse.classList.remove('fade-out');
+                }, 3500);
             }, false);
         }
 
