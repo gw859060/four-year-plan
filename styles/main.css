@@ -43,7 +43,6 @@
 :root {
     --bg-01: #222;
     --bg-02: #2f2f2f;
-    --bg-03: #414141;
     --bg-04: #ddd;
     --bg-05: #eee;
     --bg-06: #f3f3f3;
@@ -54,7 +53,7 @@
     --txt-03: #ddd;
     --txt-05: #777;
     --txt-06: #4d4d4d;
-    --txt-07: #222;
+    --txt-07: #262626;
 
     --gap-large: 1.25em;
     --gap-small: .6em;
@@ -202,7 +201,7 @@ abbr {
 
 .tile.dark {
     color: var(--txt-02);
-    background-color: var(--bg-03);
+    background-color: var(--bg-02);
 }
 
 .tile.dark p:last-of-type {
@@ -215,6 +214,7 @@ abbr {
 }
 
 .description {
+    color: #484848;
     max-width: 35em;
     margin-left: auto;
     margin-right: auto;
@@ -363,6 +363,10 @@ main > div:last-of-type {
     margin-right: .5em;
 }
 
+.attribute-name .number {
+    margin-left: .2em;
+}
+
 .attribute-course {
     font-weight: bold;
     white-space: nowrap;
@@ -424,7 +428,7 @@ main > div:last-of-type {
     font-weight: normal;
     font-family: 'IBM Plex Sans Condensed', sans-serif;
     text-transform: none;
-    padding: .4em .7em;
+    padding: .4em .85em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
                 0 4px 8px rgba(0, 0, 0, .12),
                 0 8px 16px rgba(0, 0, 0, .13);
@@ -436,7 +440,7 @@ main > div:last-of-type {
     top: 100%;
     left: var(--arrow-pos);
     border: 6px solid transparent;
-    border-top-color: var(--bg-03);
+    border-top-color: var(--bg-02);
 }
 
 .tooltip.show {
@@ -456,11 +460,6 @@ main > div:last-of-type {
 .tooltip-details {
     font-size: .9em;
     opacity: .85;
-}
-
-.tooltip-req + .tooltip-req::before {
-    content: '•';
-    margin: 0 .25em;
 }
 
 /* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
@@ -542,10 +541,10 @@ main > div:last-of-type {
 
     content: '';
     position: absolute;
-    left: calc(var(--line-offset) - var(--line-width) / 2);
+    left: calc(var(--line-offset) - var(--line-width) + 2px);
     width: var(--line-width);
     height: calc(100% - var(--top-padding) * 2 + 10px);
-    background: linear-gradient(to top, var(--timeline-bg), var(--bg-03) 20px) no-repeat;
+    background: linear-gradient(to top, var(--timeline-bg), #414141 20px) no-repeat;
 }
 
 .timeline li + li {
@@ -741,7 +740,7 @@ main > div:last-of-type {
 }
 
 .fade-overflow::after {
-    background: linear-gradient(to left, var(--bg-03), rgba(65, 65, 65, 0) 30px);
+    background: linear-gradient(to left, var(--bg-02), rgba(65, 65, 65, 0) 30px);
     opacity: 0;
 }
 
@@ -800,7 +799,7 @@ main > div:last-of-type {
 
     0%,
     50% {
-        background-color: var(--bg-03);
+        background-color: var(--bg-02);
     }
 
 }
@@ -845,7 +844,7 @@ main > div:last-of-type {
     0%,
     50% {
         color: var(--txt-03);
-        background-color: #4e4e4e;
+        background-color: #474747;
     }
 
 }
@@ -894,7 +893,7 @@ main > div:last-of-type {
 
 .pill.selected {
     color: var(--txt-02);
-    background-color: var(--bg-03);
+    background-color: var(--bg-02);
 }
 
 .pill.selected:hover {
