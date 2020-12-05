@@ -86,7 +86,7 @@
                 'number': number,
                 'title': title,
                 'shorthand': subject + ' ' + number,
-                'id': subject + number
+                'id': subject + '-' + number
             };
             this.reqs = {
                 'requirement': requirement,
@@ -453,7 +453,7 @@
                     shortNode.textContent = course.name.shorthand;
                     shortNodeAlt.textContent = course.name.shorthand;
                     linkTitle(titleNode, course);
-                    handlePill(reqContainer, course.reqs.requirement, course.reqs.attribute);
+                    handlePill(reqContainer, course);
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
                     get('.semester', semTemplate).appendChild(courseTemplate);
@@ -495,7 +495,10 @@
             container.appendChild(link);
         }
 
-        function handlePill(container, requirement, attribute) {
+        function handlePill(container, course) {
+            let requirement = course.reqs.requirement;
+            let attribute = course.reqs.attribute;
+
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
             if (typeof requirement === 'object') {
@@ -504,30 +507,36 @@
                 });
             }
             // if course meets multiple attributes
-            // eg. GEO 204 is interdisciplinary and diverse communities
+            // eg. GEO 204 is i and j
             else if (typeof attribute === 'object') {
                 attribute.forEach((attr, i) => {
                     if (i === 0) {
                         buildPill(container, requirement, attr);
                     }
                     // only add remaining attr, not a duplicate requirement + attr
+                    // eg. GEO 204 would show [gened] [i] [j]
                     else {
-                        buildPill(container, '', attr);
+                        buildPill(container, requirement, attr, true);
                     }
                 });
             } else {
                 buildPill(container, requirement, attribute);
             }
 
-            function buildPill(container, req, attr) {
+            function buildPill(container, req, attr, duplicate = false) {
                 [req, attr].forEach(type => {
-                    if (type !== '') {
+                    // skip duplicate requirements
+                    if (!(type === req && duplicate === true)) {
                         let pill = document.createElement('button');
+                        // separate attributes with the same name that appear in multiple reqs
+                        // (eg. core in both major/minor) by making attr classes more specific
+                        let typeClass = (type === attr) ? `${req}-${type}` : type;
 
                         pill.setAttribute('type', 'button');
-                        pill.classList.add('pill', type);
+                        pill.classList.add('pill', typeClass);
                         pill.textContent = expandAbbrev(type);
                         pill.addEventListener('click', function () {
+                            // highlight courses with same req/attr, fade all others
                             if (this.classList.contains('selected') === false) {
                                 clearSelected();
 
@@ -540,7 +549,9 @@
                                     pill.classList.add('selected');
                                     pill.closest('.course').classList.add('selected');
                                 }
-                            } else {
+                            }
+                            // if clicked pill is already selected, clear selection
+                            else {
                                 clearSelected();
                             }
 
