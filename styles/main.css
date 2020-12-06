@@ -59,7 +59,7 @@
     --gap-small: .6em;
 
     --duration: .2s;
-    --ease: cubic-bezier(0.33, 1, 0.68, 1);
+    --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* ***** basics ***** */
@@ -300,8 +300,8 @@ nav {
     transition-property: color, background-color, font-weight;
 
     border-radius: 10em;
-    padding: .1em .8em .175em;
-    margin: -0.1em -0.8em -0.175em;
+    padding: .125em .7em .2em;
+    margin: -0.125em -0.7em -0.2em;
     white-space: nowrap;
 }
 
@@ -752,20 +752,24 @@ main > div:last-of-type {
 }
 
 /* animation when clicking on requirement to jump to schedule */
+.fade-out {
+    --duration: 1.75s;  /* less than or equal to difference between two setTimeouts in addRow() */
+}
+
 .fade-out.course,
 .fade-out .course-name,
 .fade-out .course-credits,
 .fade-out .course-shorthand,
 .fade-out .pill {
-    transition: 2s var(--ease); /* duration is difference between two setTimeouts in addRow() */
+    transition: var(--duration) var(--ease);
 }
 
 .fade-out .fade-overflow::before,
 .fade-out .fade-overflow::after {
-    transition: 2.7s var(--ease); /* duration needs to be longer than above to visually match */
+    transition: calc(var(--duration) + .6s) var(--ease); /* duration needs to be longer than above to visually match */
 }
 
-/* override existing transition on .pill when animating in */
+/* override existing transition on .pill when transitioning in */
 .no-fade .pill {
     transition: none;
 }
