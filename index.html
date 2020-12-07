@@ -44,24 +44,24 @@
         </div>
     </header>
     <nav>
-        <ul class="nav-list constrained-width monospace">
+        <ul class="nav-list constrained-width">
             <li class="nav-item">
-                <a class="nav-link" data-section="degree-requirements">Degree Requirements</a>
+                <a class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="important-dates">Important Dates</a>
+                <a class="nav-link" data-section="important-dates"><span class="subdued">02.</span> Important Dates</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="course-schedule">Course Schedule</a>
+                <a class="nav-link" data-section="course-schedule"><span class="subdued">03.</span> Course Schedule</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="useful-links">Useful Links</a>
+                <a class="nav-link" data-section="useful-links"><span class="subdued">04.</span> Useful Links</a>
             </li>
         </ul>
     </nav>
     <main>
-        <div class="degree-requirements constrained-width">
-            <h2 class="degree-header">Degree Requirements</h2>
+        <section class="degree-requirements constrained-width">
+            <h2 class="degree-header"><span class="subdued">01.</span> Degree Requirements</h2>
             <p class="description">Hover over a course shorthand to see more details. Click the course to jump to its position in the four-year schedule.</p>
             <section class="requirements requirement-gened">
                 <h3 class="uppercase">General Education</h3>
@@ -141,9 +141,9 @@
                     </div>
                 </div>
             </section>
-        </div>
-        <div class="important-dates constrained-width">
-            <h2 class="year-header">Important Dates</h2>
+        </section>
+        <section class="important-dates constrained-width">
+            <h2 class="year-header"><span class="subdued">02.</span> Important Dates</h2>
             <p class="description">Placeholder text goes here. Some more placeholder text. Even more placeholder text and more placeholder text. <a class="link" target="_blank" rel="noopener" href="https://www.wcupa.edu/registrar/calendar/">Click here</a> to see the full WCUPA Academic Calendar.</p>
             <ul class="timeline tile dark">
                 <li class="event-year">
@@ -181,15 +181,15 @@
                     <h4 class="event-name">Last day of spring classes</h4>
                 </li>
             </ul>
-        </div>
+        </section>
         <!-- @TODO:
             - ability to filter by prefix or by requirement (dropdowns)
             - detailed/compact mode toggle to show class times and visual representation full-width
         -->
-        <div class="course-schedule constrained-width">
-                <h2 class="year-header">Course Schedule</h2>
+        <section class="course-schedule constrained-width">
+                <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
                 <p class="description">Click a <span class="pill fake">Requirement</span> to highlight other courses with the same requirement. Click it again to clear the highlight.</p>
-        </div>
+        </section>
     </main>
     <template class="template-attribute">
         <div class="attribute">

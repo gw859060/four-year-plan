@@ -60,6 +60,9 @@
 
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --monospace: 'IBM Plex Mono', 'Courier', ui-monospace, monospace;
+    --sans-serif: 'IBM Plex Sans Condensed', 'Trebuchet MS', system-ui, sans-serif;
 }
 
 /* ***** basics ***** */
@@ -76,8 +79,10 @@ html {
 
 body {
     color: var(--txt-07);
-    font: 1em/1.45 'IBM Plex Sans Condensed', system-ui, sans-serif;
     background-color: var(--bg-06);
+    font-size: 1em;
+    line-height: 1.45;
+    font-family: var(--sans-serif);
     margin: 0;
     overflow-x: hidden; /* for .full-width */
 }
@@ -186,7 +191,7 @@ abbr {
 
 .monospace {
     font-size: .9em;
-    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-family: var(--monospace);
 }
 
 .subdued {
@@ -263,7 +268,7 @@ header {
 }
 
 .header-container .subdued {
-    color: #c6c6c6;
+    color: #bbb;
 }
 
 /* ***** navigation ***** */
@@ -275,7 +280,7 @@ nav {
     color: var(--txt-02);
     background-color: var(--bg-01);
     border-top: 1px solid #494949;
-    z-index: 1; /* appear above checkmarks */
+    z-index: 1; /* position above checkmarks */
 }
 
 .nav-list {
@@ -297,20 +302,19 @@ nav {
     text-decoration: none;
     cursor: pointer;
     transition: .25s ease;
-    transition-property: color, background-color, font-weight;
+    transition-property: color, background-color;
 
     border-radius: 10em;
-    padding: .125em .7em .2em;
-    margin: -0.125em -0.7em -0.2em;
+    padding: .12em .7em;
+    margin: -0.12em -0.7em;
     white-space: nowrap;
 }
 
 @media screen and (hover: hover) {
 
     .nav-link:hover {
-        font-weight: bold;
-        color: var(--txt-07);
-        background-color: var(--bg-05);
+        /* color: var(--txt-07); */
+        background-color: #414141;
     }
 
 }
@@ -329,11 +333,11 @@ main {
     overflow-x: hidden; /* prevent tooltips from expanding page */
 }
 
-main > div {
+main > section {
     margin-top: 4em;
 }
 
-main > div:last-of-type {
+main > section:last-of-type {
     margin-bottom: 4em;
 }
 
@@ -391,7 +395,7 @@ main > div:last-of-type {
 }
 
 .section-summary hr {
-    border-color: #cfcfcf;
+    border-color: #d3d3d3;
 }
 
 .requirement.courses .total .attribute-course,
@@ -423,10 +427,10 @@ main > div:last-of-type {
     max-width: 20em;
     opacity: 0;
     pointer-events: none;
-    z-index: 1; /* appear above checkmarks */
+    z-index: 1; /* position above checkmarks */
 
     font-weight: normal;
-    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-family: var(--sans-serif);
     text-transform: none;
     padding: .4em .85em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
@@ -885,11 +889,9 @@ main > div:last-of-type {
 /* ***** errors ***** */
 
 .tile.error {
-    --offset: 2em;
-
     position: fixed;
     left: 50%;
-    bottom: var(--offset);
+    bottom: 2.5em;
     transition: filter .3s ease;
     animation: slide-up 1s cubic-bezier(0.25, 1, 0.5, 1) both;
     animation-delay: .75s;
@@ -911,10 +913,12 @@ main > div:last-of-type {
 @keyframes slide-up {
 
     from {
-        transform: translate(-50%, calc(100% + var(--offset)));
+        opacity: 0;
+        transform: translate(-50%, 100%);
     }
 
     to {
+        opacity: 1;
         transform: translate(-50%, 0);
     }
 
