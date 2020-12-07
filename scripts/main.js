@@ -10,13 +10,17 @@
     }
 
     function fetchData() {
-        let base = 'https://raw.githubusercontent.com/gw859060/four-year-plan/main/data/';
+        let base = 'https://gw859060.github.io/four-year-plan/data/';
         let files = ['requirements.json', 'courses.json'];
         let promises = [];
 
         for (let file of files) {
             promises.push(
-                fetch(base + file).then(response => {
+                fetch(base + file, {
+                    // <https://stackoverflow.com/q/52635660>
+                    credentials: 'include',
+                    mode: 'no-cors'
+                }).then(response => {
                     if (response.ok) {
                         return response.json();
                     } else {
