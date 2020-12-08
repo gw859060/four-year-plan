@@ -98,7 +98,7 @@ body {
 /* ***** elements ***** */
 
 h1 {
-    font-size: 2.4em;
+    font-size: 2.5em;
     margin: 0;
 }
 
@@ -112,8 +112,8 @@ h2 {
 h2::before {
     content: '';
     display: block;
-    height: 2.5em;
-    margin-top: -2.5em;
+    height: 3.25em;
+    margin-top: -3.25em;
     visibility: hidden;
     pointer-events: none;
 }
@@ -334,11 +334,11 @@ main {
 }
 
 main > section {
-    margin-top: 4em;
+    margin-top: 5em;
 }
 
 main > section:last-of-type {
-    margin-bottom: 4em;
+    margin-bottom: 5em;
 }
 
 /* ***** requirements ***** */
