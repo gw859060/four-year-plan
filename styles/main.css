@@ -5,8 +5,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: local('IBMPlexMono'),
-         url('../fonts/IBMPlexMono-Regular.ttf') format('truetype');
+    src: url('../fonts/IBMPlexMono-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -14,8 +13,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: local('IBMPlexMono-Bold'),
-         url('../fonts/IBMPlexMono-Bold.ttf') format('truetype');
+    src: url('../fonts/IBMPlexMono-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -24,8 +22,7 @@
     font-stretch: condensed;
     font-weight: 400;
     font-display: swap;
-    src: local('IBMPlexSansCondensed'),
-         url('../fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
+    src: url('../fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -34,8 +31,7 @@
     font-stretch: condensed;
     font-weight: 700;
     font-display: swap;
-    src: local('IBMPlexSansCondensed-Bold'),
-         url('../fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
+    src: url('../fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
 }
 
 /* ***** variables ***** */
