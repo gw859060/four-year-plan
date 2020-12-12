@@ -28,7 +28,24 @@
                             "name": "Introduction to Geology",
                             "credits": 3,
                             "requirement": "gened",
-                            "attribute": "science"
+                            "attribute": "science",
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "11:00",
+                                    "end": "11:50"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "11:00",
+                                    "end": "11:50"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "12:30",
+                                    "end": "14:20"
+                                }
+                            ]
                         },
                         {
                             "subject": "FYE",
@@ -36,7 +53,14 @@
                             "name": "First Year Experience",
                             "credits": 4,
                             "requirement": "gened",
-                            "attribute": "fye"
+                            "attribute": "fye",
+                            "times": [
+                                {
+                                    "day": "R",
+                                    "start": "9:25",
+                                    "end": "10:15"
+                                }
+                            ]
                         },
                         {
                             "subject": "GEO",
@@ -45,9 +69,16 @@
                             "credits": 3,
                             "requirement": "gened",
                             "attribute": [
-                                    "i",
-                                    "j"
-                                ]
+                                "i",
+                                "j"
+                            ],
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "11:00",
+                                    "end": "11:50"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -60,7 +91,14 @@
                             "name": "Computer Science II",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "core",
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "14:00",
+                                    "end": "15:15"
+                                }
+                            ]
                         },
                         {
                             "subject": "MAT",
@@ -68,7 +106,19 @@
                             "name": "Brief Calculus",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "math"
+                            "attribute": "math",
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "11:00",
+                                    "end": "12:15"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "11:00",
+                                    "end": "12:15"
+                                }
+                            ]
                         },
                         {
                             "subject": "BIO",
@@ -76,7 +126,24 @@
                             "name": "General Biology",
                             "credits": 3,
                             "requirement": "gened",
-                            "attribute": "science"
+                            "attribute": "science",
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "10:00",
+                                    "end": "10:50"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "10:00",
+                                    "end": "10:50"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "11:00",
+                                    "end": "13:50"
+                                }
+                            ]
                         },
                         {
                             "subject": "LNC",
@@ -92,7 +159,19 @@
                             "name": "Introduction to Archaeology",
                             "credits": 3,
                             "requirement": "gened",
-                            "attribute": "social"
+                            "attribute": "social",
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "12:30",
+                                    "end": "13:45"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "12:30",
+                                    "end": "13:45"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -134,13 +213,13 @@
                             "name": "Introduction to Film",
                             "credits": 3,
                             "requirement": [
-                                    "gened",
-                                    "minor"
-                                ],
+                                "gened",
+                                "minor"
+                            ],
                             "attribute": [
-                                    "writing",
-                                    "core"
-                                ]
+                                "writing",
+                                "core"
+                            ]
                         },
                         {
                             "subject": "GEO",
@@ -185,13 +264,13 @@
                             "name": "Italian Cinema",
                             "credits": 3,
                             "requirement": [
-                                    "gened",
-                                    "minor"
-                                ],
+                                "gened",
+                                "minor"
+                            ],
                             "attribute": [
-                                    "speaking",
-                                    "elective"
-                                ]
+                                "speaking",
+                                "elective"
+                            ]
                         }
                     ]
                 }
@@ -209,13 +288,13 @@
                             "name": "Computer Security & Ethics",
                             "credits": 3,
                             "requirement": [
-                                    "major",
-                                    "gened"
-                                ],
+                                "major",
+                                "gened"
+                            ],
                             "attribute": [
-                                    "core",
-                                    "ethics"
-                                ]
+                                "core",
+                                "ethics"
+                            ]
                         },
                         {
                             "subject": "CSC",
@@ -292,13 +371,13 @@
                             "name": "Literature and Film",
                             "credits": 3,
                             "requirement": [
-                                    "gened",
-                                    "minor"
-                                ],
+                                "gened",
+                                "minor"
+                            ],
                             "attribute": [
                                 "writing",
                                 "elective"
-                                ]
+                            ]
                         }
                     ]
                 }
