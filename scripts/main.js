@@ -106,7 +106,7 @@
                 header.textContent = this.name.shorthand + ': ' + this.name.title;
                 tooltip.appendChild(header);
 
-                let details = document.createElement('time');
+                let details = document.createElement('div');
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details');
@@ -320,7 +320,7 @@
                 let clickedCourse = get('#' + course.name.id);
                 let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
-                clickedCourse.closest('.semester').scrollIntoView({ behavior: motion });
+                get('.semester-num', clickedCourse.parentNode).scrollIntoView({ behavior: motion });
                 clickedCourse.classList.add('highlighted');
                 get('.req-container', clickedCourse).classList.add('no-fade'); // .pill has an existing transition property that we don't want to appear when jumping to course
                 window.setTimeout(function () {
@@ -330,7 +330,7 @@
                 }, 1500);
                 window.setTimeout(function () {
                     clickedCourse.classList.remove('fade-out');
-                }, 3500);
+                }, 3000);
             }, false);
         }
 
@@ -341,12 +341,12 @@
             ['mouseenter', 'touchstart'].forEach(event => {
                 node.addEventListener(event, function () {
                     tooltip.classList.add('show');
-                }, false);
+                }, { passive: true });
             });
             ['mouseleave', 'touchend'].forEach(event => {
                 node.addEventListener(event, function () {
                     tooltip.classList.remove('show');
-                }, false);
+                }, { passive: true });
             });
 
             // reposition tooltip if it goes offscreen
@@ -382,22 +382,8 @@
     // @TODO: toggle switch for compact/expanded (detailed) views
     //        - show/hide days of week with circles around letters
     //        - show/hide professor
-    // @TODO: show weekly schedule below each semester (grid? SVG?)
-    //        <https://css-tricks.com/building-a-conference-schedule-with-css-grid/>
     //        <https://codyhouse.co/demo/schedule-template/index.html>
-    //        <https://cssgrid-generator.netlify.app>
-    //        <https://stackoverflow.com/questions/22549505/>
-    //        <https://treo.sh/demo/1/sites/1?sgi=1>
     //        <https://css-tricks.com/grid-auto-flow-css-grid-flex-direction-flexbox/>
-    //                        FALL 2020
-    //         SEMESTER 1 YEAR 1     SEMESTER 2 YEAR 1
-    //        [   course list   ]   [   course list   ]
-    //        [ hourly schedule ]   [ hourly schedule ]
-    //
-    //                       SPRING 2020
-    //         SEMESTER 3 YEAR 2     SEMESTER 4 YEAR 2
-    //        [   course list   ]   [   course list   ]
-    //        [ hourly schedule ]   [ hourly schedule ]
 
     function buildSchedule(courses) {
         // starting year for "Fall 2020" headers; I know it's a bad name
@@ -571,14 +557,27 @@
 
             // ignore classes without time data
             if (typeof times === 'object') {
-                // insert weekly grid
                 if (!get('.weekly-schedule', container)) {
+                    // insert weekly grid
                     let weekTemplate = get('.template-week').content.cloneNode(true);
 
                     container.appendChild(weekTemplate);
+
+                    // insert rows to create hourly grid lines
+                    let rowNum = 1;
+
+                    for (let i = 1; i <= 7; i++) { // currently 7 hours shown
+                        let hourLine = document.createElement('div');
+
+                        hourLine.classList.add('hour-line');
+                        hourLine.style.gridRow = rowNum + ' / ' + (rowNum + 12);
+                        get('.week-grid', container).appendChild(hourLine);
+
+                        rowNum += 12;
+                    }
                 }
 
-                // add time slots for this course to grid
+                // add time slots for this course to the grid
                 for (let time of times) {
                     let courseSlot = document.createElement('div'),
                         start = time.start.split(':'),
@@ -588,17 +587,17 @@
                         endHour = end[0],
                         endMin = end[1];
 
-                    // convert 24-hour to 12-hour time
+                    // convert 24-hour to 12-hour time for tooltip
                     if (startHour > 12) startHour -= 12;
                     if (endHour > 12) endHour -= 12;
 
                     courseSlot.classList.add('course-slot', 'monospace', 'uppercase');
                     courseSlot.textContent = course.name.shorthand;
-                    courseSlot.title = startHour + ':' + startMin + ' – ' + endHour + ':' + endMin;
+                    courseSlot.title = `${startHour}:${startMin} – ${endHour}:${endMin}`;
                     courseSlot.style.gridRow = convertToRows(time.start, time.end);
                     courseSlot.style.gridColumn = convertToColumn(time.day);
 
-                    // tooltip here
+                    // tooltip?
                     // ['mouseenter', 'touchstart'].forEach(event => {
                     //     courseSlot.addEventListener(event, function () {
                     //     }, false);

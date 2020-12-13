@@ -40,7 +40,7 @@
     --bg-01: #222;
     --bg-02: #2f2f2f;
     --bg-04: #ddd;
-    --bg-05: #eee;
+    --bg-05: #ececec;
     --bg-06: #f3f3f3;
     --bg-07: #fff;
 
@@ -310,7 +310,6 @@ nav {
 @media screen and (hover: hover) {
 
     .nav-link:hover {
-        /* color: var(--txt-07); */
         background-color: #414141;
     }
 
@@ -388,7 +387,7 @@ main > section:last-of-type {
 
 /* summary */
 .section-summary .tile {
-    background-color: #ececec;
+    background-color: var(--bg-05);
 }
 
 .section-summary hr {
@@ -461,7 +460,7 @@ main > section:last-of-type {
 .tooltip-details {
     font-size: .9em;
     opacity: .85;
-    margin-top: -0.15em;
+    margin-top: -0.1em;
 }
 
 /* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
@@ -650,19 +649,33 @@ main > section:last-of-type {
     grid-gap: var(--gap-large);
 }
 
-.semester {
-    /* <https://css-tricks.com/flexbox-truncated-text/> */
-    min-width: 0;
+.year + .year {
+    margin-top: 3em;
+}
 
-    /* <https://css-tricks.com/hash-tag-links-padding/> */
-    padding-top: 4.5em;
-    margin-top: -4.5em;
+/* <https://css-tricks.com/flexbox-truncated-text/> */
+.semester {
+    min-width: 0;
+}
+
+/* <https://css-tricks.com/hash-tag-links-padding/> */
+.semester-num::before {
+    content: '';
+    display: block;
+    height: 4em;
+    margin-top: -4em;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 @media screen and (max-width: 700px) {
 
     .year {
         grid-template-columns: none;
+    }
+
+    .semester + .semester {
+        margin-top: 1.5em;
     }
 
 }
@@ -755,7 +768,7 @@ main > section:last-of-type {
 
 /* animation when clicking on requirement to jump to schedule */
 .fade-out {
-    --duration: 1.75s;  /* less than or equal to difference between two setTimeouts in addRow() */
+    --duration: 1.5s;  /* less than or equal to difference between two setTimeouts in addRow() */
 }
 
 .fade-out.course,
@@ -768,7 +781,7 @@ main > section:last-of-type {
 
 .fade-out .fade-overflow::before,
 .fade-out .fade-overflow::after {
-    transition: calc(var(--duration) + .6s) var(--ease); /* duration needs to be longer than above to visually match */
+    transition: calc(var(--duration) + .6s) var(--ease); /* duration needs to be .6s longer than above to visually match */
 }
 
 /* override existing transition on .pill when transitioning in */
@@ -874,12 +887,12 @@ main > section:last-of-type {
 /* ***** week ***** */
 
 .weekly-schedule {
-    --day-gap: .6em;
+    --day-gap: .5em;
 
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: auto 1fr;
-    grid-gap: .5em .75em;
+    grid-gap: .5em .6em;
     margin-top: 2em;
     padding: 0 1.2rem;
 }
@@ -900,18 +913,20 @@ main > section:last-of-type {
     grid-template-rows: repeat(7, 1fr);
 }
 
-/* @TODO: this is still not exactly aligned with row lines */
+/* @TODO: why is this not exactly aligned with hour lines? */
 .header-hour {
     position: relative;
     font-size: .75rem;
+    text-align: right;
     transform: translateY(-1.1ch);
 }
 
 /* fake the last hour header */
 .header-hour:last-child::after {
-    content: '04:00';
+    content: '4:00';
     display: block;
     position: absolute;
+    right: 0;
     bottom: -1.4em;
 }
 
@@ -921,7 +936,7 @@ main > section:last-of-type {
     grid-template-columns: repeat(5, 1fr); /* 5 days a week */
     column-gap: var(--day-gap);
     border-bottom: 1px solid var(--bg-04);
-    height: 350px;
+    height: 325px;
 }
 
 .hour-line {
@@ -937,8 +952,9 @@ main > section:last-of-type {
 
     font-size: .75em;
     text-align: center;
+    line-height: 1.2;
     color: var(--txt-02);
-    background-color: #444;
+    background-color: var(--bg-02);
     border-radius: .3rem;
     padding: .5em;
 }
