@@ -56,6 +56,7 @@
 
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* --ease-in: cubic-bezier(0.22, 1, 0.36, 1) */
 
     --monospace: 'IBM Plex Mono', 'Courier', ui-monospace, monospace;
     --sans-serif: 'IBM Plex Sans Condensed', 'Trebuchet MS', system-ui, sans-serif;
@@ -275,12 +276,12 @@ nav {
     top: -1px;
     color: var(--txt-02);
     background-color: var(--bg-01);
-    border-top: 1px solid #494949;
+    border-top: 1px solid #414141;
     z-index: 1; /* position above checkmarks */
 }
 
 .nav-list {
-    --nav-padding: .9em;
+    --nav-padding: .8em;
 
     display: flex;
     justify-content: space-between;
@@ -428,7 +429,7 @@ main > section:last-of-type {
     font-weight: normal;
     font-family: var(--sans-serif);
     text-transform: none;
-    padding: .4em .85em;
+    padding: .4em .75em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
                 0 4px 8px rgba(0, 0, 0, .12),
                 0 8px 16px rgba(0, 0, 0, .13);
@@ -460,6 +461,7 @@ main > section:last-of-type {
 .tooltip-details {
     font-size: .9em;
     opacity: .85;
+    margin-top: -0.15em;
 }
 
 /* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
@@ -869,17 +871,76 @@ main > section:last-of-type {
     cursor: auto;
 }
 
-/* ***** total ***** */
+/* ***** week ***** */
 
-.semester-total {
-    display: flex;
-    justify-content: flex-end;
-    letter-spacing: -0.05ch;
-    margin: .75em 1.2em 0 0;
+.weekly-schedule {
+    --day-gap: .6em;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto 1fr;
+    grid-gap: .5em .75em;
+    margin-top: 2em;
+    padding: 0 1.2rem;
 }
 
-.credit-total {
-    margin-left: 1.25ch;
+.header-days {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: var(--day-gap);
+}
+
+.header-day {
+    font-size: .75rem;
+    text-align: center;
+}
+
+.header-hours {
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+}
+
+/* @TODO: this is still not exactly aligned with row lines */
+.header-hour {
+    position: relative;
+    font-size: .75rem;
+    transform: translateY(-1.1ch);
+}
+
+/* fake the last hour header */
+.header-hour:last-child::after {
+    content: '04:00';
+    display: block;
+    position: absolute;
+    bottom: -1.4em;
+}
+
+.week-grid {
+    display: grid;
+    grid-template-rows: repeat(calc(12 * 7), 1fr); /* 12 five min blocks per hr x 7 hrs (9am to 4pm) */
+    grid-template-columns: repeat(5, 1fr); /* 5 days a week */
+    column-gap: var(--day-gap);
+    border-bottom: 1px solid var(--bg-04);
+    height: 350px;
+}
+
+.hour-line {
+    border: solid var(--bg-04);
+    border-width: 1px 0 0;
+    grid-column: 1 / -1;
+}
+
+.course-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: .75em;
+    text-align: center;
+    color: var(--txt-02);
+    background-color: #444;
+    border-radius: .3rem;
+    padding: .5em;
 }
 
 /* ***** errors ***** */

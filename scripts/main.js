@@ -16,11 +16,7 @@
 
         for (let file of files) {
             promises.push(
-                fetch(base + file, {
-                    // <https://stackoverflow.com/q/52635660>
-                    credentials: 'include',
-                    mode: 'no-cors'
-                }).then(response => {
+                fetch(base + file).then(response => {
                     if (response.ok) {
                         return response.json();
                     } else {
@@ -33,13 +29,11 @@
 
                         warning.classList.add('tile', 'dark', 'error');
                         warning.textContent = 'Parts of this page failed to load. Click here to try again.';
-                        warning.addEventListener('click', function () {
-                            window.location.reload();
-                        });
+                        warning.addEventListener('click', () => { window.location.reload() });
                         get('main').appendChild(warning);
                     }
 
-                    console.log(error);
+                    console.error(error);
                 })
             );
         }
@@ -73,6 +67,7 @@
                         course.requirement,
                         course.attribute,
                         course.credits,
+                        course.times,
                         year.year,
                         semester.semester
                     );
@@ -84,7 +79,7 @@
 
         return courseObjects;
 
-        function Course(subject, number, title, requirement, attribute, credits, year, semester) {
+        function Course(subject, number, title, requirement, attribute, credits, times, year, semester) {
             this.name = {
                 'subject': subject,
                 'number': number,
@@ -97,6 +92,7 @@
                 'attribute': attribute
             };
             this.credits = credits;
+            this.times = times;
             this.year = year;
             this.semester = semester;
             this.tooltip = function () {
@@ -107,15 +103,15 @@
                 let header = document.createElement('div');
 
                 header.classList.add('tooltip-title');
-                header.textContent = this.name.shorthand + ': ' + title;
+                header.textContent = this.name.shorthand + ': ' + this.name.title;
                 tooltip.appendChild(header);
 
-                let details = document.createElement('div');
-                let yearDiff = (semester === 1 || semester === 4) ? year - 1 : year;
+                let details = document.createElement('time');
+                let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details');
-                details.textContent = `${expandYear(year)} Year • `;
-                details.textContent += `${expandSemester(semester)} ${2020 + yearDiff}`;
+                details.textContent = `${expandYear(this.year)} Year • `;
+                details.textContent += `${expandSemester(this.semester)} ${2020 + yearDiff}`;
                 tooltip.appendChild(details);
 
                 return tooltip;
@@ -383,7 +379,7 @@
     //        <https://catalog.wcupa.edu/js/courseleaf.js>
     //        <https://catalog.wcupa.edu/ribbit/index.cgi?page=getcourse.rjs&code=CSC%20142>
     //        <https://stackoverflow.com/questions/5031501/how-to-rate-limit-ajax-requests>
-    // @TODO: toggle switch for compact/expanded views
+    // @TODO: toggle switch for compact/expanded (detailed) views
     //        - show/hide days of week with circles around letters
     //        - show/hide professor
     // @TODO: show weekly schedule below each semester (grid? SVG?)
@@ -431,10 +427,11 @@
             // fill year with semesters
             for (let semester of semList) {
                 // create empty semester section
-                let semTemplate = get('.template-semester').content.cloneNode(true);
-                let semHeader = get('.semester-num', semTemplate);
-                let season = expandSemester(semester);
-                let semCreditTotal = 0;
+                let semTemplate = get('.template-semester').content.cloneNode(true),
+                    semNode = get('.semester', semTemplate),
+                    semHeader = get('.semester-num', semTemplate),
+                    season = expandSemester(semester),
+                    semCreditTotal = 0;
 
                 semHeader.innerHTML = `Year ${year} <span class="subdued">${season} ${semesterYear}</span>`;
                 if (semester === 1) semesterYear++;
@@ -458,9 +455,10 @@
                     shortNodeAlt.textContent = course.name.shorthand;
                     linkTitle(titleNode, course);
                     handlePill(reqContainer, course);
+                    handleTimes(semNode, course);
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
-                    get('.semester', semTemplate).appendChild(courseTemplate);
+                    semNode.appendChild(courseTemplate);
 
                     // fade out overflowing pills
                     let reqObserver = new ResizeObserver(entry => {
@@ -476,12 +474,8 @@
                     reqObserver.observe(reqContainer);
                 }
 
-                // create semester total
-                let semTotalTemplate = get('.template-total').content.cloneNode(true);
-                let semTotalNode = get('.credit-total', semTotalTemplate);
-
-                semTotalNode.textContent = semCreditTotal + ' cr.';
-                get('.semester', semTemplate).appendChild(semTotalTemplate);
+                // move weekly schedule to the end (originally placed after first class with time data)
+                if (get('.weekly-schedule', semNode)) semNode.appendChild(get('.weekly-schedule', semNode));
 
                 yearNode.appendChild(semTemplate);
             }
@@ -541,6 +535,7 @@
                         pill.textContent = expandAbbrev(type);
                         pill.addEventListener('click', function () {
                             // highlight courses with same req/attr, fade all others
+                            // @TODO: use objects to do this instead of DOM
                             if (this.classList.contains('selected') === false) {
                                 clearSelected();
 
@@ -568,6 +563,83 @@
                         container.appendChild(pill);
                     }
                 });
+            }
+        }
+
+        function handleTimes(container, course) {
+            let times = course.times;
+
+            // ignore classes without time data
+            if (typeof times === 'object') {
+                // insert weekly grid
+                if (!get('.weekly-schedule', container)) {
+                    let weekTemplate = get('.template-week').content.cloneNode(true);
+
+                    container.appendChild(weekTemplate);
+                }
+
+                // add time slots for this course to grid
+                for (let time of times) {
+                    let courseSlot = document.createElement('div'),
+                        start = time.start.split(':'),
+                        startHour = start[0],
+                        startMin = start[1],
+                        end = time.end.split(':'),
+                        endHour = end[0],
+                        endMin = end[1];
+
+                    // convert 24-hour to 12-hour time
+                    if (startHour > 12) startHour -= 12;
+                    if (endHour > 12) endHour -= 12;
+
+                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase');
+                    courseSlot.textContent = course.name.shorthand;
+                    courseSlot.title = startHour + ':' + startMin + ' – ' + endHour + ':' + endMin;
+                    courseSlot.style.gridRow = convertToRows(time.start, time.end);
+                    courseSlot.style.gridColumn = convertToColumn(time.day);
+
+                    // tooltip here
+                    // ['mouseenter', 'touchstart'].forEach(event => {
+                    //     courseSlot.addEventListener(event, function () {
+                    //     }, false);
+                    // });
+                    // ['mouseleave', 'touchend'].forEach(event => {
+                    //     courseSlot.addEventListener(event, function () {
+                    //     }, false);
+                    // });
+
+                    get('.week-grid', container).appendChild(courseSlot);
+                }
+            }
+
+            function convertToRows(startTime, endTime) {
+                let start = startTime.split(':'),
+                    startHour = start[0],
+                    startMin = start[1],
+                    end = endTime.split(':'),
+                    endHour = end[0],
+                    endMin = end[1],
+                    gridStartHour = 9; // 9am
+
+                let rowStart = ((startHour - gridStartHour) * 12 + 1) + (startMin / 5);
+                let rowEnd = ((endHour - gridStartHour) * 12 + 1) + (endMin / 5);
+
+                return rowStart + ' / ' + rowEnd;
+            }
+
+            function convertToColumn(day) {
+                switch (day) {
+                    case 'M':
+                        return 1;
+                    case 'T':
+                        return 2;
+                    case 'W':
+                        return 3;
+                    case 'R':
+                        return 4;
+                    case 'F':
+                        return 5;
+                }
             }
         }
     }

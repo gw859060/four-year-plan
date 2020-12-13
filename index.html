@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Garrett's Four Year Plan &ndash; WCUPA</title>
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/requirements.json" as="fetch">
-    <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/courses.json" as="fetch">
-
+    <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/requirements.json" as="fetch" crossorigin>
+    <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/courses.json" as="fetch" crossorigin>
     <link rel="stylesheet" href="styles/main.css">
     <script src="scripts/main.js" defer></script>
     <script src="scripts/smoothscroll.min.js" defer></script>
@@ -19,28 +18,18 @@
     <script>
         let colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-        // check on initial page load
         switchFavicon(colorScheme);
-
-        // listen for further changes after page has loaded
         colorScheme.addEventListener('change', () => switchFavicon(colorScheme));
 
         function switchFavicon(event) {
             let favicon = document.querySelector('link[rel="icon"]');
-
-            if (event.matches) {
-                favicon.href = 'favicon-dark.png';
-            } else {
-                favicon.href = 'favicon.png';
-            }
+            (event.matches) ? favicon.href = 'favicon-dark.png' : favicon.href = 'favicon.png';
         }
     </script>
     <header>
         <div class="header-container constrained-width">
             <h1>Garrett's Four Year Plan</h1>
             <h1 class="subdued">West Chester University of Pennsylvania</h1>
-            <!-- @TODO: put this in useful links section -->
-            <!-- <a class="github-link" target="_blank" rel="noopener" href="https://github.com/gw859060/four-year-plan">View on GitHub</a> -->
         </div>
     </header>
     <nav>
@@ -190,6 +179,8 @@
                 <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
                 <p class="description">Click a <span class="pill fake">Requirement</span> to highlight other courses with the same requirement. Click it again to clear the highlight.</p>
         </section>
+        <!-- @TODO: create useful links section -->
+        <!-- <a class="github-link" target="_blank" rel="noopener" href="https://github.com/gw859060/four-year-plan">View on GitHub</a> -->
     </main>
     <template class="template-attribute">
         <div class="attribute">
@@ -212,10 +203,35 @@
             <div class="course-credits monospace subdued"></div>
         </div>
     </template>
-    <template class="template-total">
-        <div class="semester-total">
-            <div class="monospace uppercase">Total</div>
-            <div class="credit-total monospace subdued"></div>
+    <template class="template-week">
+        <div class="weekly-schedule">
+            <div class="grid-spacer"></div>
+            <div class="header-days monospace uppercase subdued">
+                <div class="header-day">Mon</div>
+                <div class="header-day">Tue</div>
+                <div class="header-day">Wed</div>
+                <div class="header-day">Thu</div>
+                <div class="header-day">Fri</div>
+            </div>
+            <div class="header-hours monospace uppercase subdued">
+                <div class="header-hour">09:00</div>
+                <div class="header-hour">10:00</div>
+                <div class="header-hour">11:00</div>
+                <div class="header-hour">12:00</div>
+                <div class="header-hour">01:00</div>
+                <div class="header-hour">02:00</div>
+                <div class="header-hour">03:00</div>
+                <!-- 04:00 is inserted with ::after -->
+            </div>
+            <div class="week-grid">
+                <div class="hour-line" style="grid-row: 1 / 13"></div>
+                <div class="hour-line" style="grid-row: 13 / 25"></div>
+                <div class="hour-line" style="grid-row: 25 / 37"></div>
+                <div class="hour-line" style="grid-row: 37 / 49"></div>
+                <div class="hour-line" style="grid-row: 49 / 61"></div>
+                <div class="hour-line" style="grid-row: 61 / 73"></div>
+                <div class="hour-line" style="grid-row: 73 / 85"></div>
+            </div>
         </div>
     </template>
 </body>
