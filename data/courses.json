@@ -48,21 +48,6 @@
                             ]
                         },
                         {
-                            "subject": "FYE",
-                            "number": "100",
-                            "name": "First Year Experience",
-                            "credits": 4,
-                            "requirement": "gened",
-                            "attribute": "fye",
-                            "times": [
-                                {
-                                    "day": "R",
-                                    "start": "9:25",
-                                    "end": "10:15"
-                                }
-                            ]
-                        },
-                        {
                             "subject": "GEO",
                             "number": "204",
                             "name": "Introduction to Urban Studies",
@@ -77,6 +62,21 @@
                                     "day": "M",
                                     "start": "11:00",
                                     "end": "11:50"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "FYE",
+                            "number": "100",
+                            "name": "First Year Experience",
+                            "credits": 4,
+                            "requirement": "gened",
+                            "attribute": "fye",
+                            "times": [
+                                {
+                                    "day": "R",
+                                    "start": "9:25",
+                                    "end": "10:15"
                                 }
                             ]
                         }
@@ -146,14 +146,6 @@
                             ]
                         },
                         {
-                            "subject": "LNC",
-                            "number": "100",
-                            "name": "Discover the World on Film",
-                            "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "humanities"
-                        },
-                        {
                             "subject": "ANT",
                             "number": "103",
                             "name": "Introduction to Archaeology",
@@ -172,6 +164,14 @@
                                     "end": "13:45"
                                 }
                             ]
+                        },
+                        {
+                            "subject": "LNC",
+                            "number": "100",
+                            "name": "Discover the World on Film",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "humanities"
                         }
                     ]
                 }
