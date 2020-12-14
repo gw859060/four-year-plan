@@ -222,6 +222,61 @@ abbr {
     margin-right: auto;
 }
 
+.tooltip {
+    --arrow-pos: calc(7ch / 2 + .4rem); /* half of attribute width plus its padding */
+
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 7px);
+    max-width: 20em;
+    pointer-events: none;
+    z-index: 1; /* position above checkmarks */
+
+    font-size: .9rem;
+    font-weight: normal;
+    font-family: var(--sans-serif);
+    text-transform: none;
+    padding: .35rem .7rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
+                0 4px 8px rgba(0, 0, 0, .12),
+                0 8px 16px rgba(0, 0, 0, .13);
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: var(--arrow-pos);
+    border: 6px solid transparent;
+    border-top-color: var(--bg-02);
+}
+
+.tooltip-title {
+    font-weight: bold;
+}
+
+.tooltip-title,
+.tooltip-details {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tooltip-details {
+    font-size: .9em;
+    opacity: .85;
+    margin-top: -0.1em;
+}
+
+.week-grid .tooltip {
+    text-align: left;
+    padding: .45rem .75rem .55rem;
+    white-space: nowrap; /* allow tooltip to break out of grid */
+}
+
+.week-grid .tooltip-details {
+    margin-top: .05em;
+}
+
 @media screen and (max-width: 500px) {
 
     .constrained-width {
@@ -412,55 +467,6 @@ main > section:last-of-type {
     background: url('../images/checkmark.svg') no-repeat;
     font-size: .85em;
     margin-left: .25em;
-}
-
-.tooltip {
-    --arrow-pos: calc(7ch / 2 + .35em); /* half of attribute width plus its padding */
-
-    position: absolute;
-    left: 0;
-    bottom: calc(100% + 7px);
-    max-width: 20em;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1; /* position above checkmarks */
-
-    font-weight: normal;
-    font-family: var(--sans-serif);
-    text-transform: none;
-    padding: .4em .75em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .11),
-                0 4px 8px rgba(0, 0, 0, .12),
-                0 8px 16px rgba(0, 0, 0, .13);
-}
-
-.tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: var(--arrow-pos);
-    border: 6px solid transparent;
-    border-top-color: var(--bg-02);
-}
-
-.tooltip.show {
-    opacity: 1;
-}
-
-.tooltip-title {
-    font-weight: bold;
-}
-
-.tooltip-title,
-.tooltip-details {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tooltip-details {
-    font-size: .9em;
-    opacity: .85;
-    margin-top: -0.1em;
 }
 
 /* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
@@ -892,7 +898,7 @@ main > section:last-of-type {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: auto 1fr;
-    grid-gap: .5em .6em;
+    grid-gap: .3em .5em;
     margin-top: 2em;
     padding: 0 1.2rem;
 }
@@ -936,7 +942,7 @@ main > section:last-of-type {
     grid-template-columns: repeat(5, 1fr); /* 5 days a week */
     column-gap: var(--day-gap);
     border-bottom: 1px solid var(--bg-04);
-    height: 375px;
+    height: 350px;
 }
 
 .hour-line {
@@ -950,6 +956,7 @@ main > section:last-of-type {
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    position: relative; /* for tooltip */
 
     font-size: .75em;
     font-weight: bold;
@@ -958,11 +965,6 @@ main > section:last-of-type {
     background-color: var(--bg-02);
     border-radius: .3rem;
     padding: .5em;
-}
-
-.course-time {
-    font-size: .9em;
-    font-weight: normal;
 }
 
 .bg-red {
@@ -983,15 +985,6 @@ main > section:last-of-type {
 
 .bg-purple {
     background-color: #b272ba;
-}
-
-/* should match max-width of .constrained-width */
-@media screen and (max-width: 69em) {
-
-    .course-time {
-        display: none;
-    }
-
 }
 
 /* ***** errors ***** */

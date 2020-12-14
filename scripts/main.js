@@ -334,44 +334,21 @@
             }, false);
         }
 
-        function addTooltip(course, node) {
+        function addTooltip(course, attrNode) {
             let tooltip = course.tooltip();
 
-            node.appendChild(tooltip);
             ['mouseenter', 'touchstart'].forEach(event => {
-                node.addEventListener(event, function () {
-                    tooltip.classList.add('show');
+                attrNode.addEventListener(event, function () {
+                    this.appendChild(tooltip);
+                    repositionTooltip(tooltip);
                 }, { passive: true });
             });
+
             ['mouseleave', 'touchend'].forEach(event => {
-                node.addEventListener(event, function () {
-                    tooltip.classList.remove('show');
+                attrNode.addEventListener(event, function () {
+                    this.removeChild(tooltip);
                 }, { passive: true });
             });
-
-            // reposition tooltip if it goes offscreen
-            // @TODO: make this update when window is resized
-            let intersect = new IntersectionObserver(entries => {
-                let entry = entries[0];
-
-                if (entry.intersectionRatio < 1) {
-                    let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
-
-                    entry.target.style.left = overflow + 'px';
-                    entry.target.style.setProperty('--arrow-pos', `calc(${-overflow}px + 3.5ch + .35em)`);
-                }
-
-                intersect.unobserve(tooltip);
-            }, {
-                root: get('body'), // not sure why it doesn't work without this
-                rootMargin: '0px -15px 0px 0px'
-            });
-
-            // delay repositioning to fix tooltip randomly being more than 15px away
-            // from right edge, possibly because DOM hasn't fully loaded
-            window.setTimeout(function () {
-                intersect.observe(tooltip);
-            }, 500);
         }
     }
 
@@ -561,16 +538,15 @@
             if (typeof times === 'object') {
                 let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
 
+                // if weekly schedule has not been added yet
                 if (!get('.weekly-schedule', container)) {
-                    // insert weekly grid
                     let weekTemplate = get('.template-week').content.cloneNode(true);
+                    let rowNum = 1;
 
                     container.appendChild(weekTemplate);
 
-                    // insert rows to create hourly grid lines
-                    let rowNum = 1;
-
-                    for (let i = 1; i <= 7; i++) { // currently 7 hours shown
+                    // insert rows to create hourly grid lines (currently 7 hours shown)
+                    for (let i = 1; i <= 7; i++) {
                         let hourLine = document.createElement('div');
 
                         hourLine.classList.add('hour-line');
@@ -584,57 +560,94 @@
                 // add time slots for this course to the grid
                 for (let time of times) {
                     let courseSlot = document.createElement('div'),
-                        courseTime = document.createElement('div'),
-                        start = time.start.split(':'),
-                        startHour = start[0],
-                        startMin = start[1],
-                        end = time.end.split(':'),
-                        endHour = end[0],
-                        endMin = end[1];
-
-                    // convert 24-hour to 12-hour time for tooltip
-                    if (startHour > 12) startHour -= 12;
-                    if (endHour > 12) endHour -= 12;
+                        courseTime = document.createElement('div');
 
                     courseSlot.classList.add('course-slot', 'monospace', 'uppercase', backgrounds[index]);
                     courseSlot.textContent = course.name.shorthand;
-                    courseSlot.title = `${startHour}:${startMin} – ${endHour}:${endMin}`;
-                    courseSlot.style.gridRow = convertToRows(time.start, time.end);
+                    courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
                     courseSlot.style.gridColumn = convertToColumn(time.day);
-
-                    courseTime.classList.add('course-time');
-                    courseTime.textContent = `${startHour}:${startMin}`;
-                    courseSlot.appendChild(courseTime);
-
-                    // tooltip?
-                    // ['mouseenter', 'touchstart'].forEach(event => {
-                    //     courseSlot.addEventListener(event, function () {
-                    //     }, false);
-                    // });
-                    // ['mouseleave', 'touchend'].forEach(event => {
-                    //     courseSlot.addEventListener(event, function () {
-                    //     }, false);
-                    // });
+                    addTooltip(courseSlot, course, time);
 
                     get('.week-grid', container).appendChild(courseSlot);
                 }
             }
 
-            function convertToRows(startTime, endTime) {
-                let start = startTime.split(':'),
-                    startHour = start[0],
-                    startMin = start[1],
-                    end = endTime.split(':'),
-                    endHour = end[0],
-                    endMin = end[1],
+            function addTooltip(courseSlot, course, time) {
+                let tooltip = buildTooltip(course, time);
+
+                ['mouseenter', 'touchstart'].forEach(event => {
+                    courseSlot.addEventListener(event, function () {
+                        this.appendChild(tooltip);
+                        repositionTooltip(tooltip);
+                    }, false);
+                });
+
+                ['mouseleave', 'touchend'].forEach(event => {
+                    courseSlot.addEventListener(event, function () {
+                        this.removeChild(tooltip);
+                    }, false);
+                });
+
+                function buildTooltip(course, time) {
+                    let tooltip = document.createElement('div');
+
+                    tooltip.classList.add('tooltip', 'tile', 'dark');
+
+                    let header = document.createElement('div');
+
+                    header.classList.add('tooltip-title');
+                    header.textContent = course.name.shorthand + ': ' + course.name.title;
+                    tooltip.appendChild(header);
+
+                    let details = document.createElement('div'),
+                        startHour = time.start.split(':')[0],
+                        startMin = time.start.split(':')[1],
+                        endHour = time.end.split(':')[0],
+                        endMin = time.end.split(':')[1],
+                        minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
+                        hours = Math.floor(minutes / 60);
+
+                    if (hours !== 0) {
+                        let plural;
+
+                        if (hours === 1) {
+                            plural = 'hr'
+                        } else {
+                            plural = 'hrs';
+                        }
+
+                        hours = `${hours} ${plural} `;
+                    } else {
+                        hours = '';
+                    }
+
+                    // convert 24-hour time to 12-hour time
+                    if (startHour > 12) startHour -= 12;
+                    if (endHour > 12) endHour -= 12;
+
+                    let newStart = `${startHour}:${startMin}`,
+                        newEnd = `${endHour}:${endMin}`,
+                        duration = `${hours}${minutes % 60} min`;
+
+                    details.classList.add('tooltip-details');
+                    details.textContent = `${newStart} – ${newEnd} • ${duration}`;
+                    tooltip.appendChild(details);
+
+                    return tooltip;
+                }
+            }
+
+            function convertToRow(time) {
+                let timeSplit = time.split(':'),
+                    hour = timeSplit[0],
+                    min = timeSplit[1],
                     gridStartHour = 9; // 9am
 
-                // convert course start/end times to number of 5-minute intervals for grid placement
-                // by multiplying hours by twelve and adding 1 because first grid line is labeled 1, not 0
-                let rowStart = ((startHour - gridStartHour) * 12 + 1) + (startMin / 5);
-                let rowEnd = ((endHour - gridStartHour) * 12 + 1) + (endMin / 5);
+                // convert course start/end time to its number of 5-minute intervals for grid placement;
+                // we add 1 because grid lines start at 1, not 0
+                let rowNum = ((hour - gridStartHour) * 12 + 1) + (min / 5);
 
-                return rowStart + ' / ' + rowEnd;
+                return rowNum;
             }
 
             function convertToColumn(day) {
@@ -711,6 +724,21 @@
                 ['seconds', 1]
             ].reduce((acc, [key, value]) => (acc[key] = Math.floor(delta / value) * isNegative, delta -= acc[key] * isNegative * value, acc), {});
         }
+    }
+
+    function repositionTooltip(tooltip) {
+        let intersect = new IntersectionObserver(entries => {
+            let entry = entries[0];
+
+            if (entry.intersectionRatio < 1) {
+                let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
+
+                entry.target.style.left = overflow + 'px';
+                entry.target.style.setProperty('--arrow-pos', `calc(${-overflow}px + 3.5ch + .4rem)`);
+            }
+        }, { rootMargin: '0px -15px 0px 0px' });
+
+        intersect.observe(tooltip);
     }
 
     function expandAbbrev(abbrev) {
