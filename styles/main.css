@@ -936,7 +936,7 @@ main > section:last-of-type {
     grid-template-columns: repeat(5, 1fr); /* 5 days a week */
     column-gap: var(--day-gap);
     border-bottom: 1px solid var(--bg-04);
-    height: 325px;
+    height: 375px;
 }
 
 .hour-line {
@@ -947,16 +947,51 @@ main > section:last-of-type {
 
 .course-slot {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    text-align: center;
 
     font-size: .75em;
-    text-align: center;
+    font-weight: bold;
     line-height: 1.2;
     color: var(--txt-02);
     background-color: var(--bg-02);
     border-radius: .3rem;
     padding: .5em;
+}
+
+.course-time {
+    font-size: .9em;
+    font-weight: normal;
+}
+
+.bg-red {
+    background-image: repeating-linear-gradient(-45deg, #d66063, #d66063 10px, #cd5659 10px, #cd5659 20px);
+}
+
+.bg-orange {
+    background-color: #de8f43;
+}
+
+.bg-green {
+    background-image: repeating-linear-gradient(45deg, #58a14e, #58a14e 10px, #539946 10px, #539946 20px);
+}
+
+.bg-blue {
+    background-color: #5280b1;
+}
+
+.bg-purple {
+    background-color: #b272ba;
+}
+
+/* should match max-width of .constrained-width */
+@media screen and (max-width: 69em) {
+
+    .course-time {
+        display: none;
+    }
+
 }
 
 /* ***** errors ***** */

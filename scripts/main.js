@@ -423,7 +423,8 @@
                 if (semester === 1) semesterYear++;
 
                 // fill semester with courses
-                let courseList = courses
+                let courseIndex = 0,
+                    courseList = courses
                                 .filter(c => c.year === year)
                                 .filter(c => c.semester === semester);
 
@@ -441,10 +442,11 @@
                     shortNodeAlt.textContent = course.name.shorthand;
                     linkTitle(titleNode, course);
                     handlePill(reqContainer, course);
-                    handleTimes(semNode, course);
+                    handleTimes(semNode, course, courseIndex);
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
                     semNode.appendChild(courseTemplate);
+                    courseIndex++;
 
                     // fade out overflowing pills
                     let reqObserver = new ResizeObserver(entry => {
@@ -552,11 +554,13 @@
             }
         }
 
-        function handleTimes(container, course) {
+        function handleTimes(container, course, index) {
             let times = course.times;
 
             // ignore classes without time data
             if (typeof times === 'object') {
+                let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
+
                 if (!get('.weekly-schedule', container)) {
                     // insert weekly grid
                     let weekTemplate = get('.template-week').content.cloneNode(true);
@@ -580,6 +584,7 @@
                 // add time slots for this course to the grid
                 for (let time of times) {
                     let courseSlot = document.createElement('div'),
+                        courseTime = document.createElement('div'),
                         start = time.start.split(':'),
                         startHour = start[0],
                         startMin = start[1],
@@ -591,11 +596,15 @@
                     if (startHour > 12) startHour -= 12;
                     if (endHour > 12) endHour -= 12;
 
-                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase');
+                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase', backgrounds[index]);
                     courseSlot.textContent = course.name.shorthand;
                     courseSlot.title = `${startHour}:${startMin} – ${endHour}:${endMin}`;
                     courseSlot.style.gridRow = convertToRows(time.start, time.end);
                     courseSlot.style.gridColumn = convertToColumn(time.day);
+
+                    courseTime.classList.add('course-time');
+                    courseTime.textContent = `${startHour}:${startMin}`;
+                    courseSlot.appendChild(courseTime);
 
                     // tooltip?
                     // ['mouseenter', 'touchstart'].forEach(event => {
@@ -620,6 +629,8 @@
                     endMin = end[1],
                     gridStartHour = 9; // 9am
 
+                // convert course start/end times to number of 5-minute intervals for grid placement
+                // by multiplying hours by twelve and adding 1 because first grid line is labeled 1, not 0
                 let rowStart = ((startHour - gridStartHour) * 12 + 1) + (startMin / 5);
                 let rowEnd = ((endHour - gridStartHour) * 12 + 1) + (endMin / 5);
 
