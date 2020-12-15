@@ -29,7 +29,7 @@
 
                         warning.classList.add('tile', 'dark', 'error');
                         warning.textContent = 'Parts of this page failed to load. Click here to try again.';
-                        warning.addEventListener('click', () => { window.location.reload() });
+                        warning.addEventListener('click', () => { window.location.reload(); });
                         get('main').appendChild(warning);
                     }
 
@@ -129,6 +129,7 @@
                 let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
                 get('.' + section).scrollIntoView({ behavior: motion });
+                // scrollStop() goes here, maybe
             }, false);
         }
     }
@@ -171,6 +172,7 @@
             let courseNode = get('.attribute-course', attrTemplate);
 
             if (i !== 0) parentNode.appendChild(document.createElement('hr'));
+
             get('.attribute', attrTemplate).classList.add(attr.attribute);
             nameNode.textContent = expandAbbrev(attr.attribute);
             courseNode.textContent = '—';
@@ -311,23 +313,37 @@
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
             }
 
-            node.textContent = course.name.shorthand;
-            addTooltip(course, node);
+            // replace div with button so empty courses are skipped when tabbing through
+            let button = document.createElement('button');
+
+            button.classList.add('attribute-course', 'monospace', 'uppercase', 'linked');
+            button.textContent = course.name.shorthand;
+            button.setAttribute('type', 'button');
+            addTooltip(course, button);
+            node.parentNode.appendChild(button);
+            node.remove();
 
             // on click, jump to course schedule and highlight the course
-            node.classList.add('linked');
-            node.addEventListener('click', function () {
+            button.addEventListener('click', function () {
                 let clickedCourse = get('#' + course.name.id);
                 let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
-                get('.semester-num', clickedCourse.parentNode).scrollIntoView({ behavior: motion });
                 clickedCourse.classList.add('highlighted');
-                get('.req-container', clickedCourse).classList.add('no-fade'); // .pill has an existing transition property that we don't want to appear when jumping to course
+                // disable existing transition property on .pill when jumping to course
+                get('.req-container', clickedCourse).classList.add('no-fade');
+
+                // <https://css-tricks.com/smooth-scrolling-accessibility/>
+                // the problem: setting focus as instructed makes the browser jump
+                // to target immediately, skipping the smooth scroll behavior
+                get('.semester-num', clickedCourse.parentNode).scrollIntoView({ behavior: motion });
+                // scrollStop(function () { get('.pill', clickedCourse).focus(); });
+
                 window.setTimeout(function () {
                     get('.req-container', clickedCourse).classList.remove('no-fade');
                     clickedCourse.classList.remove('highlighted');
                     clickedCourse.classList.add('fade-out');
                 }, 1500);
+
                 window.setTimeout(function () {
                     clickedCourse.classList.remove('fade-out');
                 }, 3000);
@@ -337,16 +353,16 @@
         function addTooltip(course, attrNode) {
             let tooltip = course.tooltip();
 
-            ['mouseenter', 'touchstart'].forEach(event => {
-                attrNode.addEventListener(event, function () {
-                    this.appendChild(tooltip);
+            ['mouseenter', 'touchstart', 'focus'].forEach(event => {
+                attrNode.addEventListener(event, function (e) {
+                    e.currentTarget.appendChild(tooltip);
                     repositionTooltip(tooltip);
                 }, { passive: true });
             });
 
-            ['mouseleave', 'touchend'].forEach(event => {
-                attrNode.addEventListener(event, function () {
-                    this.removeChild(tooltip);
+            ['mouseleave', 'touchend', 'blur'].forEach(event => {
+                attrNode.addEventListener(event, function (e) {
+                    e.currentTarget.removeChild(tooltip);
                 }, { passive: true });
             });
         }
@@ -446,6 +462,14 @@
             }
         }
 
+        // handle keyboard accessibility for pills
+        getAll('.req-container').forEach(container => {
+            container.focus = 0;
+            container.elements = getAll('.pill', container);
+            container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
+            container.addEventListener('keydown', makeAccessible);
+        });
+
         function linkTitle(container, course) {
             let link = document.createElement('a');
 
@@ -495,9 +519,10 @@
                         // (eg. core in both major/minor) by making attr classes more specific
                         let typeClass = (type === attr) ? `${req}-${type}` : type;
 
-                        pill.setAttribute('type', 'button');
                         pill.classList.add('pill', typeClass);
                         pill.textContent = expandAbbrev(type);
+                        pill.setAttribute('type', 'button');
+                        pill.setAttribute('tabindex', '-1');
                         pill.addEventListener('click', function () {
                             // highlight courses with same req/attr, fade all others
                             // @TODO: use objects to do this instead of DOM
@@ -560,9 +585,9 @@
 
                 // add time slots for this course to the grid
                 for (let time of times) {
-                    let courseSlot = document.createElement('div'),
-                        courseTime = document.createElement('div');
+                    let courseSlot = document.createElement('div');
 
+                    courseSlot.setAttribute('tabindex', '0');
                     courseSlot.classList.add('course-slot', 'monospace', 'uppercase', backgrounds[index]);
                     courseSlot.textContent = course.name.shorthand;
                     courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
@@ -576,17 +601,20 @@
             function addTooltip(courseSlot, course, time) {
                 let tooltip = buildTooltip(course, time);
 
-                ['mouseenter', 'touchstart'].forEach(event => {
-                    courseSlot.addEventListener(event, function () {
-                        this.appendChild(tooltip);
+                ['mouseenter', 'touchstart', 'focus'].forEach(event => {
+                    courseSlot.addEventListener(event, function (e) {
+                        e.currentTarget.appendChild(tooltip);
                         repositionTooltip(tooltip);
-                    }, false);
+                    }, { passive: true });
                 });
 
-                ['mouseleave', 'touchend'].forEach(event => {
-                    courseSlot.addEventListener(event, function () {
-                        this.removeChild(tooltip);
-                    }, false);
+                ['mouseleave', 'touchend', 'blur'].forEach(event => {
+                    courseSlot.addEventListener(event, function (e) {
+                        // some weird interaction where clicking slot and then clicking away produces error
+                        if (e.currentTarget.contains(tooltip)) {
+                            e.currentTarget.removeChild(tooltip);
+                        }
+                    }, { passive: true });
                 });
 
                 function buildTooltip(course, time) {
@@ -601,37 +629,25 @@
                     tooltip.appendChild(header);
 
                     let details = document.createElement('div'),
-                        startHour = time.start.split(':')[0],
-                        startMin = time.start.split(':')[1],
-                        endHour = time.end.split(':')[0],
-                        endMin = time.end.split(':')[1],
                         minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
                         hours = Math.floor(minutes / 60);
 
-                    if (hours !== 0) {
-                        let plural;
-
-                        if (hours === 1) {
-                            plural = 'hr'
-                        } else {
-                            plural = 'hrs';
-                        }
-
-                        hours = `${hours} ${plural} `;
-                    } else {
-                        hours = '';
-                    }
+                    (hours !== 0) ? hours += 'h ' : hours = '';
 
                     // convert 24-hour time to 12-hour time
+                    let startHour = time.start.split(':')[0],
+                        startMin = time.start.split(':')[1],
+                        endHour = time.end.split(':')[0],
+                        endMin = time.end.split(':')[1];
+
                     if (startHour > 12) startHour -= 12;
                     if (endHour > 12) endHour -= 12;
 
                     let newStart = `${startHour}:${startMin}`,
-                        newEnd = `${endHour}:${endMin}`,
-                        duration = `${hours}${minutes % 60} min`;
+                        newEnd = `${endHour}:${endMin}`;
 
                     details.classList.add('tooltip-details');
-                    details.textContent = `${newStart} to ${newEnd} • ${duration}`;
+                    details.textContent = `${newStart}–${newEnd} • ${hours}${minutes % 60}m`;
                     tooltip.appendChild(details);
 
                     return tooltip;
@@ -727,10 +743,55 @@
         }
     }
 
+    function makeAccessible(event) {
+        let target = event.currentTarget,
+            elements = target.elements,
+            key = event.key;
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            event.preventDefault(); // stop page from scrolling with arrow keys
+            elements[target.focus].setAttribute('tabindex', -1);
+
+            // move to next element
+            if (['ArrowDown', 'ArrowRight'].includes(key)) {
+                target.focus++;
+
+                // if at the end, move to the start
+                if (target.focus >= elements.length) {
+                    target.focus = 0;
+                }
+            }
+            // move to previous element
+            else if (['ArrowUp', 'ArrowLeft'].includes(key)) {
+                target.focus--;
+
+                // if at the start, move to the end
+                if (target.focus < 0) {
+                    target.focus = elements.length - 1;
+                }
+            }
+
+            elements[target.focus].setAttribute('tabindex', 0);
+            elements[target.focus].focus();
+        }
+    }
+
+    // <https://gomakethings.com/detecting-when-a-visitor-has-stopped-scrolling-with-vanilla-javascript/>
+    function scrollStop(callback) {
+        let isScrolling;
+
+        window.addEventListener('scroll', function (event) {
+            window.clearTimeout(isScrolling);
+
+            isScrolling = setTimeout(function () {
+                callback();
+            }, 66);
+        }, { passive: true });
+    }
+
     function repositionTooltip(tooltip) {
         let parentWidth = tooltip.parentNode.offsetWidth;
         let padLeft = parseFloat(window.getComputedStyle(tooltip).getPropertyValue('padding-left'));
-
         let intersect = new IntersectionObserver(entries => {
             let entry = entries[0];
             let overflow = 0;
@@ -741,7 +802,7 @@
 
             // move tooltip body while keeping arrow centered over hovered element
             // @TODO: fix tooltip "jumping" when it appears on Chrome and Firefox
-            let arrowPos = (-1 * overflow) + (parentWidth / 2) - (padLeft / 2);
+            let arrowPos = (overflow * -1) + (parentWidth / 2) - (padLeft / 2);
 
             entry.target.style.left = overflow + 'px';
             entry.target.style.setProperty('--arrow-pos', arrowPos + 'px');

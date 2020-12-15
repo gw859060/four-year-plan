@@ -10,6 +10,7 @@
     <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/courses.json" as="fetch" crossorigin>
     <link rel="stylesheet" href="styles/main.css">
     <script src="scripts/main.js" defer></script>
+    <script src="scripts/focus-visible.min.js" defer></script>
     <script src="scripts/smoothscroll.min.js" defer></script>
     <script src="scripts/confetti.min.js" defer></script>
 </head>
@@ -35,23 +36,23 @@
     <nav>
         <ul class="nav-list constrained-width">
             <li class="nav-item">
-                <a class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</a>
+                <button class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</button>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="important-dates"><span class="subdued">02.</span> Important Dates</a>
+                <button class="nav-link" data-section="important-dates"><span class="subdued">02.</span> Important Dates</button>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="course-schedule"><span class="subdued">03.</span> Course Schedule</a>
+                <button class="nav-link" data-section="course-schedule"><span class="subdued">03.</span> Course Schedule</button>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-section="useful-links"><span class="subdued">04.</span> Useful Links</a>
+                <button class="nav-link" data-section="useful-links"><span class="subdued">04.</span> Useful Links</button>
             </li>
         </ul>
     </nav>
     <main>
         <section class="degree-requirements constrained-width">
             <h2 class="degree-header"><span class="subdued">01.</span> Degree Requirements</h2>
-            <p class="description">Hover over a course shorthand to see more details. Click the course to jump to its position in the four-year schedule.</p>
+            <p class="description">Hover over a course to see more details. Click it to jump to its position in the four-year schedule.</p>
             <section class="requirements requirement-gened">
                 <h3 class="uppercase">General Education</h3>
                 <div class="tile requirement academic">
@@ -177,7 +178,7 @@
         -->
         <section class="course-schedule constrained-width">
                 <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
-                <p class="description">Click a <span class="pill fake">Requirement</span> to highlight other courses with the same requirement. Click it again to clear the highlight.</p>
+                <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses, and click again to clear. Hover over a block in the weekly schedule to see more details.</p>
         </section>
         <!-- @TODO: create useful links section -->
         <!-- <a class="github-link" target="_blank" rel="noopener" href="https://github.com/gw859060/four-year-plan">View on GitHub</a> -->
@@ -185,7 +186,7 @@
     <template class="template-attribute">
         <div class="attribute">
             <div class="attribute-name"></div>
-            <abbr class="attribute-course monospace uppercase"></abbr>
+            <div class="attribute-course monospace uppercase"></div>
         </div>
     </template>
     <template class="template-semester">
@@ -205,14 +206,14 @@
     </template>
     <template class="template-week">
         <figure class="weekly-schedule">
-            <div class="header-days monospace uppercase subdued">
+            <div class="header-days monospace uppercase subdued unselectable">
                 <div class="header-day">Mon</div>
                 <div class="header-day">Tue</div>
                 <div class="header-day">Wed</div>
                 <div class="header-day">Thu</div>
                 <div class="header-day">Fri</div>
             </div>
-            <div class="header-hours monospace uppercase subdued">
+            <div class="header-hours monospace uppercase subdued unselectable">
                 <div class="header-hour">9:00</div>
                 <div class="header-hour">10:00</div>
                 <div class="header-hour">11:00</div>

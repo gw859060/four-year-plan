@@ -155,12 +155,18 @@ abbr {
 
 /* ***** utility classes ***** */
 
+/* for focus-visible.min.js */
+.js-focus-visible :focus:not(.focus-visible) {
+    outline: none;
+}
+
 .link {
     color: inherit;
     transition: filter var(--duration) ease;
 }
 
-.link:hover {
+.link:hover,
+.link:focus {
     filter: brightness(.85);
 }
 
@@ -361,14 +367,18 @@ nav {
     padding: .12em .7em;
     margin: -0.12em -0.7em;
     white-space: nowrap;
+
+    /* reset default <button> styles */
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    background-color: transparent;
+    border: none;
 }
 
-@media screen and (hover: hover) {
-
-    .nav-link:hover {
-        background-color: #414141;
-    }
-
+.nav-link:hover,
+.nav-link:focus {
+    background-color: #414141;
 }
 
 @media screen and (max-width: 650px) {
@@ -427,6 +437,26 @@ main > section:last-of-type {
     font-weight: bold;
     white-space: nowrap;
     position: relative; /* for .tooltip */
+
+    /* reset default <button> styles */
+    background-color: transparent;
+    border: none;
+    margin: 0;
+}
+
+.attribute-course.linked:hover,
+.attribute-course.linked:focus {
+    cursor: pointer;
+    background-color: var(--bg-05);
+}
+
+/* reset default <button> style */
+.attribute-course:active {
+    color: inherit;
+}
+
+.attribute-course .tooltip {
+    text-align: left;
 }
 
 .attribute-course.linked {
@@ -468,16 +498,6 @@ main > section:last-of-type {
     background: url('../images/checkmark.svg') no-repeat;
     font-size: .85em;
     margin-left: .25em;
-}
-
-/* <https://css-tricks.com/solving-sticky-hover-states-with-media-hover-hover/> */
-@media screen and (hover: hover) {
-
-    .attribute-course.linked:hover {
-        cursor: pointer;
-        background-color: var(--bg-05);
-    }
-
 }
 
 @media screen and (max-width: 500px) {
@@ -643,7 +663,8 @@ main > section:last-of-type {
     transition: filter var(--duration) ease;
 }
 
-.event.celebrate:hover {
+.event.celebrate:hover,
+.event.celebrate:focus {
     cursor: pointer;
     filter: brightness(1.2);
 }
@@ -731,7 +752,8 @@ main > section:last-of-type {
     text-decoration: none;
 }
 
-.course-link:hover {
+.course-link:hover,
+.course-link:focus {
     text-decoration: underline;
 }
 
@@ -867,7 +889,8 @@ main > section:last-of-type {
     font-family: inherit;
 }
 
-.pill:hover {
+.pill:hover,
+.pill:focus {
     filter: brightness(.95);
     cursor: pointer;
 }
@@ -881,7 +904,8 @@ main > section:last-of-type {
     background-color: var(--bg-02);
 }
 
-.pill.selected:hover {
+.pill.selected:hover,
+.pill.selected:focus {
     filter: brightness(1.1);
 }
 
@@ -906,7 +930,7 @@ main > section:last-of-type {
     grid: auto 1fr / auto 1fr;
     grid-template-areas: "empty days"
                         "hours courses";
-    grid-gap: .3em .5em;
+    grid-gap: .35em .7em;
     margin: 2em 0 0;
     padding: 0 1.2rem;
 }
@@ -934,7 +958,7 @@ main > section:last-of-type {
     position: relative;
     font-size: .75rem;
     text-align: right;
-    transform: translateY(-1.1ch);
+    transform: translateY(-1.2ch);
 }
 
 /* fake the last hour header */
@@ -983,7 +1007,7 @@ main > section:last-of-type {
 }
 
 .bg-orange {
-    background-color: #de8f43;
+    background-color: #e69648;
 }
 
 .bg-green {
@@ -1028,7 +1052,8 @@ main > section:last-of-type {
     cursor: pointer;
 }
 
-.tile.error:hover {
+.tile.error:hover,
+.tile.error:focus {
     filter: brightness(1.1);
 }
 
