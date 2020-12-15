@@ -539,17 +539,18 @@
                 let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
 
                 // if weekly schedule has not been added yet
+                // @TODO: dynamically create hour numbers and reduce them to the minimum necessary
                 if (!get('.weekly-schedule', container)) {
                     let weekTemplate = get('.template-week').content.cloneNode(true);
                     let rowNum = 1;
 
                     container.appendChild(weekTemplate);
 
-                    // insert rows to create hourly grid lines (currently 7 hours shown)
+                    // insert rows to create hourly grid lines (currently showing 7 hours)
                     for (let i = 1; i <= 7; i++) {
                         let hourLine = document.createElement('div');
 
-                        hourLine.classList.add('hour-line');
+                        hourLine.classList.add('hour-line', 'unselectable');
                         hourLine.style.gridRow = rowNum + ' / ' + (rowNum + 12);
                         get('.week-grid', container).appendChild(hourLine);
 
@@ -630,7 +631,7 @@
                         duration = `${hours}${minutes % 60} min`;
 
                     details.classList.add('tooltip-details');
-                    details.textContent = `${newStart} – ${newEnd} • ${duration}`;
+                    details.textContent = `${newStart} to ${newEnd} • ${duration}`;
                     tooltip.appendChild(details);
 
                     return tooltip;
@@ -644,7 +645,7 @@
                     gridStartHour = 9; // 9am
 
                 // convert course start/end time to its number of 5-minute intervals for grid placement;
-                // we add 1 because grid lines start at 1, not 0
+                // add 1 because grid line naming starts at 1, not 0
                 let rowNum = ((hour - gridStartHour) * 12 + 1) + (min / 5);
 
                 return rowNum;
@@ -727,15 +728,23 @@
     }
 
     function repositionTooltip(tooltip) {
+        let parentWidth = tooltip.parentNode.offsetWidth;
+        let padLeft = parseFloat(window.getComputedStyle(tooltip).getPropertyValue('padding-left'));
+
         let intersect = new IntersectionObserver(entries => {
             let entry = entries[0];
+            let overflow = 0;
 
             if (entry.intersectionRatio < 1) {
-                let overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
-
-                entry.target.style.left = overflow + 'px';
-                entry.target.style.setProperty('--arrow-pos', `calc(${-overflow}px + 3.5ch + .4rem)`);
+                overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
             }
+
+            // move tooltip body while keeping arrow centered over hovered element
+            // @TODO: fix tooltip "jumping" when it appears on Chrome and Firefox
+            let arrowPos = (-1 * overflow) + (parentWidth / 2) - (padLeft / 2);
+
+            entry.target.style.left = overflow + 'px';
+            entry.target.style.setProperty('--arrow-pos', arrowPos + 'px');
         }, { rootMargin: '0px -15px 0px 0px' });
 
         intersect.observe(tooltip);
