@@ -119,7 +119,6 @@
         }
     }
 
-    // @TODO: make background slide on hover
     function buildNavigation() {
         let links = getAll('.nav-link');
 
@@ -132,6 +131,49 @@
                 // scrollStop() goes here, maybe
             }, false);
         }
+
+        // fade in nav items with a delay
+        let delay = 50;
+
+        getAll('.nav-item').forEach(item => {
+            item.style.transitionDelay = delay + 'ms';
+            delay += 125;
+        });
+
+        // handle opening/closing nav via menu button
+        let nav = get('nav');
+
+        get('.nav-button').addEventListener('click', function (event) {
+            // if open, close nav
+            if (nav.classList.contains('show-menu')) {
+                nav.classList.remove('show-menu');
+            }
+            // if closed, open nav
+            else {
+                nav.classList.add('show-menu');
+
+                // click outside nav to close
+                document.addEventListener('click', function clickOutside(event) {
+                    if (!event.target.closest('nav')) {
+                        nav.classList.remove('show-menu');
+                        document.removeEventListener('click', clickOutside, { passive: true });
+                    }
+                }, { passive: true });
+
+                // close nav when focus leaves it or its children (eg. by tabbing out)
+                nav.addEventListener('focusout', function (event) {
+                    // if newly focused element is still in nav, ignore the event
+                    if (nav.contains(event.relatedTarget)) return;
+
+                    nav.classList.remove('show-menu');
+                }, { passive: true });
+
+                // close nav when Esc is pressed
+                nav.addEventListener('keydown', function escToClose(event) {
+                    if (event.key === 'Escape') nav.classList.remove('show-menu');
+                }, { passive: true });
+            }
+        }, { passive: true });
     }
 
     function buildRequirements(json) {
@@ -362,7 +404,9 @@
 
             ['mouseleave', 'touchend', 'blur'].forEach(event => {
                 attrNode.addEventListener(event, function (e) {
-                    e.currentTarget.removeChild(tooltip);
+                    if (e.currentTarget.contains(tooltip)) {
+                        e.currentTarget.removeChild(tooltip);
+                    }
                 }, { passive: true });
             });
         }
@@ -432,7 +476,7 @@
 
                     courseNode.id = course.name.id;
                     shortNode.textContent = course.name.shorthand;
-                    shortNodeAlt.textContent = course.name.shorthand;
+                    shortNodeAlt.textContent = course.name.shorthand + ' ';
                     linkTitle(titleNode, course);
                     handlePill(reqContainer, course);
                     handleTimes(semNode, course, courseIndex);

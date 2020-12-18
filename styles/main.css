@@ -54,6 +54,14 @@
     --gap-large: 1.25em;
     --gap-small: .6em;
 
+    --shadow-small: 0 2px 4px rgba(0, 0, 0, .12),
+                   0 4px 8px rgba(0, 0, 0, .13),
+                   0 8px 16px rgba(0, 0, 0, .14);
+    --shadow-big: 0 2px 4px rgba(0, 0, 0, .09),
+                 0 4px 8px rgba(0, 0, 0, .10),
+                 0 8px 16px rgba(0, 0, 0, .11),
+                 0 16px 32px rgba(0, 0, 0, .12);
+
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* --ease-in: cubic-bezier(0.22, 1, 0.36, 1) */
@@ -162,12 +170,18 @@ abbr {
 
 .link {
     color: inherit;
-    transition: filter var(--duration) ease;
+    text-decoration: none;
+    border-bottom: 2px solid #ccc;
+    transition: border-color var(--duration) var(--ease);
+
+    /* move border closer to bottom of text */
+    display: inline-block;
+    height: 1.45em;
 }
 
 .link:hover,
 .link:focus {
-    filter: brightness(.85);
+    border-color: var(--txt-05);
 }
 
 .constrained-width {
@@ -255,7 +269,7 @@ abbr {
     margin-right: auto;
 }
 
-.tooltip {
+.tooltip.tile {
     position: absolute;
     left: 0;
     bottom: calc(100% + 7px); /* greater than or equal to border-width on .tooltip::after */
@@ -268,9 +282,7 @@ abbr {
     font-family: var(--sans-serif);
     text-transform: none;
     padding: .35rem .7rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12),
-                0 4px 8px rgba(0, 0, 0, .13),
-                0 8px 16px rgba(0, 0, 0, .14);
+    box-shadow: var(--shadow-small);
 }
 
 .tooltip::after {
@@ -330,6 +342,19 @@ header {
     color: #bbb;
 }
 
+@media screen and (max-width: 700px) {
+
+    .header-container {
+        padding-top: 3em;
+        padding-bottom: 3em;
+    }
+
+    .header-container h1 {
+        font-size: 1.75em;
+    }
+
+}
+
 /* ***** navigation ***** */
 
 nav {
@@ -340,6 +365,10 @@ nav {
     background-color: var(--bg-01);
     border-top: 1px solid #414141;
     z-index: 1; /* position above checkmarks */
+}
+
+.nav-button {
+    display: none;
 }
 
 .nav-list {
@@ -381,10 +410,95 @@ nav {
     background-color: #414141;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 700px) {
 
     nav {
-        display: none;
+        --nav-size: 44px;
+
+        height: var(--nav-size);
+    }
+
+    .nav-button {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        color: var(--txt-02);
+        font-size: 1em;
+        font-weight: bold;
+        padding: 0 0 0 calc(var(--nav-size) + 1rem);
+        cursor: pointer;
+
+        /* reset default <button> styles */
+        background-color: transparent;
+        text-align: left;
+        border: none;
+    }
+
+    /* hamburger symbol */
+    .nav-button::after {
+        --button-width: 20px;
+
+        content: '';
+        position: absolute;
+        width: var(--button-width);
+        height: 10px; /* should match height of linear-gradient */
+        left: calc(1rem + (var(--nav-size) - var(--button-width)) / 2);
+        top: calc(50% - 5px); /* subtract half of height of linear-gradient */
+        bottom: 0;
+        transition: transform .4s var(--ease);
+        background-image: linear-gradient(
+            var(--txt-02), var(--txt-02) 2px, transparent 2px, transparent 8px,
+            var(--txt-02) 8px, var(--txt-02) 10px, transparent 10px
+        );
+    }
+
+    .show-menu .nav-button::after {
+        transform: rotate(180deg);
+    }
+
+    .nav-list {
+        display: block;
+        visibility: hidden;
+        background-color: var(--bg-01);
+        border-top: 1px solid #414141;
+        box-shadow: var(--shadow-big);
+        padding: .5em 2.6em;
+    }
+
+    .show-menu .nav-list {
+        visibility: visible;
+    }
+
+    .nav-item {
+        opacity: 0;
+        transition: opacity .5s var(--ease);
+    }
+
+    .show-menu .nav-item {
+        opacity: 1;
+    }
+
+    .nav-item + .nav-item {
+        border-top: 1px solid #414141;
+    }
+
+    .nav-link {
+        display: block;
+        width: 100%;
+        color: #cfcfcf;
+        font-size: 1.1em;
+        text-align: left;
+        border-radius: 0;
+        padding: .7em 0;
+        margin: 0;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+        color: var(--txt-01);
+        background-color: transparent;
     }
 
 }
@@ -678,7 +792,7 @@ main > section:last-of-type {
 }
 
 .year + .year {
-    margin-top: 3em;
+    margin-top: 3.5em;
 }
 
 /* <https://css-tricks.com/flexbox-truncated-text/> */
@@ -730,7 +844,6 @@ main > section:last-of-type {
 .course-shorthand-alt {
     display: none;
     font-weight: normal;
-    margin-right: 1ch;
 }
 
 .course-body {
@@ -931,7 +1044,7 @@ main > section:last-of-type {
     grid-template-areas: "empty days"
                         "hours courses";
     grid-gap: .35em .7em;
-    margin: 2em 0 0;
+    margin: 1.5em 0 0;
     padding: 0 1.2rem;
 }
 
@@ -1007,7 +1120,7 @@ main > section:last-of-type {
 }
 
 .bg-orange {
-    background-color: #e69648;
+    background-color: #ed9547;
 }
 
 .bg-green {
@@ -1015,11 +1128,11 @@ main > section:last-of-type {
 }
 
 .bg-blue {
-    background-color: #5280b1;
+    background-color: #3f7cbd;
 }
 
 .bg-purple {
-    background-image: repeating-linear-gradient(90deg, #b272ba, #b272ba 10px, #ab6ab3 10px, #ab6ab3 20px);
+    background-image: repeating-linear-gradient(90deg, #aa63c6, #aa63c6 10px, #a35bbf 10px, #a35bbf 20px);
 }
 
 .week-grid .tooltip {
@@ -1030,6 +1143,14 @@ main > section:last-of-type {
 
 .week-grid .tooltip-details {
     margin-top: .05em;
+}
+
+@media screen and (max-width: 69em) {
+
+    .weekly-schedule {
+        padding: 0;
+    }
+
 }
 
 /* ***** errors ***** */
@@ -1045,10 +1166,7 @@ main > section:last-of-type {
     font-weight: bold;
     background-color: #be1d0c;
     padding: .75em 1.5em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .09),
-                0 4px 8px rgba(0, 0, 0, .10),
-                0 8px 16px rgba(0, 0, 0, .11),
-                0 16px 32px rgba(0, 0, 0, .12);
+    box-shadow: var(--shadow-big);
     cursor: pointer;
 }
 
