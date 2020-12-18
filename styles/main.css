@@ -413,12 +413,12 @@ nav {
 @media screen and (max-width: 700px) {
 
     nav {
-        --nav-size: 44px;
-
-        height: var(--nav-size);
+        height: 48px;
     }
 
     .nav-button {
+        --button-width: 20px;
+
         display: block;
         position: relative;
         width: 100%;
@@ -427,7 +427,7 @@ nav {
         color: var(--txt-02);
         font-size: 1em;
         font-weight: bold;
-        padding: 0 0 0 calc(var(--nav-size) + 1rem);
+        padding: 0 0 0 calc(var(--button-width) + 2.5rem);
         cursor: pointer;
 
         /* reset default <button> styles */
@@ -438,13 +438,11 @@ nav {
 
     /* hamburger symbol */
     .nav-button::after {
-        --button-width: 20px;
-
         content: '';
         position: absolute;
         width: var(--button-width);
         height: 10px; /* should match height of linear-gradient */
-        left: calc(1rem + (var(--nav-size) - var(--button-width)) / 2);
+        left: 1.75rem;
         top: calc(50% - 5px); /* subtract half of height of linear-gradient */
         bottom: 0;
         transition: transform .4s var(--ease);
@@ -463,17 +461,20 @@ nav {
         visibility: hidden;
         background-color: var(--bg-01);
         border-top: 1px solid #414141;
+        padding: .5em 1.8em;
         box-shadow: var(--shadow-big);
-        padding: .5em 2.6em;
+        transition: opacity .4s var(--ease);
+        opacity: 0;
     }
 
     .show-menu .nav-list {
         visibility: visible;
+        opacity: 1;
     }
 
     .nav-item {
+        transition: opacity .4s var(--ease);
         opacity: 0;
-        transition: opacity .5s var(--ease);
     }
 
     .show-menu .nav-item {
@@ -499,6 +500,10 @@ nav {
     .nav-link:focus {
         color: var(--txt-01);
         background-color: transparent;
+    }
+
+    .nav-link .subdued {
+        margin-right: .3em;
     }
 
 }

@@ -133,11 +133,11 @@
         }
 
         // fade in nav items with a delay
-        let delay = 50;
+        let delay = 100;
 
         getAll('.nav-item').forEach(item => {
             item.style.transitionDelay = delay + 'ms';
-            delay += 125;
+            delay += 100;
         });
 
         // handle opening/closing nav via menu button
