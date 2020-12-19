@@ -120,6 +120,7 @@
     }
 
     function buildNavigation() {
+        let nav = get('nav');
         let links = getAll('.nav-link');
 
         for (let link of links) {
@@ -132,7 +133,7 @@
             }, false);
         }
 
-        // fade in nav items with a delay
+        // add transition-delay values to nav items
         let delay = 100;
 
         getAll('.nav-item').forEach(item => {
@@ -141,23 +142,22 @@
         });
 
         // handle opening/closing nav via menu button
-        let nav = get('nav');
-
         get('.nav-button').addEventListener('click', function (event) {
             // if open, close nav
             if (nav.classList.contains('show-menu')) {
                 nav.classList.remove('show-menu');
+                this.setAttribute('aria-expanded', false);
             }
             // if closed, open nav
             else {
                 nav.classList.add('show-menu');
+                this.setAttribute('aria-expanded', true);
 
-                // click outside nav to close
-                document.addEventListener('click', function clickOutside(event) {
-                    if (!event.target.closest('nav')) {
-                        nav.classList.remove('show-menu');
-                        document.removeEventListener('click', clickOutside, { passive: true });
-                    }
+                nav.addEventListener('keydown', function (event) {
+                    // close nav when Esc is pressed
+                    if (event.key === 'Escape') nav.classList.remove('show-menu');
+
+                    // @TODO: move focus between items with arrow keys
                 }, { passive: true });
 
                 // close nav when focus leaves it or its children (eg. by tabbing out)
@@ -168,9 +168,12 @@
                     nav.classList.remove('show-menu');
                 }, { passive: true });
 
-                // close nav when Esc is pressed
-                nav.addEventListener('keydown', function escToClose(event) {
-                    if (event.key === 'Escape') nav.classList.remove('show-menu');
+                // click outside nav to close
+                document.addEventListener('click', function clickOutside(event) {
+                    if (!event.target.closest('nav')) {
+                        nav.classList.remove('show-menu');
+                        document.removeEventListener('click', clickOutside, { passive: true });
+                    }
                 }, { passive: true });
             }
         }, { passive: true });
