@@ -281,7 +281,7 @@ abbr {
     font-weight: normal;
     font-family: var(--sans-serif);
     text-transform: none;
-    padding: .35rem .7rem;
+    padding: .45rem .7rem .5rem;
     box-shadow: var(--shadow-small);
 }
 
@@ -1140,11 +1140,11 @@ main > section {
 }
 
 .bg-red {
-    background-image: repeating-linear-gradient(-45deg, #d66063, #d66063 10px, #cd5659 10px, #cd5659 20px);
+    background-image: repeating-linear-gradient(-45deg, #d3585e, #d3585e 10px, #c95258 10px, #c95258 20px);
 }
 
 .bg-orange {
-    background-color: #ed9547;
+    background-color: #ec9344;
 }
 
 .bg-green {

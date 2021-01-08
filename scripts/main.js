@@ -158,6 +158,8 @@
                     if (event.key === 'Escape') nav.classList.remove('show-menu');
 
                     // @TODO: move focus between items with arrow keys
+                    // <https://www.smashingmagazine.com/2017/11/building-accessible-menu-systems/>
+                    // § "Keyboard And Focus Behavior"
                 }, { passive: true });
 
                 // close nav when focus leaves it or its children (eg. by tabbing out)
@@ -668,6 +670,7 @@
                     let tooltip = document.createElement('div');
 
                     tooltip.classList.add('tooltip', 'tile', 'dark');
+                    tooltip.setAttribute('role', 'tooltip');
 
                     let header = document.createElement('div');
 
