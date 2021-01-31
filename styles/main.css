@@ -686,7 +686,7 @@ main > section {
 
 .timeline.tile {
     --timeline-bg: var(--bg-02);
-    --top-padding: 2em;
+    --top-padding: 2.5em;
     --date-width: 43%;
     --name-width: calc(100% - var(--date-width));
     --line-offset: calc(var(--date-width) + 1%);
@@ -698,7 +698,7 @@ main > section {
     border-radius: .6em;
     padding: var(--top-padding) 1.5em calc(var(--top-padding) * 1.2);
     margin: 2em auto 0;
-    max-width: 43em;
+    max-width: 36em;
 }
 
 /* the vertical line */
@@ -770,7 +770,7 @@ main > section {
 }
 
 .event + .event-year {
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
 }
 
 .event-date {
