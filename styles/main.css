@@ -5,7 +5,7 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url('../fonts/IBMPlexMono-Regular.ttf') format('truetype');
+    src: url('../fonts/IBMPlexMono-Regular-Latin1.woff') format('woff');
 }
 
 @font-face {
@@ -13,7 +13,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url('../fonts/IBMPlexMono-Bold.ttf') format('truetype');
+    src: url('../fonts/IBMPlexMono-Bold-Latin1.woff') format('woff');
 }
 
 @font-face {
@@ -22,7 +22,7 @@
     font-stretch: condensed;
     font-weight: 400;
     font-display: swap;
-    src: url('../fonts/IBMPlexSansCondensed-Regular.ttf') format('truetype');
+    src: url('../fonts/IBMPlexSansCondensed-Regular-Latin1.woff') format('woff');
 }
 
 @font-face {
@@ -31,7 +31,7 @@
     font-stretch: condensed;
     font-weight: 700;
     font-display: swap;
-    src: url('../fonts/IBMPlexSansCondensed-Bold.ttf') format('truetype');
+    src: url('../fonts/IBMPlexSansCondensed-Bold-Latin1.woff') format('woff');
 }
 
 /* ***** variables ***** */
@@ -64,10 +64,9 @@
 
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* --ease-in: cubic-bezier(0.22, 1, 0.36, 1) */
 
-    --monospace: 'IBM Plex Mono', 'Courier', ui-monospace, monospace;
-    --sans-serif: 'IBM Plex Sans Condensed', 'Trebuchet MS', system-ui, sans-serif;
+    --monospace: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace;
+    --sans-serif: 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ***** basics ***** */
@@ -1092,10 +1091,9 @@ main > section {
 
 /* @TODO: why is this not exactly aligned with hour lines? */
 .header-hour {
-    position: relative;
     font-size: .75rem;
     text-align: right;
-    transform: translateY(-1.2ch);
+    transform: translateY(-1.25ch);
 }
 
 /* fake the last hour header */
