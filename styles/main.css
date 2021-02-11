@@ -280,7 +280,7 @@ abbr {
     font-weight: normal;
     font-family: var(--sans-serif);
     text-transform: none;
-    padding: .45rem .7rem .5rem;
+    padding: .4rem .7rem .45rem;
     box-shadow: var(--shadow-small);
 }
 
@@ -1011,10 +1011,11 @@ main > section {
 /* ***** pills ***** */
 
 .pill {
+    font-size: .875em;
     color: var(--txt-06);
     background-color: var(--bg-05);
-    font-size: .875em;
-    padding: .175em .6em;
+    line-height: 1;
+    padding: .275em .6em;
     border-radius: 10em;
     transition: var(--duration) var(--ease);
     transition-property: filter, color, background-color;
