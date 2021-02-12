@@ -188,7 +188,7 @@
 
         for (let type of genedTypes) {
             geneds[type].forEach((attr, i) => {
-                let parentNode = get('.requirement-gened .' + type);
+                let parentNode = get('.section-gened .' + type);
 
                 buildAttrRow(attr, parentNode, i);
             });
@@ -264,8 +264,7 @@
             // eg. CSC 301 is major and gen ed
             if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
-                    let sectionNode = (req !== 'gened') ? '.section-' + req : '';
-                    let reqNode = get(`.requirement-${req} ${sectionNode} .attribute.${attribute[i]} .attribute-course`);
+                    let reqNode = get(`.section-${req} .attribute.${attribute[i]} .attribute-course`);
 
                     addRow(course, reqNode);
                 });
@@ -274,24 +273,23 @@
             // eg. GEO 204 is interdisciplinary and diverse communities
             else if (typeof attribute === 'object') {
                 attribute.forEach(attr => {
-                    let reqNode = get(`.requirement-${requirement} .attribute.${attr} .attribute-course`);
+                    let reqNode = get(`.section-${requirement} .attribute.${attr} .attribute-course`);
 
                     addRow(course, reqNode);
                 });
             }
             // otherwise course has a single requirement/attribute pair
             else {
-                let sectionNode = (requirement !== 'gened') ? '.section-' + requirement : '';
-                let reqNode = get(`.requirement-${requirement} ${sectionNode} .attribute.${attribute} .attribute-course`);
+                let reqNode = get(`.section-${requirement} .attribute.${attribute} .attribute-course`);
 
                 // handle math separately to allow them to keep the same pill text
                 if (requirement === 'major' && attribute === 'math') {
-                    let math = '';
+                    let math;
 
                     if (course.name.title.includes('Statistics')) math = 'statistics';
                     if (course.name.title.includes('Calculus')) math = 'calculus';
 
-                    reqNode = get(`.requirement-major .attribute.${math} .attribute-course`);
+                    reqNode = get(`.section-major .attribute.${math} .attribute-course`);
                 }
 
                 addRow(course, reqNode);
@@ -299,60 +297,60 @@
         }
 
         /* ***** fill in summary section ***** */
-        let reqTypes = ['gened', 'major', 'minor'];
-
-        for (let type of reqTypes) {
-            let filteredCourses = courses.filter(c => c.reqs.requirement.includes(type));
-            let courseSubtotal = 0;
-            let creditSubtotal = 0;
-
-            for (let c of filteredCourses) {
-                courseSubtotal += 1;
-                creditSubtotal += c.credits;
-            }
-
-            // fill in subtotals
-            let courseNode = get(`.requirement.courses .${type} .attribute-course`);
-            let creditNode = get(`.requirement.credits .${type} .attribute-course`);
-
-            courseNode.textContent = courseSubtotal;
-            creditNode.textContent = creditSubtotal;
-        }
-
-        // fill in totals
-        let courseNode = get(`.requirement.courses .total .attribute-course`);
-        let creditNode = get(`.requirement.credits .total .attribute-course`);
-        let notice = 'May be less than the sum of the numbers above due to overlap between requirements.';
-
-        courseNode.textContent = courses.length; // don't count overlap between types
-        courseNode.title = notice;
-        creditNode.textContent = creditTotal;
-        creditNode.title = notice;
+        // let reqTypes = ['gened', 'major', 'minor'];
+        //
+        // for (let type of reqTypes) {
+        //     let filteredCourses = courses.filter(c => c.reqs.requirement.includes(type));
+        //     let courseSubtotal = 0;
+        //     let creditSubtotal = 0;
+        //
+        //     for (let c of filteredCourses) {
+        //         courseSubtotal += 1;
+        //         creditSubtotal += c.credits;
+        //     }
+        //
+        //     // fill in subtotals
+        //     let courseNode = get(`.requirement.courses .${type} .attribute-course`);
+        //     let creditNode = get(`.requirement.credits .${type} .attribute-course`);
+        //
+        //     courseNode.textContent = courseSubtotal;
+        //     creditNode.textContent = creditSubtotal;
+        // }
+        //
+        // // fill in totals
+        // let courseNode = get(`.requirement.courses .total .attribute-course`);
+        // let creditNode = get(`.requirement.credits .total .attribute-course`);
+        // let notice = 'May be less than the sum of the numbers above due to overlap between requirements.';
+        //
+        // courseNode.textContent = courses.length; // don't count overlap between types
+        // courseNode.title = notice;
+        // creditNode.textContent = creditTotal;
+        // creditNode.title = notice;
 
         /* ***** add checkmark to filled tiles ***** */
-        let tiles = getAll(':not(.section-summary) > .tile.requirement');
-
-        for (let tile of tiles) {
-            let attributes = getAll('.attribute-course', tile);
-            let abort = false;
-
-            for (let attribute of attributes) {
-                if (attribute.textContent === '—') {
-                    abort = true;
-                    break;
-                }
-            }
-
-            // skip this tile if it has an unfilled attribute
-            if (abort === true) continue;
-
-            // add checkmark if all requirements in this tile are filled
-            let check = document.createElement('span');
-
-            check.setAttribute('title', 'This section\'s requirements have been filled.');
-            check.classList.add('icon', 'checkmark');
-            get('h4', tile).appendChild(check);
-        }
+        // let tiles = getAll(':not(.section-summary) > .tile.requirement');
+        //
+        // for (let tile of tiles) {
+        //     let attributes = getAll('.attribute-course', tile);
+        //     let abort = false;
+        //
+        //     for (let attribute of attributes) {
+        //         if (attribute.textContent === '—') {
+        //             abort = true;
+        //             break;
+        //         }
+        //     }
+        //
+        //     // skip this tile if it has an unfilled attribute
+        //     if (abort === true) continue;
+        //
+        //     // add checkmark if all requirements in this tile are filled
+        //     let check = document.createElement('span');
+        //
+        //     check.setAttribute('title', 'This section\'s requirements have been filled.');
+        //     check.classList.add('icon', 'checkmark');
+        //     get('h4', tile).appendChild(check);
+        // }
 
         function addRow(course, node) {
             // if attribute is already filled, skip and move to the next one
