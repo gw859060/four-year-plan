@@ -51,15 +51,11 @@
 
     function createCourses(json) {
         let courseObjects = [];
-        let years = json.years;
 
-        for (let year of years) {
-            let semesters = year.semesters;
-
-            for (let semester of semesters) {
-                let courses = semester.courses;
-
-                for (let course of courses) {
+        // anything with dates (standard four-year sequence)
+        for (let year of json.years) {
+            for (let semester of year.semesters) {
+                for (let course of semester.courses) {
                     let obj = new Course(
                         course.subject,
                         course.number,
@@ -77,46 +73,63 @@
             }
         }
 
+        // anything without dates (AP credit, etc)
+        for (let course of json.other) {
+            let obj = new Course(
+                course.subject,
+                course.number,
+                course.name,
+                course.requirement,
+                course.attribute,
+                course.credits,
+                -1
+            );
+
+            courseObjects.push(obj);
+        }
+
         return courseObjects;
+    }
 
-        function Course(subject, number, title, requirement, attribute, credits, times, year, semester) {
-            this.name = {
-                'subject': subject,
-                'number': number,
-                'title': title,
-                'shorthand': subject + ' ' + number,
-                'id': subject + '-' + number
-            };
-            this.reqs = {
-                'requirement': requirement,
-                'attribute': attribute
-            };
-            this.credits = credits;
-            this.times = times;
-            this.year = year;
-            this.semester = semester;
-            this.tooltip = function () {
-                let tooltip = document.createElement('div');
+    function Course(subject, number, title, requirement, attribute, credits, times, year, semester) {
+        this.name = {
+            'subject': subject,
+            'number': number,
+            'title': title,
+            'shorthand': subject + ' ' + number,
+            'id': subject + '-' + number
+        };
+        this.reqs = {
+            'requirement': requirement,
+            'attribute': attribute
+        };
+        this.credits = credits;
+        this.times = times;
+        this.year = year;
+        this.semester = semester;
+        this.tooltip = function () {
+            let tooltip = document.createElement('div');
+            let header = document.createElement('div');
+            let details = document.createElement('div');
 
-                tooltip.classList.add('tooltip', 'tile', 'dark');
+            header.classList.add('tooltip-title');
+            header.textContent = this.name.shorthand + ': ' + this.name.title;
 
-                let header = document.createElement('div');
-
-                header.classList.add('tooltip-title');
-                header.textContent = this.name.shorthand + ': ' + this.name.title;
-                tooltip.appendChild(header);
-
-                let details = document.createElement('div');
+            // don't add year/semester for courses without dates (eg. AP credits)
+            if (this.times !== -1) {
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details');
                 details.textContent = `${expandYear(this.year)} Year • `;
                 details.textContent += `${expandSemester(this.semester)} ${2020 + yearDiff}`;
-                tooltip.appendChild(details);
+            }
 
-                return tooltip;
-            };
-        }
+            tooltip.classList.add('tooltip', 'tile', 'dark');
+            tooltip.appendChild(header);
+            tooltip.appendChild(details);
+
+            return tooltip;
+        };
     }
 
     function buildNavigation() {
@@ -469,6 +482,9 @@
                                 .filter(c => c.semester === semester);
 
                 for (let course of courseList) {
+                    // do not create DOM elements for courses without dates (eg. AP credits)
+                    if (course.times === -1) return;
+
                     let courseTemplate = get('.template-course').content.cloneNode(true),
                         courseNode = get('.course', courseTemplate),
                         shortNode = get('.course-shorthand', courseTemplate),
@@ -745,7 +761,7 @@
 
             // not a valid date
             if (Number.isNaN(timeDiff.days)) {
-                // generally for registration dates in the future
+                // purposely done for unknown registration dates in the future
                 diffNode.textContent = `? days away`;
             }
             // today and tomorrow
@@ -882,11 +898,8 @@
             case 'complex':
                 return 'Complex Large-Scale Systems';
             default:
-                return capitalizeFirstLetter(abbrev);
-        }
-
-        function capitalizeFirstLetter(string) {
-            return string[0].toUpperCase() + string.slice(1);
+                // capitalize first letter
+                return abbrev[0].toUpperCase() + abbrev.slice(1);
         }
     }
 

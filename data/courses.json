@@ -449,5 +449,31 @@
                 }
             ]
         }
+    ],
+    "other": [
+        {
+            "subject": "HIS",
+            "number": "151",
+            "name": "History of the United States I",
+            "credits": 3,
+            "requirement": "gened",
+            "attribute": "humanities"
+        },
+        {
+            "subject": "WRT",
+            "number": "120",
+            "name": "Effective Writing I",
+            "credits": 3,
+            "requirement": "gened",
+            "attribute": "english"
+        },
+        {
+            "subject": "ART",
+            "number": "228",
+            "name": "Digital Photography",
+            "credits": 3,
+            "requirement": "gened",
+            "attribute": "arts"
+        }
     ]
 }
