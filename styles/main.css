@@ -66,7 +66,7 @@
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     --monospace: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace;
-    --sans-serif: 'IBM Plex Sans Condensed', 'Helvetica Neue', Arial, sans-serif;
+    --sans-serif: 'IBM Plex Sans Condensed', 'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ***** basics ***** */
@@ -169,18 +169,14 @@ abbr {
 
 .link {
     color: inherit;
-    text-decoration: none;
-    border-bottom: 2px solid #ccc;
-    transition: border-color var(--duration) var(--ease);
-
-    /* move border closer to bottom of text */
-    display: inline-block;
-    height: 1.45em;
+    text-decoration: 2px underline #ccc;
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--duration) var(--ease);
 }
 
 .link:hover,
 .link:focus {
-    border-color: var(--txt-05);
+    text-decoration-color: var(--txt-05);
 }
 
 .constrained-width {
@@ -1033,9 +1029,8 @@ main > section {
 }
 
 .pill.fake {
-    font-size: .9em;
     background-color: #e3e3e3;
-    cursor: auto;
+    padding: .15em .6em;
 }
 
 /* ***** week ***** */
@@ -1076,7 +1071,6 @@ main > section {
     grid-template-rows: repeat(7, 1fr);
 }
 
-/* @TODO: why is this not exactly aligned with hour lines? */
 .header-hour {
     font-size: .75rem;
     text-align: right;
@@ -1110,18 +1104,25 @@ main > section {
 
 .course-slot {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    text-align: center;
+    align-items: center;
     position: relative; /* for .tooltip */
 
+    color: var(--txt-01);
     font-size: .75em;
     font-weight: bold;
     line-height: 1.2;
-    color: var(--txt-01);
-    background-color: var(--bg-02);
     border-radius: .35rem;
     padding: .5em;
+}
+
+.week-grid .tooltip {
+    padding: .45rem .75rem .55rem;
+    white-space: nowrap; /* allow tooltip to break out of grid */
+}
+
+.week-grid .tooltip-details {
+    margin-top: .05em;
 }
 
 .bg-red {
@@ -1142,16 +1143,6 @@ main > section {
 
 .bg-purple {
     background-image: repeating-linear-gradient(90deg, #aa63c6, #aa63c6 10px, #a35bbf 10px, #a35bbf 20px);
-}
-
-.week-grid .tooltip {
-    text-align: left;
-    padding: .45rem .75rem .55rem;
-    white-space: nowrap; /* allow tooltip to break out of grid */
-}
-
-.week-grid .tooltip-details {
-    margin-top: .05em;
 }
 
 @media screen and (max-width: 69em) {
@@ -1256,7 +1247,7 @@ main > section {
 
     from {
         opacity: 0;
-        transform: translate(-50%, 100%);
+        transform: translate(-50%, 50%);
     }
 
     to {
