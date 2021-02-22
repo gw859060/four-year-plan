@@ -254,6 +254,14 @@
                             "attribute": "math"
                         },
                         {
+                            "subject": "ENG",
+                            "number": "371",
+                            "name": "Technical Writing",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        },
+                        {
                             "subject": "EIT",
                             "number": "360",
                             "name": "Italian Cinema",
@@ -300,12 +308,12 @@
                             "attribute": "core"
                         },
                         {
-                            "subject": "ENG",
-                            "number": "371",
-                            "name": "Technical Writing",
+                            "subject": "CSC",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirement": "major",
+                            "attribute": "elective"
                         },
                         {
                             "subject": "COM",
@@ -340,14 +348,6 @@
                             "subject": "CSC",
                             "number": "321",
                             "name": "Database Management Systems",
-                            "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
-                        },
-                        {
-                            "subject": "CSC",
-                            "number": "335",
-                            "name": "Data Communications and Networking I",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "elective"
