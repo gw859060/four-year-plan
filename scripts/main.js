@@ -311,6 +311,7 @@
 
         /* ***** fill in summary section ***** */
         // @TODO: fun stats?
+        //     - total major/minor/gened credits & courses
         //     - "your busiest day of the week"
         //     - first semester date, last semester date
         //     - most common/second most common department taken
@@ -489,7 +490,7 @@
 
                 // only add row-gap if there are summer/winter semesters; if the gap is constantly "on",
                 // it creates inconsistent spacing because the gap doesn't hide when there is no second row
-                if (semester === 3 || semester === 4) yearNode.style.rowGap = '3em';
+                if (semester === 3 || semester === 4) yearNode.style.rowGap = '2em';
 
                 // fill semester with courses
                 for (let course of courseList) {
@@ -531,15 +532,15 @@
 
                 yearNode.appendChild(semTemplate);
             }
-        }
 
-        // handle keyboard accessibility for pills
-        getAll('.req-container').forEach(container => {
-            container.focus = 0;
-            container.elements = getAll('.pill', container);
-            container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
-            container.addEventListener('keydown', makeAccessible);
-        });
+            // handle keyboard accessibility for pills
+            getAll('.req-container').forEach(container => {
+                container.focus = 0;
+                container.elements = getAll('.pill', container);
+                container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
+                container.addEventListener('keydown', makeAccessible);
+            });
+        }
 
         function linkTitle(container, course) {
             let link = document.createElement('a');

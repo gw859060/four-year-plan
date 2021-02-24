@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Garrett's Four Year Plan &ndash; WCUPA</title>
+    <title>Garrett's Degree Planner &ndash; WCUPA</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/requirements.json" as="fetch" crossorigin>
     <link rel="preload" href="https://gw859060.github.io/four-year-plan/data/courses.json" as="fetch" crossorigin>
@@ -33,7 +33,7 @@
     </script>
     <header>
         <div class="header-container constrained-width">
-            <h1>Garrett's Four Year Plan</h1>
+            <h1>Garrett's Degree Planner</h1>
             <h1 class="subdued">West Chester University of Pennsylvania</h1>
         </div>
     </header>
@@ -183,7 +183,7 @@
         -->
         <section class="course-schedule constrained-width">
             <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
-            <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses; click again to clear. Hover over the week view to see meeting times. For the full course catalog, <a class="link" target="_blank" rel="noopener" href="https://catalog.wcupa.edu/general-information/index-course-prefix-guide/course-index/undergraduate/">click here</a>.</p>
+            <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses; click again to clear. Hover over courses in week view to see times. For the full course catalog, <a class="link" target="_blank" rel="noopener" href="https://catalog.wcupa.edu/general-information/index-course-prefix-guide/course-index/undergraduate/">click here</a>.</p>
         </section>
         <!-- <section class="useful-links constrained-width">
             <h2><span class="subdued">04.</span> Useful Links</h2>
@@ -237,7 +237,7 @@
         </div>
     </template>
     <template class="template-week">
-        <div class="weekly-schedule">
+        <div class="weekly-schedule collapsed">
             <figure class="week-container">
                 <div class="header-days monospace uppercase subdued unselectable">
                     <div class="header-day">Mon</div>
@@ -259,7 +259,7 @@
                 <div class="week-grid"></div>
             </figure>
             <div class="week-button-container">
-                <button class="week-button button subdued" type="button" data-collapse="expanded">Collapse week view ↑</button>
+                <button class="week-button button subdued" type="button" data-collapse="collapsed">Expand week view ↓</button>
             </div>
         </div>
     </template>
