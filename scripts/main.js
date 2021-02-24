@@ -82,7 +82,8 @@
                 course.requirement,
                 course.attribute,
                 course.credits,
-                -1
+                -1 // can't use undefined - courses without times that will eventually be assigned
+                   // times in the future (ie. in upcoming semesters) already use undefined
             );
 
             courseObjects.push(obj);
@@ -115,13 +116,12 @@
             header.classList.add('tooltip-title');
             header.textContent = this.name.shorthand + ': ' + this.name.title;
 
-            // don't add year/semester for courses without dates (eg. AP credits)
+            // don't add year/semester for courses without dates (eg. AP credit)
             if (this.times !== -1) {
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details');
-                details.textContent = `${expandYear(this.year)} Year • `;
-                details.textContent += `${expandSemester(this.semester)} ${2020 + yearDiff}`;
+                details.textContent = `${expandYear(this.year)} Year • ${expandSemester(this.semester)} ${2020 + yearDiff}`;
             }
 
             tooltip.classList.add('tooltip', 'tile', 'dark');
@@ -310,6 +310,11 @@
         }
 
         /* ***** fill in summary section ***** */
+        // @TODO: fun stats?
+        //     - "your busiest day of the week"
+        //     - first semester date, last semester date
+        //     - most common/second most common department taken
+        //
         // let reqTypes = ['gened', 'major', 'minor'];
         //
         // for (let type of reqTypes) {
@@ -465,6 +470,12 @@
 
             // fill year with semesters
             for (let semester of semList) {
+                let courseIndex = 0;
+                let courseList = courses.filter(c => c.year === year).filter(c => c.semester === semester);
+
+                // do not create DOM elements for courses without dates (eg. AP credits)
+                if (courseList[0].times === -1) return;
+
                 // create empty semester section
                 let semTemplate = get('.template-semester').content.cloneNode(true),
                     semNode = get('.semester', semTemplate),
@@ -472,19 +483,16 @@
                     season = expandSemester(semester),
                     semCreditTotal = 0;
 
+                semNode.style.gridArea = expandSemester(semester).toLowerCase();
                 semHeader.innerHTML = `Year ${year} <span class="subdued">${season} ${semesterYear}</span>`;
                 if (semester === 1) semesterYear++;
 
+                // only add row-gap if there are summer/winter semesters; if the gap is constantly "on",
+                // it creates inconsistent spacing because the gap doesn't hide when there is no second row
+                if (semester === 3 || semester === 4) yearNode.style.rowGap = '3em';
+
                 // fill semester with courses
-                let courseIndex = 0,
-                    courseList = courses
-                                .filter(c => c.year === year)
-                                .filter(c => c.semester === semester);
-
                 for (let course of courseList) {
-                    // do not create DOM elements for courses without dates (eg. AP credits)
-                    if (course.times === -1) return;
-
                     let courseTemplate = get('.template-course').content.cloneNode(true),
                         courseNode = get('.course', courseTemplate),
                         shortNode = get('.course-shorthand', courseTemplate),
@@ -626,7 +634,7 @@
             if (typeof times === 'object') {
                 let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
 
-                // if weekly schedule has not been added yet
+                // if weekly schedule has not been created yet
                 // @TODO: dynamically create hour numbers and reduce them to the minimum necessary
                 if (!get('.weekly-schedule', container)) {
                     let weekTemplate = get('.template-week').content.cloneNode(true);
@@ -644,6 +652,34 @@
 
                         rowNum += 12;
                     }
+
+                    // open/collapse week schedule on click
+                    let button = get('.week-button', container);
+
+                    button.addEventListener('click', function () {
+                        // schedule is in expanded state (default)
+                        if (button.dataset.collapse === 'expanded') {
+                            for (let button of getAll('.week-button')) {
+                                button.textContent = 'Expand week view ↓';
+                                button.dataset.collapse = 'collapsed';
+                            }
+
+                            for (let week of getAll('.weekly-schedule')) {
+                                week.classList.add('collapsed');
+                            }
+                        }
+                        // schedule is in collapsed state
+                        else {
+                            for (let button of getAll('.week-button')) {
+                                button.textContent = 'Collapse week view ↑';
+                                button.dataset.collapse = 'expanded';
+                            }
+
+                            for (let week of getAll('.weekly-schedule')) {
+                                week.classList.remove('collapsed');
+                            }
+                        }
+                    }, false);
                 }
 
                 // add time slots for this course to the grid

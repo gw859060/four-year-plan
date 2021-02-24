@@ -169,7 +169,8 @@ abbr {
 
 .link {
     color: inherit;
-    text-decoration: 2px underline #ccc;
+    text-decoration-color: #ccc;
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
     transition: text-decoration-color var(--duration) var(--ease);
 }
@@ -177,6 +178,17 @@ abbr {
 .link:hover,
 .link:focus {
     text-decoration-color: var(--txt-05);
+}
+
+.button {
+    cursor: pointer;
+
+    /* reset default <button> styles */
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    background-color: transparent;
+    border: none;
 }
 
 .constrained-width {
@@ -275,6 +287,7 @@ abbr {
     font-size: .9rem;
     font-weight: normal;
     font-family: var(--sans-serif);
+    text-align: left;
     text-transform: none;
     padding: .4rem .7rem .45rem;
     box-shadow: var(--shadow-small);
@@ -584,15 +597,15 @@ main > section {
     color: inherit;
 }
 
-.attribute-course .tooltip {
-    text-align: left;
-}
-
 .attribute-course.linked {
     border-radius: 10em;
     padding: .1em .5em .1em .575em;
     margin: -0.1em -0.5em -0.1em -0.575em;
     transition: background-color var(--duration) ease;
+}
+
+.attribute-course .tooltip {
+    text-align: left;
 }
 
 /* major/minor */
@@ -793,11 +806,13 @@ main > section {
 .year {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: var(--gap-large);
+    grid-template-areas: "fall spring"
+                        "winter summer";
+    column-gap: var(--gap-large);
 }
 
 .year + .year {
-    margin-top: 3.5em;
+    margin-top: 3em;
 }
 
 /* <https://css-tricks.com/flexbox-truncated-text/> */
@@ -1030,7 +1045,7 @@ main > section {
 
 .pill.fake {
     background-color: #e3e3e3;
-    padding: .15em .6em;
+    padding: .1em .6em .15em;
 }
 
 /* ***** week ***** */
@@ -1042,6 +1057,15 @@ main > section {
 */
 
 .weekly-schedule {
+    margin: 1.5em 0 0;
+    padding: 0 1.2rem;
+}
+
+.weekly-schedule.collapsed {
+    margin-top: 1em;
+}
+
+.week-container {
     --day-gap: .5em;
 
     display: grid;
@@ -1049,8 +1073,11 @@ main > section {
     grid-template-areas: "empty days"
                         "hours courses";
     grid-gap: .35em .7em;
-    margin: 1.5em 0 0;
-    padding: 0 1.2rem;
+    margin: 0;
+}
+
+.weekly-schedule.collapsed .week-container {
+    display: none;
 }
 
 .header-days {
@@ -1106,6 +1133,7 @@ main > section {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     position: relative; /* for .tooltip */
 
     color: var(--txt-01);
@@ -1143,6 +1171,25 @@ main > section {
 
 .bg-purple {
     background-image: repeating-linear-gradient(90deg, #aa63c6, #aa63c6 10px, #a35bbf 10px, #a35bbf 20px);
+}
+
+.week-button-container {
+    grid-area: btn;
+    margin-top: 1em;
+    text-align: center;
+}
+
+.week-button {
+    font-size: .9em;
+    border-radius: 10em;
+    padding: .15em .6em .2em .6em;
+    margin: -0.15em -0.6em -0.2em -0.6em;
+    transition: background-color var(--duration) ease;
+}
+
+.week-button:hover,
+.week-button:focus {
+    background-color: #e7e7e7;
 }
 
 @media screen and (max-width: 69em) {
