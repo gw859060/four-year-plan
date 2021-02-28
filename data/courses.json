@@ -174,20 +174,20 @@
                     "semester": 3,
                     "courses": [
                         {
-                            "subject": "WRT",
-                            "number": "200",
-                            "name": "Critical Writing and Research",
-                            "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "english"
-                        },
-                        {
                             "subject": "MAT",
                             "number": "121",
                             "name": "Introduction to Statistics I",
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "math"
+                        },
+                        {
+                            "subject": "ENG",
+                            "number": "368",
+                            "name": "Business and Organizational Writing",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
                         }
                     ]
                 }
@@ -205,7 +205,24 @@
                             "name": "Computer Science III",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "core",
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "10:00",
+                                    "end": "10:50"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "10:00",
+                                    "end": "10:50"
+                                },
+                                {
+                                    "day": "F",
+                                    "start": "10:00",
+                                    "end": "10:50"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
@@ -213,7 +230,24 @@
                             "name": "Computer Systems",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "core"
+                            "attribute": "core",
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "12:00",
+                                    "end": "12:50"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "12:00",
+                                    "end": "12:50"
+                                },
+                                {
+                                    "day": "F",
+                                    "start": "12:00",
+                                    "end": "12:50"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
@@ -227,6 +261,18 @@
                             "attribute": [
                                 "core",
                                 "ethics"
+                            ],
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "12:30",
+                                    "end": "13:45"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "12:30",
+                                    "end": "13:45"
+                                }
                             ]
                         },
                         {
@@ -235,20 +281,43 @@
                             "name": "Introduction to Statistics II",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "math"
+                            "attribute": "math",
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "9:00",
+                                    "end": "9:50"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "9:00",
+                                    "end": "9:50"
+                                },
+                                {
+                                    "day": "F",
+                                    "start": "9:00",
+                                    "end": "9:50"
+                                }
+                            ]
                         },
                         {
-                            "subject": "FLM",
+                            "subject": "WRT",
                             "number": "200",
-                            "name": "Introduction to Film",
+                            "name": "Critical Writing and Research",
                             "credits": 3,
-                            "requirement": [
-                                "gened",
-                                "minor"
-                            ],
-                            "attribute": [
-                                "writing",
-                                "core"
+                            "requirement": "gened",
+                            "attribute": "english",
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "14:00",
+                                    "end": "15:15"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "14:00",
+                                    "end": "15:15"
+                                }
                             ]
                         }
                     ]
@@ -289,12 +358,18 @@
                             "attribute": "speaking"
                         },
                         {
-                            "subject": "ENG",
-                            "number": "371",
-                            "name": "Technical Writing",
+                            "subject": "FLM",
+                            "number": "200",
+                            "name": "Introduction to Film",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirement": [
+                                "gened",
+                                "minor"
+                            ],
+                            "attribute": [
+                                "writing",
+                                "core"
+                            ]
                         }
                     ]
                 },
@@ -409,6 +484,13 @@
             "attribute": "humanities"
         },
         {
+            "subject": "HIS",
+            "number": "102",
+            "name": "History of Civilization II",
+            "credits": 3,
+            "requirement": "other"
+        },
+        {
             "subject": "WRT",
             "number": "120",
             "name": "Effective Writing I",
@@ -431,6 +513,27 @@
             "credits": 3,
             "requirement": "gened",
             "attribute": "arts"
+        },
+        {
+            "subject": "CSC",
+            "number": "110",
+            "name": "Fundamentals in Computer Science",
+            "credits": 3,
+            "requirement": "other"
+        },
+        {
+            "subject": "CSW",
+            "number": "131",
+            "name": "Introduction to Web Design",
+            "credits": 3,
+            "requirement": "other"
+        },
+        {
+            "subject": "CSW",
+            "number": "315",
+            "name": "Introduction to Web Programming",
+            "credits": 3,
+            "requirement": "other"
         }
     ]
 }
