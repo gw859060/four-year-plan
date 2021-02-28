@@ -50,7 +50,7 @@
                 <button class="nav-link" data-section="course-schedule"><span class="subdued">03.</span> Course Schedule</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" data-section="useful-links"><span class="subdued">04.</span> Useful Links</button>
+                <button class="nav-link" data-section="summary"><span class="subdued">04.</span> Summary</button>
             </li>
         </ol>
     </nav>
@@ -92,52 +92,9 @@
                         <h4>Electives</h4>
                     </div>
                 </div>
-                <!-- <div class="section-summary">
-                    <h3 class="uppercase">Summary</h3>
-                    <div class="tile requirement courses">
-                        <h4>Courses</h4>
-                        <div class="attribute gened">
-                            <div class="attribute-name">General Education</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <div class="attribute major">
-                            <div class="attribute-name">Major</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <div class="attribute minor">
-                            <div class="attribute-name">Minor</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <hr />
-                        <div class="attribute total">
-                            <div class="attribute-name">Total courses</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                    </div>
-                    <div class="tile requirement credits">
-                        <h4>Credits</h4>
-                        <div class="attribute gened">
-                            <div class="attribute-name">General Education</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <div class="attribute major">
-                            <div class="attribute-name">Major</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <div class="attribute minor">
-                            <div class="attribute-name">Minor</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                        <hr />
-                        <div class="attribute total">
-                            <div class="attribute-name">Total credits</div>
-                            <abbr class="attribute-course monospace uppercase">—</abbr>
-                        </div>
-                    </div>
-                </div> -->
             </section>
         </section>
-        <section class="important-dates constrained-width">
+        <!-- <section class="important-dates constrained-width">
             <h2 class="year-header"><span class="subdued">02.</span> Important Dates</h2>
             <p class="description">Placeholder text goes here. Some more placeholder text. Even more placeholder text and more placeholder text. For the full WCUPA Academic Calendar, <a class="link" target="_blank" rel="noopener" href="https://www.wcupa.edu/registrar/calendar/">click here</a>.</p>
             <ul class="timeline tile dark">
@@ -176,7 +133,7 @@
                     <h4 class="event-name">Last day of spring classes</h4>
                 </li>
             </ul>
-        </section>
+        </section> -->
         <!-- @TODO:
             - ability to filter by prefix or by requirement (dropdowns)
             - detailed/compact mode toggle to show class times and visual representation full-width
@@ -185,35 +142,90 @@
             <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
             <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses; click again to clear. Hover over courses in week view to see times. For the full course catalog, <a class="link" target="_blank" rel="noopener" href="https://catalog.wcupa.edu/general-information/index-course-prefix-guide/course-index/undergraduate/">click here</a>.</p>
         </section>
-        <!-- <section class="useful-links constrained-width">
-            <h2><span class="subdued">04.</span> Useful Links</h2>
-            <div class="link-grid">
-                <a class="link-item tile" target="_blank" rel="noopener" href="https://www.wcupa.edu/sciences-mathematics/computerScience/undergraduate.aspx">
-                    <div class="link-container">
-                        <div class="monospace uppercase subdued" aria-hidden="true">wcupa.edu</div>
-                        <h3 class="link-title">Department of Computer Science</h3>
+        <section class="summary constrained-width">
+            <h2><span class="subdued">04.</span> Summary</h2>
+            <div class="summary-container">
+                <div class="tile courses">
+                    <h4>Courses</h4>
+                    <div class="attribute gened">
+                        <div class="attribute-name">General Education courses</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
-                </a>
-                <a class="link-item tile" target="_blank" rel="noopener" href="https://catalog.wcupa.edu/general-information/index-course-prefix-guide/course-index/undergraduate/">
-                    <div class="link-container">
-                        <div class="monospace uppercase subdued" aria-hidden="true">wcupa.edu</div>
-                        <h3 class="link-title">Undergraduate Course Catalog</h3>
+                    <div class="attribute major">
+                        <div class="attribute-name">Major courses</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
-                </a>
-                <a class="link-item tile" target="_blank" rel="noopener" href="https://www.wcupa.edu/registrar/calendar/">
-                    <div class="link-container">
-                        <div class="monospace uppercase subdued" aria-hidden="true">wcupa.edu</div>
-                        <h3 class="link-title">Academic Calendar</h3>
+                    <div class="attribute minor">
+                        <div class="attribute-name">Minor courses</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
-                </a>
-                <a class="link-item tile" target="_blank" rel="noopener" href="https://github.com/gw859060/four-year-plan">
-                    <div class="link-container">
-                        <div class="monospace uppercase subdued" aria-hidden="true">github.com</div>
-                        <h3 class="link-title">GitHub Repository</h3>
+                    <div class="attribute other">
+                        <div class="attribute-name">Other courses</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
-                </a>
+                    <hr />
+                    <div class="attribute total">
+                        <div class="attribute-name">Total courses</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="summary-note subdued">May be less than the sum of the numbers above due to requirement overlap.</div>
+                </div>
+                <div class="tile credits">
+                    <h4>Credits</h4>
+                    <div class="attribute gened">
+                        <div class="attribute-name">General Education credits</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="attribute major">
+                        <div class="attribute-name">Major credits</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="attribute minor">
+                        <div class="attribute-name">Minor credits</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="attribute other">
+                        <div class="attribute-name">Other credits</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <hr />
+                    <div class="attribute total">
+                        <div class="attribute-name">Total credits</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="summary-note subdued">May be less than the sum of the numbers above due to requirement overlap.</div>
+                </div>
+                <div class="tile fun">
+                    <h4>Fun</h4>
+                    <div class="attribute avg-courses">
+                        <div class="attribute-name">Avg. courses per day</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="attribute avg-hours">
+                        <div class="attribute-name">Avg. hours per day</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <div class="attribute busiest">
+                        <div class="attribute-name">Busiest weekday</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                    <hr />
+                    <div class="attribute common">
+                        <div class="attribute-name">Most common prefix</div>
+                        <abbr class="attribute-course monospace uppercase">CSC</abbr>
+                    </div>
+                    <div class="attribute common-2">
+                        <div class="attribute-name">Next most common prefix</div>
+                        <abbr class="attribute-course monospace uppercase">MAT</abbr>
+                    </div>
+                    <hr />
+                    <div class="attribute">
+                        <div class="attribute-name">Placeholder</div>
+                        <abbr class="attribute-course monospace uppercase">—</abbr>
+                    </div>
+                </div>
             </div>
-        </section> -->
+        </section>
     </main>
     <template class="template-attribute">
         <div class="attribute">
@@ -239,27 +251,27 @@
     <template class="template-week">
         <div class="weekly-schedule collapsed">
             <figure class="week-container">
-                <div class="header-days monospace uppercase subdued unselectable">
+                <div class="header-days monospace uppercase subdued">
                     <div class="header-day">Mon</div>
                     <div class="header-day">Tue</div>
                     <div class="header-day">Wed</div>
                     <div class="header-day">Thu</div>
                     <div class="header-day">Fri</div>
                 </div>
-                <div class="header-hours monospace uppercase subdued unselectable">
+                <div class="header-hours monospace uppercase subdued">
                     <div class="header-hour">9:00</div>
                     <div class="header-hour">10:00</div>
                     <div class="header-hour">11:00</div>
                     <div class="header-hour">12:00</div>
                     <div class="header-hour">1:00</div>
                     <div class="header-hour">2:00</div>
-                    <div class="header-hour">3:00</div>
-                    <!-- 4:00 is inserted with ::after -->
+                    <div class="header-hour" data-next-hour="4:00">3:00</div>
+                    <!-- final hour header is inserted with ::after -->
                 </div>
                 <div class="week-grid"></div>
             </figure>
             <div class="week-button-container">
-                <button class="week-button button subdued" type="button" data-collapse="collapsed">Expand week view ↓</button>
+                <button class="week-button button subdued" type="button" data-collapsed="true">Expand week view ↓</button>
             </div>
         </div>
     </template>

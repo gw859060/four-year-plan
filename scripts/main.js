@@ -45,6 +45,7 @@
             buildRequirements(requirements);
             fillRequirements(courses);
             buildSchedule(courses);
+            buildSummary(courses);
         })
         .catch(console.log);
     }
@@ -114,14 +115,14 @@
             let details = document.createElement('div');
 
             header.classList.add('tooltip-title');
-            header.textContent = this.name.shorthand + ': ' + this.name.title;
+            header.textContent = this.name.title;
 
             // don't add year/semester for courses without dates (eg. AP credit)
             if (this.times !== -1) {
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details');
-                details.textContent = `${expandYear(this.year)} Year • ${expandSemester(this.semester)} ${2020 + yearDiff}`;
+                details.textContent = `${expandSemester(this.semester)} ${2020 + yearDiff} • Year ${this.year}`;
             }
 
             tooltip.classList.add('tooltip', 'tile', 'dark');
@@ -142,7 +143,6 @@
                 let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
                 get('.' + section).scrollIntoView({ behavior: motion });
-                // scrollStop() goes here, maybe
             }, false);
         }
 
@@ -263,27 +263,24 @@
     }
 
     function fillRequirements(courses) {
-        let creditTotal = 0;
-
         /* ***** fill in courses ***** */
         for (let course of courses) {
             let requirement = course.reqs.requirement;
             let attribute = course.reqs.attribute;
 
-            // for summary section
-            creditTotal += course.credits;
-
-            // if course meets multiple requirements
-            // eg. CSC 301 is major and gen ed
-            if (typeof requirement === 'object') {
+            // if course is "free" and doesn't meet any requirements, skip it
+            if (requirement === 'other') {
+                continue;
+            }
+            // if course meets multiple requirements, eg. CSC 301 is major and gen ed
+            else if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
                     let reqNode = get(`.section-${req} .attribute.${attribute[i]} .attribute-course`);
 
                     addRow(course, reqNode);
                 });
             }
-            // if course meets multiple attributes
-            // eg. GEO 204 is interdisciplinary and diverse communities
+            // if course meets multiple attributes, eg. GEO 204 is interdisciplinary and diverse
             else if (typeof attribute === 'object') {
                 attribute.forEach(attr => {
                     let reqNode = get(`.section-${requirement} .attribute.${attr} .attribute-course`);
@@ -295,81 +292,9 @@
             else {
                 let reqNode = get(`.section-${requirement} .attribute.${attribute} .attribute-course`);
 
-                // handle math separately to allow them to keep the same pill text
-                if (requirement === 'major' && attribute === 'math') {
-                    let math;
-
-                    if (course.name.title.includes('Statistics')) math = 'statistics';
-                    if (course.name.title.includes('Calculus')) math = 'calculus';
-
-                    reqNode = get(`.section-major .attribute.${math} .attribute-course`);
-                }
-
                 addRow(course, reqNode);
             }
         }
-
-        /* ***** fill in summary section ***** */
-        // @TODO: fun stats?
-        //     - total major/minor/gened credits & courses
-        //     - "your busiest day of the week"
-        //     - first semester date, last semester date
-        //     - most common/second most common department taken
-        //
-        // let reqTypes = ['gened', 'major', 'minor'];
-        //
-        // for (let type of reqTypes) {
-        //     let filteredCourses = courses.filter(c => c.reqs.requirement.includes(type));
-        //     let courseSubtotal = 0;
-        //     let creditSubtotal = 0;
-        //
-        //     for (let c of filteredCourses) {
-        //         courseSubtotal += 1;
-        //         creditSubtotal += c.credits;
-        //     }
-        //
-        //     // fill in subtotals
-        //     let courseNode = get(`.requirement.courses .${type} .attribute-course`);
-        //     let creditNode = get(`.requirement.credits .${type} .attribute-course`);
-        //
-        //     courseNode.textContent = courseSubtotal;
-        //     creditNode.textContent = creditSubtotal;
-        // }
-        //
-        // // fill in totals
-        // let courseNode = get(`.requirement.courses .total .attribute-course`);
-        // let creditNode = get(`.requirement.credits .total .attribute-course`);
-        // let notice = 'May be less than the sum of the numbers above due to overlap between requirements.';
-        //
-        // courseNode.textContent = courses.length; // don't count overlap between types
-        // courseNode.title = notice;
-        // creditNode.textContent = creditTotal;
-        // creditNode.title = notice;
-
-        /* ***** add checkmark to filled tiles ***** */
-        // let tiles = getAll(':not(.section-summary) > .tile.requirement');
-        //
-        // for (let tile of tiles) {
-        //     let attributes = getAll('.attribute-course', tile);
-        //     let abort = false;
-        //
-        //     for (let attribute of attributes) {
-        //         if (attribute.textContent === '—') {
-        //             abort = true;
-        //             break;
-        //         }
-        //     }
-        //
-        //     // skip this tile if it has an unfilled attribute
-        //     if (abort === true) continue;
-        //
-        //     // add checkmark if all requirements in this tile are filled
-        //     let check = document.createElement('span');
-        //
-        //     check.setAttribute('title', 'This section\'s requirements have been filled.');
-        //     check.classList.add('icon', 'checkmark');
-        //     get('h4', tile).appendChild(check);
-        // }
 
         function addRow(course, node) {
             // if attribute is already filled, skip and move to the next one
@@ -400,7 +325,6 @@
                 // the problem: setting focus as instructed makes the browser jump
                 // to target immediately, skipping the smooth scroll behavior
                 get('.semester-num', clickedCourse.parentNode).scrollIntoView({ behavior: motion });
-                // scrollStop(function () { get('.pill', clickedCourse).focus(); });
 
                 window.setTimeout(function () {
                     get('.req-container', clickedCourse).classList.remove('no-fade');
@@ -459,6 +383,11 @@
             // create empty year section
             let yearNode = document.createElement('section');
 
+            // don't build DOM for "other" array in courses.json - dates for those courses are set to -1
+            if (courses.filter(c => c.year === year)[0].times === -1) {
+                return;
+            }
+
             yearNode.classList.add('year');
             get('.course-schedule').appendChild(yearNode);
 
@@ -474,9 +403,6 @@
                 let courseIndex = 0;
                 let courseList = courses.filter(c => c.year === year).filter(c => c.semester === semester);
 
-                // do not create DOM elements for courses without dates (eg. AP credits)
-                if (courseList[0].times === -1) return;
-
                 // create empty semester section
                 let semTemplate = get('.template-semester').content.cloneNode(true),
                     semNode = get('.semester', semTemplate),
@@ -484,8 +410,8 @@
                     season = expandSemester(semester),
                     semCreditTotal = 0;
 
-                semNode.style.gridArea = expandSemester(semester).toLowerCase();
-                semHeader.innerHTML = `Year ${year} <span class="subdued">${season} ${semesterYear}</span>`;
+                semNode.classList.add(expandSemester(semester).toLowerCase()); // for grid-area
+                semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
                 if (semester === 1) semesterYear++;
 
                 // only add row-gap if there are summer/winter semesters; if the gap is constantly "on",
@@ -537,7 +463,11 @@
             getAll('.req-container').forEach(container => {
                 container.focus = 0;
                 container.elements = getAll('.pill', container);
-                container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
+
+                if (container.elements.length > 0) {
+                    container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
+                }
+
                 container.addEventListener('keydown', makeAccessible);
             });
         }
@@ -558,9 +488,13 @@
             let requirement = course.reqs.requirement;
             let attribute = course.reqs.attribute;
 
+            // skip courses that don't meet any attributes
+            if (requirement === 'other') {
+                return;
+            }
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
-            if (typeof requirement === 'object') {
+            else if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
                     buildPill(container, req, attribute[i]);
                 });
@@ -573,7 +507,7 @@
                         buildPill(container, requirement, attr);
                     }
                     // only add remaining attr, not a duplicate requirement + attr
-                    // eg. GEO 204 would show [gened] [i] [j]
+                    // eg. GEO 204 should show [gened] [i] [j] instead of [gened] [i] [gened] [j]
                     else {
                         buildPill(container, requirement, attr, true);
                     }
@@ -643,7 +577,8 @@
 
                     container.appendChild(weekTemplate);
 
-                    // insert rows to create hourly grid lines (currently showing 7 hours)
+                    // insert divs to create hourly grid lines (currently showing 7 hours)
+                    // @TODO: create half-hour lines? dotted?
                     for (let i = 1; i <= 7; i++) {
                         let hourLine = document.createElement('div');
 
@@ -654,30 +589,33 @@
                         rowNum += 12;
                     }
 
-                    // open/collapse week schedule on click
+                    // open/collapse week schedule on button click
                     let button = get('.week-button', container);
 
-                    button.addEventListener('click', function () {
-                        // schedule is in expanded state (default)
-                        if (button.dataset.collapse === 'expanded') {
-                            for (let button of getAll('.week-button')) {
-                                button.textContent = 'Expand week view ↓';
-                                button.dataset.collapse = 'collapsed';
+                    button.addEventListener('click', function (e) {
+                        let buttons = getAll('.week-button', e.currentTarget.closest('.year'));
+                        let weeks = getAll('.weekly-schedule', e.currentTarget.closest('.year'));
+
+                        // schedule is currently collapsed (default); expand it on click
+                        if (button.dataset.collapsed === 'true') {
+                            for (let button of buttons) {
+                                button.textContent = 'Collapse week view ↑';
+                                button.dataset.collapsed = false;
                             }
 
-                            for (let week of getAll('.weekly-schedule')) {
-                                week.classList.add('collapsed');
+                            for (let week of weeks) {
+                                week.classList.remove('collapsed');
                             }
                         }
-                        // schedule is in collapsed state
+                        // else schedule is currently expanded; collapse it on click
                         else {
-                            for (let button of getAll('.week-button')) {
-                                button.textContent = 'Collapse week view ↑';
-                                button.dataset.collapse = 'expanded';
+                            for (let button of buttons) {
+                                button.textContent = 'Expand week view ↓';
+                                button.dataset.collapsed = true;
                             }
 
-                            for (let week of getAll('.weekly-schedule')) {
-                                week.classList.remove('collapsed');
+                            for (let week of weeks) {
+                                week.classList.add('collapsed');
                             }
                         }
                     }, false);
@@ -844,6 +782,42 @@
         }
     }
 
+    function buildSummary(courses) {
+        // subtotals for requirement types
+        let reqTypes = ['gened', 'major', 'minor', 'other'];
+
+        for (let type of reqTypes) {
+            let filteredCourses = courses.filter(course => course.reqs.requirement.includes(type));
+            let courseSubtotal = 0;
+            let creditSubtotal = 0;
+
+            for (let course of filteredCourses) {
+                courseSubtotal += 1;
+                creditSubtotal += course.credits;
+            }
+
+            // fill in subtotals
+            let courseNode = get(`.summary .courses .${type} .attribute-course`);
+            let creditNode = get(`.summary .credits .${type} .attribute-course`);
+
+            courseNode.textContent = courseSubtotal;
+            creditNode.textContent = creditSubtotal;
+        }
+
+        // totals
+        let creditTotal = 0;
+
+        for (let course of courses) {
+            creditTotal += course.credits;
+        }
+
+        let courseNode = get(`.summary .courses .total .attribute-course`);
+        let creditNode = get(`.summary .credits .total .attribute-course`);
+
+        courseNode.textContent = courses.length; // don't count overlap between types
+        creditNode.textContent = creditTotal;
+    }
+
     function makeAccessible(event) {
         let target = event.currentTarget,
             elements = target.elements,
@@ -875,19 +849,6 @@
             elements[target.focus].setAttribute('tabindex', 0);
             elements[target.focus].focus();
         }
-    }
-
-    // <https://gomakethings.com/detecting-when-a-visitor-has-stopped-scrolling-with-vanilla-javascript/>
-    function scrollStop(callback) {
-        let isScrolling;
-
-        window.addEventListener('scroll', function (event) {
-            window.clearTimeout(isScrolling);
-
-            isScrolling = setTimeout(function () {
-                callback();
-            }, 66);
-        }, { passive: true });
     }
 
     function repositionTooltip(tooltip) {
@@ -950,19 +911,6 @@
                 return 'Summer';
             case 4:
                 return 'Winter';
-        }
-    }
-
-    function expandYear(year) {
-        switch (year) {
-            case 1:
-                return 'Freshman';
-            case 2:
-                return 'Sophomore';
-            case 3:
-                return 'Junior';
-            case 4:
-                return 'Senior';
         }
     }
 

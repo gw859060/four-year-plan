@@ -78,7 +78,7 @@
 }
 
 html {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 body {
@@ -89,6 +89,14 @@ body {
     font-family: var(--sans-serif);
     margin: 0;
     overflow-x: hidden; /* for .full-width */
+}
+
+@media screen and (min-width: 700px) {
+
+    html {
+        font-size: 16px;
+    }
+
 }
 
 @media screen and (min-width: 1400px) {
@@ -116,8 +124,8 @@ h2 {
 h2::before {
     content: '';
     display: block;
-    height: 3.25em;
-    margin-top: -3.25em;
+    height: 2.75em;
+    margin-top: -2.75em;
     visibility: hidden;
     pointer-events: none;
 }
@@ -136,10 +144,6 @@ p {
     font-size: 1.1em;
     margin: 0 0 1em;
     line-height: 1.5;
-}
-
-section + section {
-    margin: 3em 0 0;
 }
 
 hr {
@@ -220,6 +224,10 @@ abbr {
 
 .subdued {
     color: var(--txt-05);
+}
+
+.tile.dark .subdued {
+    color: #bbb;
 }
 
 .unselectable {
@@ -380,7 +388,7 @@ nav {
 }
 
 .nav-list {
-    --nav-padding: .8em;
+    --nav-padding: .65em;
 
     display: flex;
     justify-content: space-between;
@@ -543,9 +551,10 @@ nav {
 
 main {
     overflow-x: hidden; /* prevent tooltips from expanding page */
+    padding: 5em 0;
 }
 
-main > section {
+main > section + section {
     margin-top: 5em;
 }
 
@@ -568,6 +577,7 @@ main > section {
 }
 
 .attribute-name {
+    line-height: 1.3;
     margin-right: .5em;
 }
 
@@ -613,35 +623,6 @@ main > section {
     margin-top: var(--gap-small);
 }
 
-/* summary */
-/* .section-summary .tile {
-    background-color: var(--bg-05);
-}
-
-.section-summary hr {
-    border-color: #d3d3d3;
-}
-
-.requirement.courses .total .attribute-course,
-.requirement.credits .total .attribute-course {
-    border-bottom: 1px dotted #999;
-    cursor: help;
-} */
-
-.icon {
-    display: inline-block;
-    position: relative;
-    top: .15em;
-    width: 1em;
-    height: 1em;
-}
-
-.checkmark {
-    background: url('../images/checkmark.svg') no-repeat;
-    font-size: .85em;
-    margin-left: .25em;
-}
-
 @media screen and (max-width: 550px) {
 
     .requirements {
@@ -657,22 +638,6 @@ main > section {
         grid-template-columns: repeat(2, 1fr);
         row-gap: var(--gap-large);
     }
-
-    /* .section-summary {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-column: 1 / 3;
-        column-gap: var(--gap-large);
-        margin-top: calc(3em - var(--gap-large));
-    }
-
-    .section-summary h3 {
-        grid-column: 1 / 3;
-    }
-
-    .section-summary .tile + .tile {
-        margin-top: 0;
-    } */
 
 }
 
@@ -820,12 +785,28 @@ main > section {
     min-width: 0;
 }
 
+.semester.spring {
+    grid-area: spring;
+}
+
+.semester.summer {
+    grid-area: summer;
+}
+
+.semester.fall {
+    grid-area: fall;
+}
+
+.semester.winter {
+    grid-area: winter;
+}
+
 /* <https://css-tricks.com/hash-tag-links-padding/> */
 .semester-num::before {
     content: '';
     display: block;
-    height: 4em;
-    margin-top: -4em;
+    height: 3.75em;
+    margin-top: -3.75em;
     visibility: hidden;
     pointer-events: none;
 }
@@ -833,7 +814,7 @@ main > section {
 @media screen and (max-width: 700px) {
 
     .year {
-        grid-template-columns: none;
+        display: block;
     }
 
     .semester + .semester {
@@ -857,7 +838,7 @@ main > section {
     display: flex;
     align-items: center;
     width: 3.05ch;
-    line-height: 1.2;
+    line-height: 1.25;
     margin-right: .9rem;
 }
 
@@ -867,6 +848,11 @@ main > section {
 }
 
 .course-body {
+    /* vertically center course title when there are no pills */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     flex: 1;
     margin-right: 1.1rem;
     min-width: 0; /* <https://css-tricks.com/flexbox-truncated-text/> */
@@ -874,6 +860,7 @@ main > section {
 
 .course-name {
     color: var(--txt-07);
+    margin-bottom: 0;
     line-height: 1.2;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -893,7 +880,7 @@ main > section {
 .req-container {
     position: relative;
     white-space: nowrap;
-    margin-top: -0.1em;
+    margin-top: .2em;
 }
 
 .fade-overflow {
@@ -1106,7 +1093,7 @@ main > section {
 
 /* fake the last hour header */
 .header-hour:last-child::after {
-    content: '4:00';
+    content: attr(data-next-hour);
     display: block;
     position: absolute;
     right: 0;
@@ -1190,8 +1177,7 @@ main > section {
     transition: background-color var(--duration) ease;
 }
 
-.week-button:hover,
-.week-button:focus {
+.week-button:hover {
     background-color: #e7e7e7;
 }
 
@@ -1203,70 +1189,44 @@ main > section {
 
 }
 
-/* ***** useful links ***** */
+/* ***** summary ***** */
 
-.useful-links {
-    margin-bottom: 5em;
-}
-
-.link-grid {
+.summary-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: var(--gap-large);
-    width: 75%;
-    margin: auto;
+    align-items: flex-start;
 }
 
-.link-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 150px;
-    color: var(--txt-07);
+.summary .tile {
+    flex: 1;
+    line-height: 1.55;
     background-color: var(--bg-05);
-    text-decoration: none;
-    transition: background-color .4s ease;
 }
 
-.link-item:hover,
-.link-item:focus {
-    background-color: var(--bg-04);
+.summary hr {
+    border-color: #cfcfcf;
+    margin: .7em 0;
 }
 
-.link-container {
-    text-align: left;
-    width: 60%;
+.summary-note {
+    font-size: .9em;
+    margin-top: .3em;
+    line-height: 1.45;
 }
 
-.link-title {
-    font-size: 1.25em;
-    line-height: 1.3;
-    margin: 0;
-}
+@media screen and (max-width: 550px) {
 
-@media screen and (max-width: 500px) {
-
-    .link-grid {
-        width: 100%;
-    }
-
-}
-
-@media screen and (max-width: 700px) {
-
-    .link-grid {
+    .summary-container {
         grid-template-columns: none;
-        grid-gap: var(--gap-small);
     }
 
-    .link-item {
-        justify-content: initial;
-        padding: 1em 2em;
-        height: auto;
-    }
+}
 
-    .link-container {
-        width: auto;
+@media screen and (min-width: 550px) and (max-width: 900px) {
+
+    .summary-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 
 }

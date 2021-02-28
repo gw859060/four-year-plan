@@ -75,12 +75,8 @@
             ],
             "mathematics": [
                 {
-                    "attribute": "statistics",
-                    "number": 2
-                },
-                {
-                    "attribute": "calculus",
-                    "number": 1
+                    "attribute": "math",
+                    "number": 3
                 }
             ],
             "electives": [
