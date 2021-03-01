@@ -227,7 +227,7 @@ abbr {
 }
 
 .tile.dark .subdued {
-    color: #bbb;
+    color: #bfbfbf;
 }
 
 .unselectable {
@@ -297,7 +297,7 @@ abbr {
     font-family: var(--sans-serif);
     text-align: left;
     text-transform: none;
-    padding: .4rem .7rem .45rem;
+    padding: .35rem .7rem .4rem;
     box-shadow: var(--shadow-small);
 }
 
@@ -322,8 +322,6 @@ abbr {
 
 .tooltip-details {
     font-size: .9em;
-    opacity: .85;
-    margin-top: -0.1em;
 }
 
 @media screen and (max-width: 500px) {
@@ -421,8 +419,7 @@ nav {
     border: none;
 }
 
-.nav-link:hover,
-.nav-link:focus {
+.nav-link:hover {
     background-color: #414141;
 }
 
@@ -1137,7 +1134,7 @@ main > section + section {
 }
 
 .week-grid .tooltip-details {
-    margin-top: .05em;
+    margin-top: .1em;
 }
 
 .bg-red {

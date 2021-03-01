@@ -121,7 +121,7 @@
             if (this.times !== -1) {
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
-                details.classList.add('tooltip-details');
+                details.classList.add('tooltip-details', 'subdued');
                 details.textContent = `${expandSemester(this.semester)} ${2020 + yearDiff} • Year ${this.year}`;
             }
 
@@ -367,6 +367,7 @@
     //        - show/hide professor
     //        <https://codyhouse.co/demo/schedule-template/index.html>
     //        <https://css-tricks.com/grid-auto-flow-css-grid-flex-direction-flexbox/>
+    // @TODO: show transfer/other courses (ie. courses without a semester) in separate section?
 
     function buildSchedule(courses) {
         // starting year for "Fall 2020" headers; I know it's a bad name
@@ -380,13 +381,13 @@
         }
 
         for (let year of yearList) {
-            // create empty year section
-            let yearNode = document.createElement('section');
-
             // don't build DOM for "other" array in courses.json - dates for those courses are set to -1
             if (courses.filter(c => c.year === year)[0].times === -1) {
                 return;
             }
+
+            // create empty year section
+            let yearNode = document.createElement('section');
 
             yearNode.classList.add('year');
             get('.course-schedule').appendChild(yearNode);
@@ -464,6 +465,7 @@
                 container.focus = 0;
                 container.elements = getAll('.pill', container);
 
+                // ignore courses without pills (ie. courses that don't fill any requirements)
                 if (container.elements.length > 0) {
                     container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
                 }
@@ -531,7 +533,6 @@
                         pill.setAttribute('tabindex', '-1');
                         pill.addEventListener('click', function () {
                             // highlight courses with same req/attr, fade all others
-                            // @TODO: use objects to do this instead of DOM
                             if (this.classList.contains('selected') === false) {
                                 clearSelected();
 
@@ -565,7 +566,7 @@
         function handleTimes(container, course, index) {
             let times = course.times;
 
-            // ignore classes without time data
+            // ignore courses without time data
             if (typeof times === 'object') {
                 let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
 
@@ -625,7 +626,7 @@
                 for (let time of times) {
                     let courseSlot = document.createElement('div');
 
-                    courseSlot.setAttribute('tabindex', '0');
+                    courseSlot.setAttribute('tabindex', '0'); // allow users to tab through
                     courseSlot.classList.add('course-slot', 'monospace', 'uppercase', backgrounds[index]);
                     courseSlot.textContent = course.name.shorthand;
                     courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
@@ -664,32 +665,56 @@
                     let header = document.createElement('div');
 
                     header.classList.add('tooltip-title');
-                    header.textContent = course.name.shorthand + ': ' + course.name.title;
+                    header.textContent = course.name.title;
                     tooltip.appendChild(header);
 
+                    // determine if we need "h" too (> 50 minute course), or just "m" (50 minute course)
                     let details = document.createElement('div'),
                         minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
                         hours = Math.floor(minutes / 60);
 
-                    (hours !== 0) ? hours += 'h ' : hours = '';
+                    if (hours !== 0) {
+                        hours += 'h ';
+                    } else {
+                        hours = '';
+                    }
 
-                    // convert 24-hour time to 12-hour time
+                    // add start time, end time, and course duration
                     let startHour = time.start.split(':')[0],
                         startMin = time.start.split(':')[1],
+                        startPeriod = checkPeriod(startHour),
                         endHour = time.end.split(':')[0],
-                        endMin = time.end.split(':')[1];
+                        endMin = time.end.split(':')[1],
+                        endPeriod = checkPeriod(endHour);
 
-                    if (startHour > 12) startHour -= 12;
-                    if (endHour > 12) endHour -= 12;
+                    let convertedStart = `${convertHour(startHour)}:${startMin} ${startPeriod}`,
+                        convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
-                    let newStart = `${startHour}:${startMin}`,
-                        newEnd = `${endHour}:${endMin}`;
-
-                    details.classList.add('tooltip-details');
-                    details.textContent = `${newStart}–${newEnd} • ${hours}${minutes % 60}m`;
+                    details.classList.add('tooltip-details', 'subdued');
+                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
                     tooltip.appendChild(details);
 
                     return tooltip;
+
+                    // convert 24-hour time to 12-hour time
+                    function convertHour(hour) {
+                        if (hour > 12) {
+                            return hour -= 12;
+                        } else {
+                            return hour;
+                        }
+                    }
+
+                    // check if AM or PM
+                    function checkPeriod(hour) {
+                        if (hour > 12) {
+                            return 'pm';
+                        } else if (hour == 12) {
+                            return 'pm';
+                        } else {
+                            return 'am';
+                        }
+                    }
                 }
             }
 
