@@ -798,6 +798,12 @@ main > section + section {
     grid-area: winter;
 }
 
+/* in Firefox, pointer-events: none doesn't prevent ::before from blocking the
+   "Expand week view" button underneath it (??), so put this on <h3> as well */
+.semester-num {
+    pointer-events: none;
+}
+
 /* <https://css-tricks.com/hash-tag-links-padding/> */
 .semester-num::before {
     content: '';
@@ -824,6 +830,7 @@ main > section + section {
 
 .course {
     display: flex;
+    align-items: center;
     transition: opacity var(--duration) var(--ease); /* for .filtered */
 }
 
@@ -832,8 +839,6 @@ main > section + section {
 }
 
 .course-shorthand {
-    display: flex;
-    align-items: center;
     width: 3.05ch;
     line-height: 1.25;
     margin-right: .9rem;
@@ -875,7 +880,7 @@ main > section + section {
 }
 
 .req-container {
-    position: relative;
+    position: relative; /* for .fade-overflow */
     white-space: nowrap;
     margin-top: .2em;
 }
@@ -907,8 +912,6 @@ main > section + section {
 }
 
 .course-credits {
-    display: flex;
-    margin: auto;
     letter-spacing: -0.05ch;
 }
 
@@ -1196,7 +1199,6 @@ main > section + section {
 }
 
 .summary .tile {
-    flex: 1;
     line-height: 1.55;
     background-color: var(--bg-05);
 }

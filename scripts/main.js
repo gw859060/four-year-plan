@@ -662,24 +662,18 @@
                     tooltip.classList.add('tooltip', 'tile', 'dark');
                     tooltip.setAttribute('role', 'tooltip');
 
+                    // add course name
                     let header = document.createElement('div');
 
                     header.classList.add('tooltip-title');
                     header.textContent = course.name.title;
                     tooltip.appendChild(header);
 
-                    // determine if we need "h" too (> 50 minute course), or just "m" (50 minute course)
+                    // add start time, end time, and course duration
                     let details = document.createElement('div'),
                         minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
-                        hours = Math.floor(minutes / 60);
+                        hours = '0' + Math.floor(minutes / 60); // zero-pad, assuming there are no 10+ hr courses
 
-                    if (hours !== 0) {
-                        hours += 'h ';
-                    } else {
-                        hours = '';
-                    }
-
-                    // add start time, end time, and course duration
                     let startHour = time.start.split(':')[0],
                         startMin = time.start.split(':')[1],
                         startPeriod = checkPeriod(startHour),
@@ -691,7 +685,7 @@
                         convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
                     details.classList.add('tooltip-details', 'subdued');
-                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
+                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}:${minutes % 60}`;
                     tooltip.appendChild(details);
 
                     return tooltip;
@@ -707,9 +701,7 @@
 
                     // check if AM or PM
                     function checkPeriod(hour) {
-                        if (hour > 12) {
-                            return 'pm';
-                        } else if (hour == 12) {
+                        if (hour >= 12) {
                             return 'pm';
                         } else {
                             return 'am';
