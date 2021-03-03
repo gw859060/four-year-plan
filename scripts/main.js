@@ -74,7 +74,7 @@
             }
         }
 
-        // anything without dates (AP credit, etc)
+        // anything without dates (AP credit, transfer courses, etc)
         for (let course of json.other) {
             let obj = new Course(
                 course.subject,
@@ -83,8 +83,10 @@
                 course.requirement,
                 course.attribute,
                 course.credits,
-                -1 // can't use undefined - courses without times that will eventually be assigned
-                   // times in the future (ie. in upcoming semesters) already use undefined
+                // null = will never have a time; undefined (from above loop) = may get a time in the future
+                null,
+                null,
+                null
             );
 
             courseObjects.push(obj);
@@ -118,7 +120,7 @@
             header.textContent = this.name.title;
 
             // don't add year/semester for courses without dates (eg. AP credit)
-            if (this.times !== -1) {
+            if (this.times !== null) {
                 let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
 
                 details.classList.add('tooltip-details', 'subdued');
@@ -297,6 +299,11 @@
         }
 
         function addRow(course, node) {
+            // skip courses that don't fulfill any requirement
+            if (course.reqs.requirement === null) {
+                return;
+            }
+
             // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
@@ -380,11 +387,10 @@
             if (yearList.includes(course.year) === false) yearList.push(course.year);
         }
 
+        // start building DOM
         for (let year of yearList) {
-            // don't build DOM for "other" array in courses.json - dates for those courses are set to -1
-            if (courses.filter(c => c.year === year)[0].times === -1) {
-                return;
-            }
+            // don't build DOM for "other" array in courses.json - dates for those courses are set to null
+            if (year === null) continue;
 
             // create empty year section
             let yearNode = document.createElement('section');
@@ -519,7 +525,12 @@
             }
 
             function buildPill(container, req, attr, duplicate = false) {
-                [req, attr].forEach(type => {
+                // skip courses that don't meet any requirements
+                if (req === null) {
+                    return;
+                }
+
+                for (let type of [req, attr]) {
                     // skip duplicate requirements
                     if (!(type === req && duplicate === true)) {
                         let pill = document.createElement('button');
@@ -559,7 +570,7 @@
 
                         container.appendChild(pill);
                     }
-                });
+                }
             }
         }
 
@@ -590,36 +601,24 @@
                         rowNum += 12;
                     }
 
-                    // open/collapse week schedule on button click
-                    let button = get('.week-button', container);
+                    // open all week schedules in the same year when one is clicked
+                    let weekButton = get('.week-button', container);
 
-                    button.addEventListener('click', function (e) {
+                    weekButton.addEventListener('click', function (e) {
+                        let schedules = getAll('.weekly-schedule', e.currentTarget.closest('.year'));
                         let buttons = getAll('.week-button', e.currentTarget.closest('.year'));
-                        let weeks = getAll('.weekly-schedule', e.currentTarget.closest('.year'));
 
-                        // schedule is currently collapsed (default); expand it on click
-                        if (button.dataset.collapsed === 'true') {
-                            for (let button of buttons) {
-                                button.textContent = 'Collapse week view ↑';
-                                button.dataset.collapsed = false;
-                            }
-
-                            for (let week of weeks) {
-                                week.classList.remove('collapsed');
+                        // exclude the current schedule (it's already been toggled by click)
+                        for (let sched of schedules) {
+                            if (sched !== e.currentTarget.parentNode) {
+                                sched.toggleAttribute('open');
                             }
                         }
-                        // else schedule is currently expanded; collapse it on click
-                        else {
-                            for (let button of buttons) {
-                                button.textContent = 'Expand week view ↓';
-                                button.dataset.collapsed = true;
-                            }
 
-                            for (let week of weeks) {
-                                week.classList.add('collapsed');
-                            }
+                        for (let button of buttons) {
+                            button.classList.toggle('active');
                         }
-                    }, false);
+                    }, { passive: true });
                 }
 
                 // add time slots for this course to the grid
@@ -670,9 +669,16 @@
                     tooltip.appendChild(header);
 
                     // add start time, end time, and course duration
-                    let details = document.createElement('div'),
-                        minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
-                        hours = '0' + Math.floor(minutes / 60); // zero-pad, assuming there are no 10+ hr courses
+                    let details = document.createElement('div');
+
+                    let minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
+                        hours = Math.floor(minutes / 60);
+
+                    if (hours === 0) {
+                        hours = '';
+                    } else {
+                        hours += 'h ';
+                    }
 
                     let startHour = time.start.split(':')[0],
                         startMin = time.start.split(':')[1],
@@ -685,7 +691,7 @@
                         convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
                     details.classList.add('tooltip-details', 'subdued');
-                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}:${minutes % 60}`;
+                    details.textContent = `${convertedStart}–${convertedEnd}: ${hours}${minutes % 60}m`;
                     tooltip.appendChild(details);
 
                     return tooltip;

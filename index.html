@@ -249,7 +249,8 @@
         </div>
     </template>
     <template class="template-week">
-        <div class="weekly-schedule collapsed">
+        <details class="weekly-schedule">
+            <summary class="week-button button subdued unselectable">Week view</summary>
             <figure class="week-container">
                 <div class="header-days monospace uppercase subdued">
                     <div class="header-day">Mon</div>
@@ -270,10 +271,7 @@
                 </div>
                 <div class="week-grid"></div>
             </figure>
-            <div class="week-button-container">
-                <button class="week-button button subdued" type="button" data-collapsed="true">Expand week view ↓</button>
-            </div>
-        </div>
+        </details>
     </template>
 </body>
 
