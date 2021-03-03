@@ -174,7 +174,7 @@ abbr {
 .link {
     color: inherit;
     text-decoration-color: #ccc;
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
     transition: text-decoration-color var(--duration) var(--ease);
 }
@@ -1045,16 +1045,14 @@ main > section + section {
 
 .weekly-schedule {
     display: flex;
-    margin: .75em 0 0;
-    padding: 0 1.2rem;
+    margin: .85em 1rem 0;
 }
 
 .week-button {
-    display: inline-block;
     font-size: .875em;
-    width: max-content;
     border-radius: 10em;
-    padding: .05em .7em .15em;
+    width: max-content;
+    padding: .025em .65em .075em;
     margin: auto;
     transition: .3s ease;
 }
@@ -1075,8 +1073,8 @@ main > section + section {
     grid: auto 1fr / auto 1fr;
     grid-template-areas: "empty days"
                         "hours courses";
-    grid-gap: .35em .7em;
-    margin: .5em 0;
+    grid-gap: .2em .6em;
+    margin: .75em 0 .5em;
 }
 
 .header-days {
@@ -1100,7 +1098,7 @@ main > section + section {
 .header-hour {
     font-size: .75rem;
     text-align: right;
-    transform: translateY(-1.25ch);
+    transform: translateY(-1.2ch);
 }
 
 /* fake the last hour header */
@@ -1109,7 +1107,7 @@ main > section + section {
     display: block;
     position: absolute;
     right: 0;
-    bottom: -1.4em;
+    bottom: -1.35em;
 }
 
 .week-grid {
@@ -1175,7 +1173,7 @@ main > section + section {
 @media screen and (max-width: 69em) {
 
     .weekly-schedule {
-        padding: 0;
+        margin: .85em 0 0;
     }
 
 }
@@ -1203,6 +1201,13 @@ main > section + section {
     font-size: .9em;
     margin-top: .3em;
     line-height: 1.45;
+}
+
+.dotted {
+    cursor: help;
+    -webkit-text-decoration: underline dotted #aaa; /* safari only */
+    text-decoration: 1px underline dotted #aaa;
+    text-underline-offset: 3px;
 }
 
 @media screen and (max-width: 550px) {

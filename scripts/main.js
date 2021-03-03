@@ -390,7 +390,9 @@
         // start building DOM
         for (let year of yearList) {
             // don't build DOM for "other" array in courses.json - dates for those courses are set to null
-            if (year === null) continue;
+            if (year === null) {
+                continue;
+            }
 
             // create empty year section
             let yearNode = document.createElement('section');
@@ -671,14 +673,8 @@
                     // add start time, end time, and course duration
                     let details = document.createElement('div');
 
-                    let minutes = ((convertToRow(time.end) - convertToRow(time.start)) * 5),
-                        hours = Math.floor(minutes / 60);
-
-                    if (hours === 0) {
-                        hours = '';
-                    } else {
-                        hours += 'h ';
-                    }
+                    let minutes = (convertToRow(time.end) - convertToRow(time.start)) * 5,
+                        hours = '0' + Math.floor(minutes / 60);
 
                     let startHour = time.start.split(':')[0],
                         startMin = time.start.split(':')[1],
@@ -691,7 +687,7 @@
                         convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
                     details.classList.add('tooltip-details', 'subdued');
-                    details.textContent = `${convertedStart}–${convertedEnd}: ${hours}${minutes % 60}m`;
+                    details.textContent = `${convertedStart}–${convertedEnd}: ${hours}:${minutes % 60}`;
                     tooltip.appendChild(details);
 
                     return tooltip;
