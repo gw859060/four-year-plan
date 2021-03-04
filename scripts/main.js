@@ -581,7 +581,7 @@
 
             // ignore courses without time data
             if (typeof times === 'object') {
-                let backgrounds = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
+                let backgrounds = ['bg-red', 'bg-yellow', 'bg-green', 'bg-blue', 'bg-purple'];
 
                 // if weekly schedule has not been created yet
                 // @TODO: dynamically create hour numbers and reduce them to the minimum necessary

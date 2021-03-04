@@ -1150,24 +1150,30 @@ main > section + section {
     margin-top: .1em;
 }
 
+/* @TODO: colorblind toggle - switch to stripes for red/green, blue/purple */
+/* eg. background-image: repeating-linear-gradient(-45deg, lighter, lighter 10px, darker 10px, darker 20px); */
+
 .bg-red {
-    background-image: repeating-linear-gradient(-45deg, #e2474f, #e2474f 10px, #db3f48 10px, #db3f48 20px);
+    background-color: #f1444d;
 }
 
-.bg-orange {
-    background-color: #fa9a00;
+.bg-yellow {
+    background-color: #ffa412;
+    background-color: color(display-p3 0.98 0.672 0.181);
 }
 
 .bg-green {
-    background-image: repeating-linear-gradient(45deg, #0da037, #0da037 10px, #009a2d 10px, #009a2d 20px);
+    background-color: #0da037;
+    background-color: color(display-p3 0.236 0.64 0.221);
 }
 
 .bg-blue {
-    background-color: #276fec;
+    background-color: #3475e6;
 }
 
 .bg-purple {
-    background-image: repeating-linear-gradient(90deg, #a859ff, #a859ff 10px, #a151f7 10px, #a151f7 20px);
+    background-color: #a656ff;
+    background-color: color(display-p3 0.616 0.338 0.995);
 }
 
 @media screen and (max-width: 69em) {
