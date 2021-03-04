@@ -1151,23 +1151,23 @@ main > section + section {
 }
 
 .bg-red {
-    background-image: repeating-linear-gradient(-45deg, #d3585e, #d3585e 10px, #c95258 10px, #c95258 20px);
+    background-image: repeating-linear-gradient(-45deg, #e2474f, #e2474f 10px, #db3f48 10px, #db3f48 20px);
 }
 
 .bg-orange {
-    background-color: #ec9344;
+    background-color: #fa9a00;
 }
 
 .bg-green {
-    background-image: repeating-linear-gradient(45deg, #58a14e, #58a14e 10px, #539946 10px, #539946 20px);
+    background-image: repeating-linear-gradient(45deg, #0da037, #0da037 10px, #009a2d 10px, #009a2d 20px);
 }
 
 .bg-blue {
-    background-color: #3f7cbd;
+    background-color: #276fec;
 }
 
 .bg-purple {
-    background-image: repeating-linear-gradient(90deg, #aa63c6, #aa63c6 10px, #a35bbf 10px, #a35bbf 20px);
+    background-image: repeating-linear-gradient(90deg, #a859ff, #a859ff 10px, #a151f7 10px, #a151f7 20px);
 }
 
 @media screen and (max-width: 69em) {
