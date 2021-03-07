@@ -257,6 +257,20 @@ abbr {
 
 /* ***** components ***** */
 
+@keyframes slide-up {
+
+    from {
+        opacity: 0;
+        transform: translate(-50%, 50%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+}
+
 .tile {
     background-color: var(--bg-07);
     border-radius: .4em;
@@ -277,6 +291,26 @@ abbr {
     background-color: #4d4d4d;
 }
 
+.tile.error {
+    position: fixed;
+    left: 50%;
+    bottom: 2.5em;
+    transition: filter .3s ease;
+    animation: slide-up 1s cubic-bezier(0.25, 1, 0.5, 1) both;
+    animation-delay: .75s;
+
+    font-weight: bold;
+    background-color: #be1d0c;
+    padding: .75em 1.5em;
+    box-shadow: var(--shadow-big);
+    cursor: pointer;
+}
+
+.tile.error:hover,
+.tile.error:focus {
+    filter: brightness(1.1);
+}
+
 .description {
     color: #484848;
     max-width: 35em;
@@ -284,21 +318,22 @@ abbr {
     margin-right: auto;
 }
 
-.tooltip.tile {
+.tooltip {
     position: absolute;
     left: 0;
     bottom: calc(100% + 7px); /* greater than or equal to border-width on .tooltip::after */
-    pointer-events: none;
-    z-index: 1; /* position above checkmarks */
-
     max-width: 20em;
+    padding: .45em .8em .55em;
+    box-shadow: var(--shadow-small);
+    pointer-events: none;
+    z-index: 1;
+
+    /* reset stuff inherited from parent element */
     font-size: .9rem;
     font-weight: normal;
     font-family: var(--sans-serif);
     text-align: left;
     text-transform: none;
-    padding: .35rem .7rem .4rem;
-    box-shadow: var(--shadow-small);
 }
 
 .tooltip::after {
@@ -310,14 +345,14 @@ abbr {
     border-top-color: var(--bg-02);
 }
 
-.tooltip-title {
-    font-weight: bold;
-}
-
 .tooltip-title,
 .tooltip-details {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.tooltip-title {
+    font-weight: bold;
 }
 
 .tooltip-details {
@@ -768,8 +803,6 @@ main > section + section {
 .year {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: "fall spring"
-                        "winter summer";
     column-gap: var(--gap-large);
 }
 
@@ -777,25 +810,14 @@ main > section + section {
     margin-top: 4em;
 }
 
+/* added with js */
+.year-row-gap {
+    row-gap: 2em;
+}
+
 /* <https://css-tricks.com/flexbox-truncated-text/> */
 .semester {
     min-width: 0;
-}
-
-.semester.spring {
-    grid-area: spring;
-}
-
-.semester.summer {
-    grid-area: summer;
-}
-
-.semester.fall {
-    grid-area: fall;
-}
-
-.semester.winter {
-    grid-area: winter;
 }
 
 /* in Firefox, pointer-events: none doesn't prevent ::before from blocking the
@@ -839,7 +861,7 @@ main > section + section {
 }
 
 .course-shorthand {
-    width: 3.05ch;
+    width: 3ch;
     line-height: 1.25;
     margin-right: .9rem;
 }
@@ -1142,38 +1164,38 @@ main > section + section {
 }
 
 .week-grid .tooltip {
-    padding: .45rem .75rem .55rem;
+    padding: .6em .9em .75em;
     white-space: nowrap; /* allow tooltip to break out of grid */
 }
 
 .week-grid .tooltip-details {
-    margin-top: .1em;
+    margin-top: .075em;
 }
 
-/* @TODO: colorblind toggle - switch to stripes for red/green, blue/purple */
-/* eg. background-image: repeating-linear-gradient(-45deg, lighter, lighter 10px, darker 10px, darker 20px); */
+/* color reference: <https://www.ibm.com/plex/>, <https://rsms.me/inter/> */
+/* @TODO: colorblind toggle - switch to stripes for red/green, blue/purple
+          eg. background-image: repeating-linear-gradient(-45deg, light, light 10px, dark 10px, dark 20px); */
 
 .bg-red {
-    background-color: #f1444d;
+    background-color: hsl(359.28, 80.23%, 62.2%);
 }
 
-.bg-yellow {
-    background-color: #ffa412;
-    background-color: color(display-p3 0.98 0.672 0.181);
+.bg-orange {
+    background-color: hsl(36.59, 100%, 51.76%);
+    background-color: color(display-p3 0.96 0.641 0.235);
 }
 
 .bg-green {
-    background-color: #0da037;
-    background-color: color(display-p3 0.236 0.64 0.221);
+    background-color: hsl(120, 100%, 33.73%);
+    background-color: color(display-p3 0.23 0.665 0.18);
 }
 
 .bg-blue {
-    background-color: #3475e6;
+    background-color: hsl(218.04, 79.51%, 52.16%);
 }
 
 .bg-purple {
-    background-color: #a656ff;
-    background-color: color(display-p3 0.616 0.338 0.995);
+    background-color: hsl(260.78, 90.53%, 66.2%);
 }
 
 @media screen and (max-width: 69em) {
@@ -1228,42 +1250,6 @@ main > section + section {
 
     .summary-container {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-/* ***** errors ***** */
-
-.tile.error {
-    position: fixed;
-    left: 50%;
-    bottom: 2.5em;
-    transition: filter .3s ease;
-    animation: slide-up 1s cubic-bezier(0.25, 1, 0.5, 1) both;
-    animation-delay: .75s;
-
-    font-weight: bold;
-    background-color: #be1d0c;
-    padding: .75em 1.5em;
-    box-shadow: var(--shadow-big);
-    cursor: pointer;
-}
-
-.tile.error:hover,
-.tile.error:focus {
-    filter: brightness(1.1);
-}
-
-@keyframes slide-up {
-
-    from {
-        opacity: 0;
-        transform: translate(-50%, 50%);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0);
     }
 
 }

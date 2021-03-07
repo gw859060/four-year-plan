@@ -171,7 +171,20 @@
                     ]
                 },
                 {
-                    "semester": 3,
+                    "semester": 4,
+                    "courses": [
+                        {
+                            "subject": "ENG",
+                            "number": "368",
+                            "name": "Business and Organizational Writing",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        }
+                    ]
+                },
+                {
+                    "semester": 5,
                     "courses": [
                         {
                             "subject": "MAT",
@@ -180,14 +193,6 @@
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "math"
-                        },
-                        {
-                            "subject": "ENG",
-                            "number": "368",
-                            "name": "Business and Organizational Writing",
-                            "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
                         }
                     ]
                 }
@@ -374,7 +379,7 @@
                     ]
                 },
                 {
-                    "semester": 3,
+                    "semester": 4,
                     "courses": [
                         {
                             "subject": "CSC",

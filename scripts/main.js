@@ -328,9 +328,9 @@
                 // disable existing transition property on .pill when jumping to course
                 get('.req-container', clickedCourse).classList.add('no-fade');
 
-                // <https://css-tricks.com/smooth-scrolling-accessibility/>
-                // the problem: setting focus as instructed makes the browser jump
-                // to target immediately, skipping the smooth scroll behavior
+                // @TODO: <https://css-tricks.com/smooth-scrolling-accessibility/>
+                //        problem: setting focus as instructed makes the browser jump to target immediately,
+                //        skipping the smooth scroll behavior; alternatively, just remove smooth scroll
                 get('.semester-num', clickedCourse.parentNode).scrollIntoView({ behavior: motion });
 
                 window.setTimeout(function () {
@@ -419,13 +419,14 @@
                     season = expandSemester(semester),
                     semCreditTotal = 0;
 
-                semNode.classList.add(expandSemester(semester).toLowerCase()); // for grid-area
                 semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
                 if (semester === 1) semesterYear++;
 
-                // only add row-gap if there are summer/winter semesters; if the gap is constantly "on",
-                // it creates inconsistent spacing because the gap doesn't hide when there is no second row
-                if (semester === 3 || semester === 4) yearNode.style.rowGap = '2em';
+                // only add row-gap if summer/winter semesters exist; if the gap is constantly "on", it creates
+                // inconsistent vertical spacing because the gap doesn't collapse when there is no second row
+                if (semester > 2 && !yearNode.classList.contains('year-row-gap')) {
+                    yearNode.classList.add('year-row-gap');
+                }
 
                 // fill semester with courses
                 for (let course of courseList) {
@@ -576,13 +577,11 @@
             }
         }
 
-        function handleTimes(container, course, index) {
+        function handleTimes(container, course, i) {
             let times = course.times;
 
             // ignore courses without time data
             if (typeof times === 'object') {
-                let backgrounds = ['bg-red', 'bg-yellow', 'bg-green', 'bg-blue', 'bg-purple'];
-
                 // if weekly schedule has not been created yet
                 // @TODO: dynamically create hour numbers and reduce them to the minimum necessary
                 if (!get('.weekly-schedule', container)) {
@@ -604,6 +603,8 @@
                     }
 
                     // open all week schedules in the same year when one is clicked
+                    // @TODO: on open, add colored dots next to course name in list?
+                    // @TODO: only open adjacent semesters <https://forum.jquery.com/topic/select-items-on-the-same-line>
                     let weekButton = get('.week-button', container);
 
                     weekButton.addEventListener('click', function (e) {
@@ -625,10 +626,11 @@
 
                 // add time slots for this course to the grid
                 for (let time of times) {
+                    let bgClasses = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
                     let courseSlot = document.createElement('div');
 
                     courseSlot.setAttribute('tabindex', '0'); // allow users to tab through
-                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase', backgrounds[index]);
+                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
                     courseSlot.textContent = course.name.shorthand;
                     courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
                     courseSlot.style.gridColumn = convertToColumn(time.day);
@@ -638,6 +640,7 @@
                 }
             }
 
+            // @TODO: combine the code for this and the Course object's tooltip
             function addTooltip(courseSlot, course, time) {
                 let tooltip = buildTooltip(course, time);
 
@@ -716,7 +719,7 @@
                 let timeSplit = time.split(':'),
                     hour = timeSplit[0],
                     min = timeSplit[1],
-                    gridStartHour = 9; // 9am
+                    gridStartHour = 9; // currently hardcoded to 9am; @TODO make this dynamic later
 
                 // convert course start/end time to its number of 5-minute intervals for grid placement;
                 // add 1 because grid line naming starts at 1, not 0
@@ -927,9 +930,11 @@
             case 2:
                 return 'Spring';
             case 3:
-                return 'Summer';
-            case 4:
                 return 'Winter';
+            case 4:
+                return 'Summer 1';
+            case 5:
+                return 'Summer 2';
         }
     }
 
