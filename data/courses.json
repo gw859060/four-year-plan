@@ -178,8 +178,14 @@
                             "number": "368",
                             "name": "Business and Organizational Writing",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirement": [
+                                "gened",
+                                "major"
+                            ],
+                            "attribute": [
+                                "writing",
+                                "communications"
+                            ]
                         }
                     ]
                 },
@@ -359,8 +365,8 @@
                             "number": "230",
                             "name": "Business and Professional Speech Communication",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "speaking"
+                            "requirement": "major",
+                            "attribute": "communications"
                         },
                         {
                             "subject": "FLM",

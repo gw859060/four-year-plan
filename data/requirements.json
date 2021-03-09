@@ -47,10 +47,6 @@
                     "number": 3
                 },
                 {
-                    "attribute": "speaking",
-                    "number": 1
-                },
-                {
                     "attribute": "ethics",
                     "number": 1
                 }
@@ -73,16 +69,20 @@
                     "number": 1
                 }
             ],
-            "mathematics": [
-                {
-                    "attribute": "math",
-                    "number": 3
-                }
-            ],
             "electives": [
                 {
                     "attribute": "elective",
                     "number": 6
+                }
+            ],
+            "additional": [
+                {
+                    "attribute": "communications",
+                    "number": 2
+                },
+                {
+                    "attribute": "math",
+                    "number": 3
                 }
             ]
         }

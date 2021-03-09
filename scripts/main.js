@@ -119,12 +119,21 @@
             header.classList.add('tooltip-title');
             header.textContent = this.name.title;
 
-            // don't add year/semester for courses without dates (eg. AP credit)
+            // add season and year this course is being taken
+            // don't do this for courses without dates, eg. AP credits or transfer courses
             if (this.times !== null) {
-                let yearDiff = (this.semester === 1 || this.semester === 4) ? this.year - 1 : this.year;
+                let startYear = 2020;
+                let calendarYear = startYear + this.year;
+
+                // if it's the fall or winter semester, we haven't ticked over to the next year yet
+                // (assuming student started in the fall), so subtract 1 from calendarYear
+                // for example, fall semester of year 1 is not 2020 + 1 = 2021, but 2020 + 0 = 2020
+                if (expandSeason(this.semester) === 'Fall' || expandSeason(this.semester) === 'Winter') {
+                    calendarYear -= 1;
+                }
 
                 details.classList.add('tooltip-details', 'subdued');
-                details.textContent = `${expandSemester(this.semester)} ${2020 + yearDiff} • Year ${this.year}`;
+                details.textContent = `${expandSeason(this.semester)} ${calendarYear} • Year ${this.year}`;
             }
 
             tooltip.classList.add('tooltip', 'tile', 'dark');
@@ -211,7 +220,7 @@
 
         /* ***** major ***** */
         let major = json.major[0];
-        let majorTypes = ['core', 'mathematics', 'electives'];
+        let majorTypes = ['core', 'electives', 'additional'];
 
         for (let type of majorTypes) {
             major[type].forEach((attr, i) => {
@@ -224,7 +233,7 @@
         /* ***** minor ***** */
         let minor = json.minor[0];
 
-        // only one attr in each section so no need for forEach
+        // only one attr in each section so no need for forloop
         buildAttrRow(minor.core, get('.section-minor .core'), 0);
         buildAttrRow(minor.electives, get('.section-minor .electives'), 0);
 
@@ -299,11 +308,6 @@
         }
 
         function addRow(course, node) {
-            // skip courses that don't fulfill any requirement
-            if (course.reqs.requirement === null) {
-                return;
-            }
-
             // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
@@ -365,15 +369,17 @@
         }
     }
 
-    // @TODO: use WCUPA "api"?
+    // @TODO: use CourseLeaf API?
     //        <https://catalog.wcupa.edu/js/courseleaf.js>
-    //        <https://catalog.wcupa.edu/ribbit/index.cgi?page=getcourse.rjs&code=CSC%20142>
     //        <https://stackoverflow.com/questions/5031501/how-to-rate-limit-ajax-requests>
-    // @TODO: toggle switch for compact/expanded (detailed) views
-    //        - show/hide days of week with circles around letters
-    //        - show/hide professor
-    //        <https://codyhouse.co/demo/schedule-template/index.html>
-    //        <https://css-tricks.com/grid-auto-flow-css-grid-flex-direction-flexbox/>
+    //        Examples:
+    //            <https://catalog.wcupa.edu/ribbit/?page=getcourse.rjs&code=CSC+142>
+    //            <https://catalog.wcupa.edu/ribbit/?page=getcourse.rjs&subject=CSC>
+    //            <https://catalog.wcupa.edu/ribbit/?page=getcourse.rjs&department=CSC>
+    //            <https://catalog.wcupa.edu/ribbit/?page=getprogram.rjs&name=*Computer*>
+    //        CORS workaround:
+    //            <https://app.cors.bridged.cc/>
+    //            <https://medium.com/bridgedxyz/cors-anywhere-for-everyone-free-reliable-cors-proxy-service-73507192714e>
     // @TODO: show transfer/other courses (ie. courses without a semester) in separate section?
 
     function buildSchedule(courses) {
@@ -416,7 +422,7 @@
                 let semTemplate = get('.template-semester').content.cloneNode(true),
                     semNode = get('.semester', semTemplate),
                     semHeader = get('.semester-num', semTemplate),
-                    season = expandSemester(semester),
+                    season = expandSeason(semester),
                     semCreditTotal = 0;
 
                 semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
@@ -427,6 +433,9 @@
                 if (semester > 2 && !yearNode.classList.contains('year-row-gap')) {
                     yearNode.classList.add('year-row-gap');
                 }
+
+                // @TODO: build weekly grid here instead of in each course
+                //        so we can check earliest/latest course time beforehand
 
                 // fill semester with courses
                 for (let course of courseList) {
@@ -489,7 +498,7 @@
             link.classList.add('course-link');
             link.setAttribute('target', '_blank');
             link.setAttribute('rel', 'noopener');
-            link.setAttribute('title', `Open in course catalog on wcupa.edu`);
+            link.setAttribute('title', `See description in WCUPA Course Catalog`);
             link.href = `https://catalog.wcupa.edu/search/?P=${course.name.subject}+${course.name.number}`;
             link.textContent = course.name.title;
             container.appendChild(link);
@@ -500,12 +509,14 @@
             let attribute = course.reqs.attribute;
 
             // skip courses that don't meet any attributes
+            // @TODO: replace with some text like "no requirements" to maintain the same height
             if (requirement === 'other') {
                 return;
             }
+
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
-            else if (typeof requirement === 'object') {
+            if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
                     buildPill(container, req, attribute[i]);
                 });
@@ -584,27 +595,27 @@
             if (typeof times === 'object') {
                 // if weekly schedule has not been created yet
                 // @TODO: dynamically create hour numbers and reduce them to the minimum necessary
+                //        50px of height per hour block
                 if (!get('.weekly-schedule', container)) {
                     let weekTemplate = get('.template-week').content.cloneNode(true);
-                    let rowNum = 1;
+                    let hourLineRow = 1;
 
                     container.appendChild(weekTemplate);
 
                     // insert divs to create hourly grid lines (currently showing 7 hours)
-                    // @TODO: create half-hour lines? dotted?
                     for (let i = 1; i <= 7; i++) {
                         let hourLine = document.createElement('div');
 
                         hourLine.classList.add('hour-line', 'unselectable');
-                        hourLine.style.gridRow = rowNum + ' / ' + (rowNum + 12);
+                        hourLine.style.gridRow = hourLineRow + ' / ' + (hourLineRow + 12); // 12 rows = 1 hr
                         get('.week-grid', container).appendChild(hourLine);
 
-                        rowNum += 12;
+                        hourLineRow += 12;
                     }
 
                     // open all week schedules in the same year when one is clicked
-                    // @TODO: on open, add colored dots next to course name in list?
-                    // @TODO: only open adjacent semesters <https://forum.jquery.com/topic/select-items-on-the-same-line>
+                    // @TODO: only open adjacent semesters (get all weeks and find leftpos for each)
+                    //        <https://forum.jquery.com/topic/select-items-on-the-same-line>
                     let weekButton = get('.week-button', container);
 
                     weekButton.addEventListener('click', function (e) {
@@ -677,7 +688,13 @@
                     let details = document.createElement('div');
 
                     let minutes = (convertToRow(time.end) - convertToRow(time.start)) * 5,
-                        hours = '0' + Math.floor(minutes / 60);
+                        hours = Math.floor(minutes / 60);
+
+                    if (hours === 0) {
+                        hours = '';
+                    } else {
+                        hours += 'hr ';
+                    }
 
                     let startHour = time.start.split(':')[0],
                         startMin = time.start.split(':')[1],
@@ -690,7 +707,7 @@
                         convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
                     details.classList.add('tooltip-details', 'subdued');
-                    details.textContent = `${convertedStart}–${convertedEnd}: ${hours}:${minutes % 60}`;
+                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
                     tooltip.appendChild(details);
 
                     return tooltip;
@@ -923,7 +940,7 @@
         }
     }
 
-    function expandSemester(semester) {
+    function expandSeason(semester) {
         switch (semester) {
             case 1:
                 return 'Fall';

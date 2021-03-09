@@ -1181,21 +1181,20 @@ main > section + section {
 }
 
 .bg-orange {
-    background-color: hsl(36.59, 100%, 51.76%);
-    background-color: color(display-p3 0.96 0.641 0.235);
+    background-color: hsl(35, 100%, 50%);
 }
 
 .bg-green {
     background-color: hsl(120, 100%, 33.73%);
-    background-color: color(display-p3 0.23 0.665 0.18);
+    background-color: color(display-p3 0.258 0.66 0.211);
 }
 
 .bg-blue {
-    background-color: hsl(218.04, 79.51%, 52.16%);
+    background-color: hsl(218.04, 83.23%, 55.27%);
 }
 
 .bg-purple {
-    background-color: hsl(260.78, 90.53%, 66.2%);
+    background-color: hsl(253.68, 90.51%, 68.39%);
 }
 
 @media screen and (max-width: 69em) {
