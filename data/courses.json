@@ -198,7 +198,34 @@
                             "name": "Introduction to Statistics I",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "math"
+                            "attribute": "math",
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "10:15",
+                                    "end": "11:45"
+                                },
+                                {
+                                    "day": "T",
+                                    "start": "10:15",
+                                    "end": "11:45"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "10:15",
+                                    "end": "11:45"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "10:15",
+                                    "end": "11:45"
+                                },
+                                {
+                                    "day": "F",
+                                    "start": "10:15",
+                                    "end": "11:45"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -396,6 +423,19 @@
                             "attribute": "elective"
                         }
                     ]
+                },
+                {
+                    "semester": 5,
+                    "courses": [
+                        {
+                            "subject": "LNC",
+                            "number": "105",
+                            "name": "Global Science Fiction",
+                            "credits": 3,
+                            "requirement": "gened",
+                            "attribute": "writing"
+                        }
+                    ]
                 }
             ]
         },
@@ -436,20 +476,6 @@
                             "credits": 3,
                             "requirement": "major",
                             "attribute": "elective"
-                        },
-                        {
-                            "subject": "CLS",
-                            "number": "369",
-                            "name": "Literature and Film",
-                            "credits": 3,
-                            "requirement": [
-                                "gened",
-                                "minor"
-                            ],
-                            "attribute": [
-                                "writing",
-                                "elective"
-                            ]
                         }
                     ]
                 },
