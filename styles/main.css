@@ -51,22 +51,37 @@
     --txt-06: #4d4d4d;
     --txt-07: #262626;
 
+    --red: hsl(359.28, 80.23%, 62.2%);
+    --orange: hsl(35, 100%, 50%);
+    --green: hsl(120, 100%, 33.73%);
+    --blue: hsl(218.04, 83.23%, 55.27%);
+    --purple: hsl(253.68, 90.51%, 68.39%);
+
     --gap-large: 1.25em;
     --gap-small: .6em;
 
     --shadow-small: 0 2px 4px rgba(0, 0, 0, .12),
-                   0 4px 8px rgba(0, 0, 0, .13),
-                   0 8px 16px rgba(0, 0, 0, .14);
+                    0 4px 8px rgba(0, 0, 0, .13),
+                    0 8px 16px rgba(0, 0, 0, .14);
     --shadow-big: 0 2px 4px rgba(0, 0, 0, .09),
-                 0 4px 8px rgba(0, 0, 0, .10),
-                 0 8px 16px rgba(0, 0, 0, .11),
-                 0 16px 32px rgba(0, 0, 0, .12);
+                  0 4px 8px rgba(0, 0, 0, .10),
+                  0 8px 16px rgba(0, 0, 0, .11),
+                  0 16px 32px rgba(0, 0, 0, .12);
 
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     --monospace: 'IBM Plex Mono', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', Courier, monospace;
     --sans-serif: 'IBM Plex Sans Condensed', 'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+
+    :root {
+        --orange: color(display-p3 0.95 0.593 0.19);
+        --green: color(display-p3 0.258 0.66 0.211);
+    }
+
 }
 
 /* ***** basics ***** */
@@ -147,7 +162,7 @@ p {
 }
 
 hr {
-    border: solid var(--bg-04);
+    border: solid var(--bg-05);
     border-width: 1px 0 0 0;
 }
 
@@ -312,7 +327,7 @@ abbr {
 }
 
 .description {
-    color: #484848;
+    color: var(--txt-06);
     max-width: 35em;
     margin-left: auto;
     margin-right: auto;
@@ -618,6 +633,7 @@ main > section + section {
 }
 
 .attribute-course {
+    color: var(--txt-07);
     font-weight: bold;
     white-space: nowrap;
     position: relative; /* for .tooltip */
@@ -1076,14 +1092,14 @@ main > section + section {
     width: max-content;
     padding: .025em .65em .075em;
     margin: auto;
-    transition: .3s ease;
+    transition: var(--duration) ease;
 }
 
 .week-button:hover {
     background-color: #e9e9e9;
 }
 
-.week-button.active {
+.weekly-schedule[open] .week-button {
     color: var(--txt-02);
     background-color: var(--bg-02);
 }
@@ -1114,7 +1130,7 @@ main > section + section {
 .header-hours {
     display: grid;
     grid-area: hours;
-    grid-template-rows: repeat(7, 1fr);
+    grid-template-rows: repeat(var(--total-hours), 1fr);
 }
 
 .header-hour {
@@ -1126,26 +1142,29 @@ main > section + section {
 /* fake the last hour header */
 .header-hour:last-child::after {
     content: attr(data-next-hour);
-    display: block;
     position: absolute;
     right: 0;
-    bottom: -1.35em;
+    bottom: -1.25em;
 }
 
 .week-grid {
     display: grid;
     grid-area: courses;
-    grid-template-rows: repeat(calc(12 * 7), 1fr); /* 12 five min blocks per hr x 7 hrs (9am to 4pm) */
-    grid-template-columns: repeat(5, 1fr); /* 5 days a week */
+    grid-template-rows: repeat(calc(12 * var(--total-hours)), 1fr); /* 12 5-min blocks = 1 hour */
+    grid-template-columns: repeat(5, 1fr);
     column-gap: var(--day-gap);
-    border-bottom: 1px solid var(--bg-04);
-    height: 350px;
+    height: calc(var(--total-hours) * 50px);
+    max-height: 350px;
 }
 
 .hour-line {
     border: solid var(--bg-04);
-    border-width: 1px 0 0;
+    border-width: 0 0 1px;
     grid-column: 1 / -1;
+}
+
+.hour-line:first-child {
+    border-width: 1px 0;
 }
 
 .course-slot {
@@ -1161,6 +1180,7 @@ main > section + section {
     line-height: 1.2;
     border-radius: .35rem;
     padding: .5em;
+    cursor: default;
 }
 
 .week-grid .tooltip {
@@ -1177,30 +1197,37 @@ main > section + section {
           eg. background-image: repeating-linear-gradient(-45deg, light, light 10px, dark 10px, dark 20px); */
 
 .bg-red {
-    background-color: hsl(359.28, 80.23%, 62.2%);
+    background-color: var(--red);
 }
 
 .bg-orange {
-    background-color: hsl(35, 100%, 50%);
+    background-color: var(--orange);
 }
 
 .bg-green {
-    background-color: hsl(120, 100%, 33.73%);
-    background-color: color(display-p3 0.258 0.66 0.211);
+    background-color: var(--green);
 }
 
 .bg-blue {
-    background-color: hsl(218.04, 83.23%, 55.27%);
+    background-color: var(--blue);
 }
 
 .bg-purple {
-    background-color: hsl(253.68, 90.51%, 68.39%);
+    background-color: var(--purple);
 }
 
 @media screen and (max-width: 69em) {
 
     .weekly-schedule {
         margin: .85em 0 0;
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+
+    .week-grid {
+        max-height: 320px;
     }
 
 }

@@ -137,6 +137,7 @@
             }
 
             tooltip.classList.add('tooltip', 'tile', 'dark');
+            tooltip.id = this.name.id + '-tooltip'; // used with aria-describedby in fillRequirements
             tooltip.appendChild(header);
             tooltip.appendChild(details);
 
@@ -158,11 +159,11 @@
         }
 
         // add transition-delay values to nav items
-        let delay = 100;
+        let delay = 85;
 
         getAll('.nav-item').forEach(item => {
             item.style.transitionDelay = delay + 'ms';
-            delay += 100;
+            delay += 85;
         });
 
         // handle opening/closing nav via menu button
@@ -313,14 +314,16 @@
                 node = get('.attribute-course', node.parentNode.nextElementSibling);
             }
 
-            // replace div with button so empty courses are skipped when tabbing through
             let button = document.createElement('button');
 
             button.classList.add('attribute-course', 'monospace', 'uppercase', 'linked');
-            button.textContent = course.name.shorthand;
+            button.setAttribute('aria-describedby', course.name.id + '-tooltip');
             button.setAttribute('type', 'button');
+            button.textContent = course.name.shorthand;
             addTooltip(course, button);
             node.parentNode.appendChild(button);
+
+            // replace div with button so empty courses are skipped when tabbing through
             node.remove();
 
             // on click, jump to course schedule and highlight the course
@@ -329,6 +332,7 @@
                 let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
                 clickedCourse.classList.add('highlighted');
+
                 // disable existing transition property on .pill when jumping to course
                 get('.req-container', clickedCourse).classList.add('no-fade');
 
@@ -393,7 +397,9 @@
             if (yearList.includes(course.year) === false) yearList.push(course.year);
         }
 
-        // start building DOM
+        // start building year structure
+        let earliestHr; // set by buildWeek() and passed into addTimes() later
+
         for (let year of yearList) {
             // don't build DOM for "other" array in courses.json - dates for those courses are set to null
             if (year === null) {
@@ -428,14 +434,13 @@
                 semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
                 if (semester === 1) semesterYear++;
 
-                // only add row-gap if summer/winter semesters exist; if the gap is constantly "on", it creates
-                // inconsistent vertical spacing because the gap doesn't collapse when there is no second row
-                if (semester > 2 && !yearNode.classList.contains('year-row-gap')) {
-                    yearNode.classList.add('year-row-gap');
+                // check if at least one course in the semester has course times before building week view
+                for (let course of courseList) {
+                    if (typeof course.times === 'object') {
+                        buildWeek(semNode, courseList);
+                        break;
+                    }
                 }
-
-                // @TODO: build weekly grid here instead of in each course
-                //        so we can check earliest/latest course time beforehand
 
                 // fill semester with courses
                 for (let course of courseList) {
@@ -451,12 +456,11 @@
                     shortNode.textContent = course.name.shorthand;
                     shortNodeAlt.textContent = course.name.shorthand + ' ';
                     linkTitle(titleNode, course);
-                    handlePill(reqContainer, course);
-                    handleTimes(semNode, course, courseIndex);
+                    addPills(reqContainer, course);
+                    addTimes(semNode, course, courseIndex, earliestHr);
                     creditsNode.textContent = course.credits + ' cr.';
                     semCreditTotal += course.credits;
                     semNode.appendChild(courseTemplate);
-                    courseIndex++;
 
                     // fade out overflowing pills
                     let reqObserver = new ResizeObserver(entry => {
@@ -470,10 +474,19 @@
                     });
 
                     reqObserver.observe(reqContainer);
+                    courseIndex++;
                 }
 
-                // move weekly schedule to the end (originally placed after first class with time data)
-                if (get('.weekly-schedule', semNode)) semNode.appendChild(get('.weekly-schedule', semNode));
+                // move weekly schedule to the end (initially placed after semester header)
+                if (get('.weekly-schedule', semNode)) {
+                    semNode.appendChild(get('.weekly-schedule', semNode));
+                }
+
+                // only add row-gap if summer/winter semesters exist; if the gap is constantly "on", it creates
+                // inconsistent vertical spacing because the gap doesn't collapse when there is no second row
+                if (semester > 2 && !yearNode.classList.contains('year-row-gap')) {
+                    yearNode.classList.add('year-row-gap');
+                }
 
                 yearNode.appendChild(semTemplate);
             }
@@ -504,7 +517,7 @@
             container.appendChild(link);
         }
 
-        function handlePill(container, course) {
+        function addPills(container, course) {
             let requirement = course.reqs.requirement;
             let attribute = course.reqs.attribute;
 
@@ -588,59 +601,109 @@
             }
         }
 
-        function handleTimes(container, course, i) {
+        function buildWeek(container, courses) {
+            let weekTemplate = get('.template-week').content.cloneNode(true);
+
+            container.appendChild(weekTemplate);
+
+            // figure out earliest and latest hours for the week so we only show minimum needed
+            let earliestHour = 24;
+            let latestHour = 0;
+
+            for (let course of courses) {
+                // ignore courses without times
+                if (typeof course.times === 'object') {
+                    for (let time of course.times) {
+                        let startHour = parseInt(time.start.split(':')[0], 10),
+                            endHour = parseInt(time.end.split(':')[0], 10),
+                            endMin = parseInt(time.end.split(':')[1], 10);
+
+                        if (startHour < earliestHour) {
+                            earliestHour = startHour;
+                        }
+
+                        if (endHour > latestHour) {
+                            latestHour = endHour;
+
+                            // if XX:15, for example, round up to the next hour
+                            if (endMin !== 0) {
+                                latestHour++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // set value of variable outside this function so it can be passed to addTimes()
+            earliestHr = earliestHour;
+
+            let totalHours = latestHour - earliestHour;
+            let hourNum = earliestHour;
+            let gridLineRow = 1;
+
+            for (let i = 0; i < totalHours; i++) {
+                // create hour headers
+                let hourHeader = document.createElement('div');
+
+                if (hourNum > 12) hourNum -= 12; // convert to 12-hour time
+
+                hourHeader.classList.add('header-hour');
+                hourHeader.textContent = hourNum + ':00';
+                hourNum++;
+                get('.header-hours', container).appendChild(hourHeader);
+
+                // fake the last hour header
+                if (i + 1 === totalHours) {
+                    hourHeader.dataset.nextHour = hourNum + ':00';
+                }
+
+                // create hourly grid lines
+                let hourLine = document.createElement('div');
+
+                hourLine.classList.add('hour-line');
+                hourLine.style.gridRow = gridLineRow + ' / ' + (gridLineRow + 12); // 12 rows = 1 hr
+                gridLineRow += 12;
+                get('.week-grid', container).appendChild(hourLine);
+            }
+
+            // set CSS variable for use in .header-hours and .week-grid
+            get('.week-container', container).style.setProperty('--total-hours', totalHours);
+
+            // listen for click and also open schedules in adjacent semesters (directly to
+            // the left or right), primarily so mobile doesn't have huge layout shift
+            let weekButton = get('.week-button', container);
+
+            weekButton.addEventListener('click', function (e) {
+                let semesters = getAll('.semester', e.target.closest('.year'));
+                let targetPos = e.target.closest('.semester').getBoundingClientRect().top;
+
+                for (let semester of semesters) {
+                    let schedule = get('.weekly-schedule', semester);
+                    let semesterPos = semester.getBoundingClientRect().top;
+
+                    // filter semesters to ones with the same y-position as the target semester
+                    if ((semesterPos === targetPos) && schedule) {
+                        // exclude the target schedule (it's already been toggled by click)
+                        if (schedule !== e.target.parentNode) {
+                            schedule.toggleAttribute('open');
+                        }
+                    }
+                }
+            }, { passive: true });
+        }
+
+        function addTimes(container, course, i, earliestHr) {
             let times = course.times;
 
             // ignore courses without time data
             if (typeof times === 'object') {
-                // if weekly schedule has not been created yet
-                // @TODO: dynamically create hour numbers and reduce them to the minimum necessary
-                //        50px of height per hour block
-                if (!get('.weekly-schedule', container)) {
-                    let weekTemplate = get('.template-week').content.cloneNode(true);
-                    let hourLineRow = 1;
-
-                    container.appendChild(weekTemplate);
-
-                    // insert divs to create hourly grid lines (currently showing 7 hours)
-                    for (let i = 1; i <= 7; i++) {
-                        let hourLine = document.createElement('div');
-
-                        hourLine.classList.add('hour-line', 'unselectable');
-                        hourLine.style.gridRow = hourLineRow + ' / ' + (hourLineRow + 12); // 12 rows = 1 hr
-                        get('.week-grid', container).appendChild(hourLine);
-
-                        hourLineRow += 12;
-                    }
-
-                    // open all week schedules in the same year when one is clicked
-                    // @TODO: only open adjacent semesters (get all weeks and find leftpos for each)
-                    //        <https://forum.jquery.com/topic/select-items-on-the-same-line>
-                    let weekButton = get('.week-button', container);
-
-                    weekButton.addEventListener('click', function (e) {
-                        let schedules = getAll('.weekly-schedule', e.currentTarget.closest('.year'));
-                        let buttons = getAll('.week-button', e.currentTarget.closest('.year'));
-
-                        // exclude the current schedule (it's already been toggled by click)
-                        for (let sched of schedules) {
-                            if (sched !== e.currentTarget.parentNode) {
-                                sched.toggleAttribute('open');
-                            }
-                        }
-
-                        for (let button of buttons) {
-                            button.classList.toggle('active');
-                        }
-                    }, { passive: true });
-                }
-
                 // add time slots for this course to the grid
                 for (let time of times) {
                     let bgClasses = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
                     let courseSlot = document.createElement('div');
 
                     courseSlot.setAttribute('tabindex', '0'); // allow users to tab through
+                    courseSlot.setAttribute('aria-describedby', course.name.id + '-tooltip');
                     courseSlot.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
                     courseSlot.textContent = course.name.shorthand;
                     courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
@@ -648,6 +711,66 @@
                     addTooltip(courseSlot, course, time);
 
                     get('.week-grid', container).appendChild(courseSlot);
+                }
+            }
+
+            function buildTooltip(course, time) {
+                let tooltip = document.createElement('div');
+
+                tooltip.classList.add('tooltip', 'tile', 'dark');
+                tooltip.id = course.name.id + '-tooltip'; // used with aria-describedby
+
+                // add course name
+                let header = document.createElement('div');
+
+                header.classList.add('tooltip-title');
+                header.textContent = course.name.title;
+                tooltip.appendChild(header);
+
+                // add start time, end time, and course duration
+                let details = document.createElement('div');
+
+                let minutes = (convertToRow(time.end) - convertToRow(time.start)) * 5,
+                    hours = Math.floor(minutes / 60);
+
+                if (hours === 0) {
+                    hours = '';
+                } else {
+                    hours += 'hr ';
+                }
+
+                let startHour = time.start.split(':')[0],
+                    startMin = time.start.split(':')[1],
+                    startPeriod = checkPeriod(startHour),
+                    endHour = time.end.split(':')[0],
+                    endMin = time.end.split(':')[1],
+                    endPeriod = checkPeriod(endHour);
+
+                let convertedStart = `${convertHour(startHour)}:${startMin} ${startPeriod}`,
+                    convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
+
+                details.classList.add('tooltip-details', 'subdued');
+                details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
+                tooltip.appendChild(details);
+
+                return tooltip;
+
+                // convert 24-hour time to 12-hour time
+                function convertHour(hour) {
+                    if (hour > 12) {
+                        return hour -= 12;
+                    } else {
+                        return hour;
+                    }
+                }
+
+                // check if AM or PM
+                function checkPeriod(hour) {
+                    if (hour >= 12) {
+                        return 'pm';
+                    } else {
+                        return 'am';
+                    }
                 }
             }
 
@@ -670,77 +793,16 @@
                         }
                     }, { passive: true });
                 });
-
-                function buildTooltip(course, time) {
-                    let tooltip = document.createElement('div');
-
-                    tooltip.classList.add('tooltip', 'tile', 'dark');
-                    tooltip.setAttribute('role', 'tooltip');
-
-                    // add course name
-                    let header = document.createElement('div');
-
-                    header.classList.add('tooltip-title');
-                    header.textContent = course.name.title;
-                    tooltip.appendChild(header);
-
-                    // add start time, end time, and course duration
-                    let details = document.createElement('div');
-
-                    let minutes = (convertToRow(time.end) - convertToRow(time.start)) * 5,
-                        hours = Math.floor(minutes / 60);
-
-                    if (hours === 0) {
-                        hours = '';
-                    } else {
-                        hours += 'hr ';
-                    }
-
-                    let startHour = time.start.split(':')[0],
-                        startMin = time.start.split(':')[1],
-                        startPeriod = checkPeriod(startHour),
-                        endHour = time.end.split(':')[0],
-                        endMin = time.end.split(':')[1],
-                        endPeriod = checkPeriod(endHour);
-
-                    let convertedStart = `${convertHour(startHour)}:${startMin} ${startPeriod}`,
-                        convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
-
-                    details.classList.add('tooltip-details', 'subdued');
-                    details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
-                    tooltip.appendChild(details);
-
-                    return tooltip;
-
-                    // convert 24-hour time to 12-hour time
-                    function convertHour(hour) {
-                        if (hour > 12) {
-                            return hour -= 12;
-                        } else {
-                            return hour;
-                        }
-                    }
-
-                    // check if AM or PM
-                    function checkPeriod(hour) {
-                        if (hour >= 12) {
-                            return 'pm';
-                        } else {
-                            return 'am';
-                        }
-                    }
-                }
             }
 
             function convertToRow(time) {
                 let timeSplit = time.split(':'),
                     hour = timeSplit[0],
-                    min = timeSplit[1],
-                    gridStartHour = 9; // currently hardcoded to 9am; @TODO make this dynamic later
+                    min = timeSplit[1];
 
                 // convert course start/end time to its number of 5-minute intervals for grid placement;
                 // add 1 because grid line naming starts at 1, not 0
-                let rowNum = ((hour - gridStartHour) * 12 + 1) + (min / 5);
+                let rowNum = ((hour - earliestHr) * 12 + 1) + (min / 5);
 
                 return rowNum;
             }
