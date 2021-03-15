@@ -281,11 +281,10 @@
             let attribute = course.reqs.attribute;
 
             // if course is "free" and doesn't meet any requirements, skip it
-            if (requirement === 'other') {
-                continue;
-            }
+            if (requirement === 'other') continue;
+
             // if course meets multiple requirements, eg. CSC 301 is major and gen ed
-            else if (typeof requirement === 'object') {
+            if (typeof requirement === 'object') {
                 requirement.forEach((req, i) => {
                     let reqNode = get(`.section-${req} .attribute.${attribute[i]} .attribute-course`);
 
@@ -394,18 +393,13 @@
         let yearList = [];
 
         for (let course of courses) {
+            // don't build DOM for "other" array in courses.json - dates for those courses are set to null
+            if (course.year === null) continue;
             if (yearList.includes(course.year) === false) yearList.push(course.year);
         }
 
         // start building year structure
-        let earliestHr; // set by buildWeek() and passed into addTimes() later
-
         for (let year of yearList) {
-            // don't build DOM for "other" array in courses.json - dates for those courses are set to null
-            if (year === null) {
-                continue;
-            }
-
             // create empty year section
             let yearNode = document.createElement('section');
 
@@ -428,19 +422,9 @@
                 let semTemplate = get('.template-semester').content.cloneNode(true),
                     semNode = get('.semester', semTemplate),
                     semHeader = get('.semester-num', semTemplate),
-                    season = expandSeason(semester),
-                    semCreditTotal = 0;
+                    season = expandSeason(semester);
 
                 semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
-                if (semester === 1) semesterYear++;
-
-                // check if at least one course in the semester has course times before building week view
-                for (let course of courseList) {
-                    if (typeof course.times === 'object') {
-                        buildWeek(semNode, courseList);
-                        break;
-                    }
-                }
 
                 // fill semester with courses
                 for (let course of courseList) {
@@ -457,29 +441,17 @@
                     shortNodeAlt.textContent = course.name.shorthand + ' ';
                     linkTitle(titleNode, course);
                     addPills(reqContainer, course);
-                    addTimes(semNode, course, courseIndex, earliestHr);
                     creditsNode.textContent = course.credits + ' cr.';
-                    semCreditTotal += course.credits;
                     semNode.appendChild(courseTemplate);
-
-                    // fade out overflowing pills
-                    let reqObserver = new ResizeObserver(entry => {
-                        let el = entry[0];
-
-                        if (el.target.scrollWidth > el.target.offsetWidth) {
-                            el.target.classList.add('fade-overflow');
-                        } else if (el.target.classList.contains('fade-overflow')) {
-                            el.target.classList.remove('fade-overflow');
-                        }
-                    });
-
-                    reqObserver.observe(reqContainer);
                     courseIndex++;
                 }
 
-                // move weekly schedule to the end (initially placed after semester header)
-                if (get('.weekly-schedule', semNode)) {
-                    semNode.appendChild(get('.weekly-schedule', semNode));
+                // check if at least one course in the semester has course times before building week view
+                for (let course of courseList) {
+                    if (typeof course.times === 'object') {
+                        buildWeek(semNode, courseList);
+                        break;
+                    }
                 }
 
                 // only add row-gap if summer/winter semesters exist; if the gap is constantly "on", it creates
@@ -487,6 +459,9 @@
                 if (semester > 2 && !yearNode.classList.contains('year-row-gap')) {
                     yearNode.classList.add('year-row-gap');
                 }
+
+                // if it's the fall semester (and assuming fall start), it's a new year
+                if (semester === 1) semesterYear++;
 
                 yearNode.appendChild(semTemplate);
             }
@@ -523,9 +498,7 @@
 
             // skip courses that don't meet any attributes
             // @TODO: replace with some text like "no requirements" to maintain the same height
-            if (requirement === 'other') {
-                return;
-            }
+            if (requirement === 'other') return;
 
             // if course meets multiple requirements
             // eg. CSC 301 is major and gen ed
@@ -551,52 +524,62 @@
                 buildPill(container, requirement, attribute);
             }
 
-            function buildPill(container, req, attr, duplicate = false) {
-                // skip courses that don't meet any requirements
-                if (req === null) {
-                    return;
-                }
+            // fade out pills if they overflow the container
+            let reqObserver = new ResizeObserver(entry => {
+                let el = entry[0];
 
+                if (el.target.scrollWidth > el.target.offsetWidth) {
+                    el.target.classList.add('fade-overflow');
+                } else if (el.target.classList.contains('fade-overflow')) {
+                    el.target.classList.remove('fade-overflow');
+                }
+            });
+
+            reqObserver.observe(container);
+
+            function buildPill(container, req, attr, duplicate = false) {
                 for (let type of [req, attr]) {
                     // skip duplicate requirements
-                    if (!(type === req && duplicate === true)) {
-                        let pill = document.createElement('button');
-                        // separate attributes with the same name that appear in multiple reqs
-                        // (eg. core in both major/minor) by making attr classes more specific
-                        let typeClass = (type === attr) ? `${req}-${type}` : type;
-
-                        pill.classList.add('pill', typeClass);
-                        pill.textContent = expandAbbrev(type);
-                        pill.setAttribute('type', 'button');
-                        pill.setAttribute('tabindex', '-1');
-                        pill.addEventListener('click', function () {
-                            // highlight courses with same req/attr, fade all others
-                            if (this.classList.contains('selected') === false) {
-                                clearSelected();
-
-                                let years = getAll('.year');
-                                let selectedPills = getAll('.pill.' + this.classList[1]);
-
-                                for (let year of years) year.classList.add('filtered');
-
-                                for (let pill of selectedPills) {
-                                    pill.classList.add('selected');
-                                    pill.closest('.course').classList.add('selected');
-                                }
-                            }
-                            // if clicked pill is already selected, clear selection
-                            else {
-                                clearSelected();
-                            }
-
-                            function clearSelected() {
-                                getAll('.selected').forEach(el => el.classList.remove('selected'));
-                                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
-                            }
-                        }, false);
-
-                        container.appendChild(pill);
+                    if (type === req && duplicate === true) {
+                        continue;
                     }
+
+                    let pill = document.createElement('button');
+                    // separate attributes with the same name that appear in multiple reqs
+                    // (eg. core in both major/minor) by making attr classes more specific
+                    let typeClass = (type === attr) ? `${req}-${type}` : type;
+
+                    pill.classList.add('pill', typeClass);
+                    pill.textContent = expandAbbrev(type);
+                    pill.setAttribute('type', 'button');
+                    pill.setAttribute('tabindex', '-1');
+                    pill.addEventListener('click', function () {
+                        // highlight courses with same req/attr, fade all others
+                        if (this.classList.contains('selected') === false) {
+                            clearSelected();
+
+                            let years = getAll('.year');
+                            let selectedPills = getAll('.pill.' + this.classList[1]);
+
+                            for (let year of years) year.classList.add('filtered');
+
+                            for (let pill of selectedPills) {
+                                pill.classList.add('selected');
+                                pill.closest('.course').classList.add('selected');
+                            }
+                        }
+                        // if clicked pill is already selected, clear selection
+                        else {
+                            clearSelected();
+                        }
+                    }, false);
+
+                    container.appendChild(pill);
+                }
+
+                function clearSelected() {
+                    getAll('.selected').forEach(el => el.classList.remove('selected'));
+                    getAll('.filtered').forEach(el => el.classList.remove('filtered'));
                 }
             }
         }
@@ -606,46 +589,45 @@
 
             container.appendChild(weekTemplate);
 
-            // figure out earliest and latest hours for the week so we only show minimum needed
+            // figure out earliest and latest hours for the week so we only show minimum necessary
             let earliestHour = 24;
             let latestHour = 0;
 
             for (let course of courses) {
-                // ignore courses without times
-                if (typeof course.times === 'object') {
-                    for (let time of course.times) {
-                        let startHour = parseInt(time.start.split(':')[0], 10),
-                            endHour = parseInt(time.end.split(':')[0], 10),
-                            endMin = parseInt(time.end.split(':')[1], 10);
+                // skip courses without times
+                if (typeof course.times !== 'object') continue;
 
-                        if (startHour < earliestHour) {
-                            earliestHour = startHour;
-                        }
+                for (let time of course.times) {
+                    let startHour = parseInt(time.start.split(':')[0], 10),
+                        endHour = parseInt(time.end.split(':')[0], 10),
+                        endMin = parseInt(time.end.split(':')[1], 10);
 
-                        if (endHour > latestHour) {
-                            latestHour = endHour;
+                    if (startHour < earliestHour) {
+                        earliestHour = startHour;
+                    }
 
-                            // if XX:15, for example, round up to the next hour
-                            if (endMin !== 0) {
-                                latestHour++;
-                            }
+                    if (endHour > latestHour) {
+                        latestHour = endHour;
+
+                        // if XX:15, for example, round up to the next hour
+                        if (endMin !== 0) {
+                            latestHour++;
                         }
                     }
                 }
             }
 
-            // set value of variable outside this function so it can be passed to addTimes()
-            earliestHr = earliestHour;
-
+            // create headers
             let totalHours = latestHour - earliestHour;
             let hourNum = earliestHour;
-            let gridLineRow = 1;
+            let gridLineRow = 1; // css grid line naming starts at 1, not 0
 
             for (let i = 0; i < totalHours; i++) {
                 // create hour headers
                 let hourHeader = document.createElement('div');
 
-                if (hourNum > 12) hourNum -= 12; // convert to 12-hour time
+                // convert to 12-hour time
+                if (hourNum > 12) hourNum -= 12;
 
                 hourHeader.classList.add('header-hour');
                 hourHeader.textContent = hourNum + ':00';
@@ -666,7 +648,15 @@
                 get('.week-grid', container).appendChild(hourLine);
             }
 
-            // set CSS variable for use in .header-hours and .week-grid
+            // add course slots to weekly schedule
+            for (let course of courses) {
+                // skip courses without times
+                if (typeof course.times !== 'object') continue;
+
+                addTimes(container, course, courses.indexOf(course), earliestHour);
+            }
+
+            // set css variable for use in .header-hours and .week-grid
             get('.week-container', container).style.setProperty('--total-hours', totalHours);
 
             // listen for click and also open schedules in adjacent semesters (directly to
@@ -681,37 +671,35 @@
                     let schedule = get('.weekly-schedule', semester);
                     let semesterPos = semester.getBoundingClientRect().top;
 
-                    // filter semesters to ones with the same y-position as the target semester
-                    if ((semesterPos === targetPos) && schedule) {
-                        // exclude the target schedule (it's already been toggled by click)
-                        if (schedule !== e.target.parentNode) {
-                            schedule.toggleAttribute('open');
-                        }
+                    // if semester doesn't contain a weekly schedule, skip it
+                    if (!schedule) continue;
+
+                    // filter semesters to ones with the same y-position as the target semester,
+                    // and exclude the target schedule (it's already been toggled by click)
+                    if ((semesterPos === targetPos) && (schedule !== e.target.parentNode)) {
+                        schedule.toggleAttribute('open');
                     }
                 }
             }, { passive: true });
         }
 
-        function addTimes(container, course, i, earliestHr) {
+        function addTimes(container, course, i, earliestHour) {
             let times = course.times;
 
-            // ignore courses without time data
-            if (typeof times === 'object') {
-                // add time slots for this course to the grid
-                for (let time of times) {
-                    let bgClasses = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
-                    let courseSlot = document.createElement('div');
+            // add time slots for this course to the grid
+            for (let time of times) {
+                let bgClasses = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
+                let courseNode = document.createElement('div');
 
-                    courseSlot.setAttribute('tabindex', '0'); // allow users to tab through
-                    courseSlot.setAttribute('aria-describedby', course.name.id + '-tooltip');
-                    courseSlot.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
-                    courseSlot.textContent = course.name.shorthand;
-                    courseSlot.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
-                    courseSlot.style.gridColumn = convertToColumn(time.day);
-                    addTooltip(courseSlot, course, time);
+                courseNode.setAttribute('tabindex', '0'); // allow users to tab through
+                courseNode.setAttribute('aria-describedby', course.name.id + '-tooltip');
+                courseNode.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
+                courseNode.textContent = course.name.shorthand;
+                courseNode.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
+                courseNode.style.gridColumn = convertToColumn(time.day);
+                addTooltip(courseNode, course, time);
 
-                    get('.week-grid', container).appendChild(courseSlot);
-                }
+                get('.week-grid', container).appendChild(courseNode);
             }
 
             function buildTooltip(course, time) {
@@ -775,18 +763,18 @@
             }
 
             // @TODO: combine the code for this and the Course object's tooltip
-            function addTooltip(courseSlot, course, time) {
+            function addTooltip(node, course, time) {
                 let tooltip = buildTooltip(course, time);
 
                 ['mouseenter', 'touchstart', 'focus'].forEach(event => {
-                    courseSlot.addEventListener(event, function (e) {
+                    node.addEventListener(event, function (e) {
                         e.currentTarget.appendChild(tooltip);
                         repositionTooltip(tooltip);
                     }, { passive: true });
                 });
 
                 ['mouseleave', 'touchend', 'blur'].forEach(event => {
-                    courseSlot.addEventListener(event, function (e) {
+                    node.addEventListener(event, function (e) {
                         // some weird interaction where clicking slot and then clicking away produces error
                         if (e.currentTarget.contains(tooltip)) {
                             e.currentTarget.removeChild(tooltip);
@@ -802,7 +790,7 @@
 
                 // convert course start/end time to its number of 5-minute intervals for grid placement;
                 // add 1 because grid line naming starts at 1, not 0
-                let rowNum = ((hour - earliestHr) * 12 + 1) + (min / 5);
+                let rowNum = ((hour - earliestHour) * 12 + 1) + (min / 5);
 
                 return rowNum;
             }
