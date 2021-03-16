@@ -656,6 +656,16 @@
                 addTimes(container, course, courses.indexOf(course), earliestHour);
             }
 
+            // add .today class to current day of the week
+            // @TODO: only for current semester? would require setting semester start/end dates
+            let dayHeaders = getAll('.header-day', container);
+            let todayNum = new Date().getDay();
+
+            // ignore the weekend; subtract 1 because schedule starts on monday, not sunday
+            if (dayHeaders[todayNum - 1]) {
+                dayHeaders[todayNum - 1].classList.add('today');
+            }
+
             // set css variable for use in .header-hours and .week-grid
             get('.week-container', container).style.setProperty('--total-hours', totalHours);
 
