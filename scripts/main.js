@@ -822,65 +822,6 @@
         }
     }
 
-    function buildDeadlines() {
-        let events = getAll('.event');
-
-        for (let eventNode of events) {
-            let time = get('.event-date', eventNode).dataset.time;
-            let timeDiff = timeBetween(new Date(), new Date(time));
-            let diffNode = document.createElement('div');
-
-            diffNode.classList.add('event-diff', 'uppercase', 'monospace', 'subdued');
-            get('.event-date', eventNode).appendChild(diffNode);
-
-            // not a valid date
-            if (Number.isNaN(timeDiff.days)) {
-                // purposely done for unknown registration dates in the future
-                diffNode.textContent = `? days away`;
-            }
-            // today and tomorrow
-            else if (timeDiff.days === 0) {
-                // today's hours/minutes is negative because 00:00 - current time
-                if (timeDiff.hours < 0 || timeDiff.minutes < 0) {
-                    diffNode.textContent = 'today';
-                } else {
-                    diffNode.textContent = '1 day away';
-                }
-            }
-            // date in the past
-            else if (timeDiff.days < 0) {
-                let days = (timeDiff.days === -1) ? 'day' : 'days';
-
-                diffNode.textContent = `${Math.abs(timeDiff.days)} ${days} ago`;
-                eventNode.classList.add('past');
-            }
-            // date in the future
-            else {
-                // add 1 day because function doesn't round up days + hours
-                diffNode.textContent = `${timeDiff.days + 1} days away`;
-            }
-
-            if (eventNode.classList.contains('celebrate')) {
-                eventNode.addEventListener('click', function () {
-                    confetti.start(3000);
-                }, false);
-            }
-        }
-
-        // <https://stackoverflow.com/a/54616411>
-        function timeBetween(startDate, endDate) {
-            let delta = Math.abs(endDate - startDate) / 1000;
-            const isNegative = startDate > endDate ? -1 : 1;
-
-            return [
-                ['days', 24 * 60 * 60],
-                ['hours', 60 * 60],
-                ['minutes', 60],
-                ['seconds', 1]
-            ].reduce((acc, [key, value]) => (acc[key] = Math.floor(delta / value) * isNegative, delta -= acc[key] * isNegative * value, acc), {});
-        }
-    }
-
     function buildSummary(courses) {
         // subtotals for requirement types
         let reqTypes = ['gened', 'major', 'minor', 'other'];
@@ -1017,5 +958,4 @@
 
     fetchData();
     buildNavigation();
-    buildDeadlines();
 }());
