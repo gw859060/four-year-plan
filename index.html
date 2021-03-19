@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="no-js">
 
 <head>
     <meta charset="utf-8">
@@ -43,18 +43,20 @@
             <li class="nav-item">
                 <button class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</button>
             </li>
-            <!-- @TODO: replace dates with list of "Other" courses? -->
             <li class="nav-item">
-                <button class="nav-link" data-section="important-dates"><span class="subdued">02.</span> Important Dates</button>
+                <button class="nav-link" data-section="course-schedule"><span class="subdued">02.</span> Course Schedule</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" data-section="course-schedule"><span class="subdued">03.</span> Course Schedule</button>
+                <button class="nav-link" data-section="undated-courses"><span class="subdued">03.</span> Undated Courses</button>
             </li>
             <li class="nav-item">
                 <button class="nav-link" data-section="summary"><span class="subdued">04.</span> Summary</button>
             </li>
         </ol>
     </nav>
+    <noscript>
+        <p class="no-js-warning">You'll need to enable JavaScript for this site to work.</p>
+    </noscript>
     <main>
         <section class="degree-requirements constrained-width">
             <h2 class="degree-header"><span class="subdued">01.</span> Degree Requirements</h2>
@@ -100,8 +102,13 @@
             - detailed/compact mode toggle to show class times and visual representation full-width
         -->
         <section class="course-schedule constrained-width">
-            <h2 class="year-header"><span class="subdued">03.</span> Course Schedule</h2>
+            <h2 class="year-header"><span class="subdued">02.</span> Course Schedule</h2>
             <p class="description">Click a <span class="pill fake">Requirement</span> to highlight similar courses; click again to clear. Hover over courses in week view to see times. For the full course catalog, <a class="link" target="_blank" rel="noopener" href="https://catalog.wcupa.edu/general-information/index-course-prefix-guide/course-index/undergraduate/">click here</a>.</p>
+        </section>
+        <section class="undated-courses constrained-width">
+            <h2 class="year-header"><span class="subdued">03.</span> Undated Courses</h2>
+            <p class="description">This section lists courses you've taken that don't have dates (and therefore can't be placed in the schedule above). Courses that may be listed here __ include AP courses, courses transferred from another university, or.</p>
+            <div class="undated-courses-container"></div>
         </section>
         <section class="summary constrained-width">
             <h2><span class="subdued">04.</span> Summary</h2>
@@ -154,6 +161,10 @@
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                 </div>
+                <!-- @TODO: other ideas
+                            - number of semesters
+                            - number of 100, 200, and 300-level courses
+                -->
                 <div class="tile fun">
                     <h4>Fun</h4>
                     <div class="attribute common">
@@ -206,7 +217,7 @@
         <details class="weekly-schedule">
             <summary class="week-button button subdued unselectable">Week view</summary>
             <figure class="week-container" style="--total-hours: 0">
-                <div class="header-days monospace uppercase subdued">
+                <div class="header-days monospace uppercase">
                     <div class="header-day" aria-label="Monday">M</div>
                     <div class="header-day" aria-label="Tuesday">T</div>
                     <div class="header-day" aria-label="Wednesday">W</div>

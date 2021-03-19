@@ -409,8 +409,7 @@ header {
 @media screen and (max-width: 700px) {
 
     .header-container {
-        padding-top: 3em;
-        padding-bottom: 3em;
+        padding: 2.5em 2em 2.5em 55px; /* padding-left should align header with "Contents" menu */
     }
 
     .header-container h1 {
@@ -476,7 +475,7 @@ nav {
 @media screen and (max-width: 700px) {
 
     nav {
-        height: 48px;
+        height: 44px;
     }
 
     .nav-button {
@@ -545,7 +544,7 @@ nav {
         visibility: hidden;
         background-color: var(--bg-01);
         border-top: 1px solid #414141;
-        padding: .6em 1.8em;
+        padding: .2em 1.8em .4em;
         box-shadow: var(--shadow-big);
         transition: .4s var(--ease);
         transform: translateY(-15px);
@@ -603,6 +602,15 @@ main {
 
 main > section + section {
     margin-top: 5em;
+}
+
+.no-js main {
+    display: none;
+}
+
+.no-js-warning {
+    text-align: center;
+    margin: 3em auto;
 }
 
 /* ***** requirements ***** */
@@ -687,131 +695,6 @@ main > section + section {
         row-gap: var(--gap-large);
     }
 
-}
-
-/* ***** important dates ***** */
-
-.timeline.tile {
-    --timeline-bg: var(--bg-02);
-    --top-padding: 2.5em;
-    --date-width: 43%;
-    --name-width: calc(100% - var(--date-width));
-    --line-offset: calc(var(--date-width) + 1%);
-
-    position: relative;
-    list-style: none;
-    color: var(--txt-03);
-    background-color: var(--timeline-bg);
-    border-radius: .6em;
-    padding: var(--top-padding) 1.5em calc(var(--top-padding) * 1.2);
-    margin: 2em auto 0;
-    max-width: 36em;
-}
-
-/* the vertical line */
-.timeline::before {
-    --line-width: 2px;
-
-    content: '';
-    position: absolute;
-    left: calc(var(--line-offset) - var(--line-width) + 2px);
-    width: var(--line-width);
-    height: calc(100% - var(--top-padding) * 2 + 10px);
-    background: linear-gradient(to top, var(--timeline-bg), #414141 20px) no-repeat;
-}
-
-.timeline li + li {
-    margin-top: 1rem;
-}
-
-.event {
-    display: flex;
-    position: relative;
-}
-
-/* the dot */
-.event::before {
-    --dot-size: 22px;
-    --border-width: 5px;
-
-    content: '';
-    position: absolute;
-    left: calc(var(--line-offset) - (var(--dot-size) + var(--border-width)) / 2);
-    width: var(--dot-size);
-    height: var(--dot-size);
-    background-color: var(--bg-04);
-    border: var(--border-width) solid var(--timeline-bg);
-    border-radius: 50%;
-}
-
-.event.exclamation::before {
-    --dot-size: 30px;
-
-    background: url('../images/exclamation.svg') no-repeat;
-    background-color: var(--bg-01);
-    top: -4px;
-}
-
-/* fade everything except the dot, otherwise the line will show through */
-.event.past > * {
-    opacity: .5;
-}
-
-.event.past::before {
-    background-color: #717171;
-}
-
-.event-year {
-    color: var(--txt-02);
-    font-size: 1.85em;
-    text-align: center;
-    line-height: 1.1;
-    background-color: var(--timeline-bg);
-    isolation: isolate; /* needed to position h3 above line */
-}
-
-.event-year h3 {
-    padding-bottom: .05em; /* balance out bottom gap between header and timeline line */
-    margin-left: -0.2em;
-    margin-bottom: 0;
-}
-
-.event + .event-year {
-    margin-top: 1.75rem;
-}
-
-.event-date {
-    width: var(--date-width);
-    font-size: 1.05em;
-    font-weight: bold;
-    text-align: right;
-    line-height: 1.2;
-    margin: 0 1.5em 0 0;
-}
-
-.event-diff {
-    font-size: .7em;
-    font-weight: normal;
-    color: #ababab;
-    margin-top: .25em;
-}
-
-.event-name {
-    width: var(--name-width);
-    font-size: 1.05em;
-    font-weight: normal;
-    line-height: 1.2;
-    margin: 0 0 0 1.5em;
-}
-
-.event.celebrate {
-    transition: filter var(--duration) ease;
-}
-
-.event.celebrate:hover,
-.event.celebrate:focus {
-    cursor: pointer;
-    filter: brightness(1.2);
 }
 
 /* ***** years/semesters ***** */
@@ -923,6 +806,10 @@ main > section + section {
     margin-top: .2em;
 }
 
+.no-reqs {
+    color: var(--txt-05);
+}
+
 .fade-overflow {
     overflow: hidden;
 }
@@ -950,6 +837,7 @@ main > section + section {
 }
 
 .course-credits {
+    font-size: .875em;
     letter-spacing: -0.05ch;
 }
 
@@ -1083,7 +971,7 @@ main > section + section {
 
 .weekly-schedule {
     display: flex;
-    margin: .75em 1.2rem .5em;
+    margin: .75em 1.2rem 0;
 }
 
 .week-button {
@@ -1234,6 +1122,26 @@ main > section + section {
 
     .week-grid {
         max-height: 300px;
+    }
+
+}
+
+/* ***** other courses ***** */
+
+.undated-courses-container {
+    columns: 2;
+    column-gap: var(--gap-large);
+    margin-top: 2em;
+}
+
+.undated-courses-container .course {
+    break-inside: avoid;
+}
+
+@media screen and (max-width: 700px) {
+
+    .undated-courses-container {
+        columns: 1;
     }
 
 }
