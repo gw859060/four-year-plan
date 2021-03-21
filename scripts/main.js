@@ -115,7 +115,36 @@
         this.times = times;
         this.year = year;
         this.semester = semester;
-        this.tooltip = function () {
+        this.tile = function () {
+            let tile = get('.template-course').content.cloneNode(true),
+                courseNode = get('.course', tile),
+                shortNode = get('.course-shorthand', tile),
+                shortNodeAlt = get('.course-shorthand-alt', tile),
+                titleNode = get('.course-name', tile),
+                reqContainer = get('.req-container', tile),
+                creditsNode = get('.course-credits', tile);
+
+            courseNode.classList.add(this.name.id);
+            shortNode.textContent = this.name.shorthand;
+            shortNodeAlt.textContent = this.name.shorthand + ' ';
+            linkTitle(titleNode, this);
+            addPills(reqContainer, this);
+            creditsNode.textContent = this.credits + ' cr.';
+
+            // handle keyboard accessibility for pills
+            reqContainer.focus = 0;
+            reqContainer.elements = getAll('.pill', reqContainer);
+            reqContainer.addEventListener('keydown', makeAccessible);
+
+            // make initial pill focusable, all pills are initially set to tabindex="-1";
+            // ignore courses that don't fill any requirements
+            if (reqContainer.elements.length > 0) {
+                reqContainer.elements[0].setAttribute('tabindex', 0);
+            }
+
+            return tile;
+        };
+        this.reqTooltip = function () {
             let tooltip = document.createElement('div');
             let header = document.createElement('div');
             let details = document.createElement('div');
@@ -147,36 +176,7 @@
 
             return tooltip;
         };
-        this.tile = function () {
-            let tile = get('.template-course').content.cloneNode(true),
-                courseNode = get('.course', tile),
-                shortNode = get('.course-shorthand', tile),
-                shortNodeAlt = get('.course-shorthand-alt', tile),
-                titleNode = get('.course-name', tile),
-                reqContainer = get('.req-container', tile),
-                creditsNode = get('.course-credits', tile);
-
-            courseNode.classList.add(this.name.id);
-            shortNode.textContent = this.name.shorthand;
-            shortNodeAlt.textContent = this.name.shorthand + ' ';
-            linkTitle(titleNode, this);
-            addPills(reqContainer, this);
-            creditsNode.textContent = this.credits + ' cr.';
-
-            // handle keyboard accessibility for pills
-            reqContainer.focus = 0;
-            reqContainer.elements = getAll('.pill', reqContainer);
-            reqContainer.addEventListener('keydown', makeAccessible);
-
-            // make initial pill focusable, all pills are initially set to tabindex="-1";
-            // ignore courses that don't fill any requirements
-            if (reqContainer.elements.length > 0) {
-                reqContainer.elements[0].setAttribute('tabindex', 0);
-            }
-
-            return tile;
-        };
-        this.slots = {}; // for week view tooltips, created in addTimes()
+        this.weekTooltips = {}; // created in addTimes()
     }
 
     function buildNavigation() {
@@ -340,33 +340,43 @@
             }
         }
 
-        get('.degree-requirements').addEventListener('mouseover', function (e) {
+        let tiles = getAll('.tile.requirement');
+
+        for (let tile of tiles) {
+            // listeners for course tooltips
+            tile.addEventListener('pointerover', showTooltip, { passive: true });
+            tile.addEventListener('pointerout', hideTooltip, { passive: true });
+            tile.addEventListener('focusin', showTooltip, { passive: true });
+            tile.addEventListener('focusout', hideTooltip, { passive: true });
+
+            // jump to schedule when clicking on course link
+            tile.addEventListener('click', function (e) {
+                if (e.target.matches('.attribute-course.linked')) {
+                    let clickedCourse = get('.course.' + e.target.dataset.course);
+
+                    scrollToCourse(clickedCourse);
+                }
+            }, { passive: true });
+        }
+
+        function showTooltip(e) {
             if (!e.target.matches('.attribute-course.linked')) return;
 
             let button = e.target;
             let course = courses.find(course => course.name.id === button.dataset.course);
-            let tooltip = course.tooltip();
+            let tooltip = course.reqTooltip();
 
-            addTooltip(button, tooltip);
-        }, { passive: true });
+            insertTooltip(button, tooltip);
+        }
 
-        get('.degree-requirements').addEventListener('mouseout', function (e) {
+        function hideTooltip(e) {
             if (!e.target.matches('.attribute-course.linked')) return;
 
             let button = e.target;
             let tooltip = get('.tooltip', button);
 
-            removeTooltip(button, tooltip);
-        }, { passive: true });
-
-        // jump to schedule when clicking on course link
-        get('.degree-requirements').addEventListener('click', function (e) {
-            if (e.target.matches('.attribute-course.linked')) {
-                let clickedCourse = get('.course.' + e.target.dataset.course);
-
-                scrollToCourse(clickedCourse);
-            }
-        }, { passive: true });
+            button.removeChild(tooltip);
+        }
 
         function addRow(course, node) {
             // if attribute is already filled, skip and move to the next one
@@ -495,25 +505,77 @@
             }
         }
 
-        get('.course-schedule').addEventListener('mouseover', function (e) {
+        // click listener for pills
+        let years = getAll('.year');
+
+        // for "Course Schedule" section
+        for (let year of years) {
+            year.addEventListener('click', clickPills, { passive: true });
+        }
+
+        // for "Undated Courses" section
+        get('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
+
+        // listeners for week view tooltips
+        let grids = getAll('.week-grid');
+
+        for (let grid of grids) {
+            grid.addEventListener('pointerover', showTooltip, { passive: true });
+            grid.addEventListener('pointerout', hideTooltip, { passive: true });
+            grid.addEventListener('focusin', showTooltip, { passive: true });
+            grid.addEventListener('focusout', hideTooltip, { passive: true });
+        }
+
+        function showTooltip(e) {
             if (!e.target.matches('.course-slot')) return;
 
             let slot = e.target;
             let index = slot.dataset.tooltipIndex;
             let course = courses.find(course => course.name.id === slot.dataset.course);
-            let tooltip = course.slots[index];
+            let tooltip = course.weekTooltips[index];
 
-            addTooltip(slot, tooltip);
-        }, { passive: true });
+            insertTooltip(slot, tooltip);
+        }
 
-        get('.course-schedule').addEventListener('mouseout', function (e) {
+        function hideTooltip(e) {
             if (!e.target.matches('.course-slot')) return;
 
             let slot = e.target;
             let tooltip = get('.tooltip', slot);
 
-            removeTooltip(slot, tooltip);
-        }, { passive: true });
+            slot.removeChild(tooltip);
+        }
+
+        function clickPills (e) {
+            if (!e.target.matches('.pill')) return;
+
+            // highlight courses with same req/attr, fade all others
+            if (e.target.classList.contains('selected') === false) {
+                clearSelectedPills();
+
+                let years = getAll('.year');
+                let selectedPills = getAll('.pill.' + e.target.classList[1]);
+
+                // for "Course Schedule" section
+                for (let year of years) year.classList.add('filtered');
+                // for "Undated Courses" section
+                get('.undated-courses-container').classList.add('filtered');
+
+                for (let pill of selectedPills) {
+                    pill.classList.add('selected');
+                    pill.closest('.course').classList.add('selected');
+                }
+            }
+            // else if clicked pill is already selected, clear selection
+            else {
+                clearSelectedPills();
+            }
+        }
+
+        function clearSelectedPills() {
+            getAll('.selected').forEach(el => el.classList.remove('selected'));
+            getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+        }
 
         function buildWeek(container, courses) {
             let weekTemplate = get('.template-week').content.cloneNode(true);
@@ -638,7 +700,7 @@
                 courseNode.setAttribute('aria-describedby', course.name.id + '-tooltip');
                 courseNode.setAttribute('data-course', course.name.id);
                 courseNode.setAttribute('data-tooltip-index', index);
-                course.slots[index] = buildTooltip(course, time); // add tooltip to course object
+                course.weekTooltips[index] = buildTooltip(course, time); // add tooltip to course object
 
                 courseNode.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
                 courseNode.textContent = course.name.shorthand;
@@ -874,47 +936,14 @@
                 pill.textContent = expandAbbrev(type);
                 pill.setAttribute('type', 'button');
                 pill.setAttribute('tabindex', '-1');
-                pill.addEventListener('click', function (e) {
-                    // highlight courses with same req/attr, fade all others
-                    if (e.target.classList.contains('selected') === false) {
-                        clearSelectedPills();
-
-                        let years = getAll('.year');
-                        let selectedPills = getAll('.pill.' + this.classList[1]);
-
-                        // for "Course Schedule" section
-                        for (let year of years) year.classList.add('filtered');
-                        // for "Undated Courses" section
-                        get('.undated-courses-container').classList.add('filtered');
-
-                        for (let pill of selectedPills) {
-                            pill.classList.add('selected');
-                            pill.closest('.course').classList.add('selected');
-                        }
-                    }
-                    // else if clicked pill is already selected, clear selection
-                    else {
-                        clearSelectedPills();
-                    }
-                }, false);
-
                 container.appendChild(pill);
-            }
-
-            function clearSelectedPills() {
-                getAll('.selected').forEach(el => el.classList.remove('selected'));
-                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
             }
         }
     }
 
-    function addTooltip(node, tooltip) {
+    function insertTooltip(node, tooltip) {
         node.appendChild(tooltip);
         repositionTooltip(tooltip);
-    }
-
-    function removeTooltip(node, tooltip) {
-        node.removeChild(tooltip);
     }
 
     function repositionTooltip(tooltip) {
