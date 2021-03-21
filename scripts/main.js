@@ -1,13 +1,15 @@
 (function () {
     'use strict';
 
-    function get(selector, scope = document) {
-        return scope.querySelector(selector);
-    }
+    // remove class that hides content when js is not enabled
+    get('html').classList.remove('no-js');
 
-    function getAll(selector, scope = document) {
-        return scope.querySelectorAll(selector);
-    }
+    // kick everything off
+    fetchData();
+
+    /* *****************************
+          main DOM-building stuff
+       ***************************** */
 
     function fetchData() {
         let base = 'https://gw859060.github.io/four-year-plan/data/';
@@ -146,23 +148,35 @@
             return tooltip;
         };
         this.tile = function () {
-            let template = get('.template-course').content.cloneNode(true),
-                courseNode = get('.course', template),
-                shortNode = get('.course-shorthand', template),
-                shortNodeAlt = get('.course-shorthand-alt', template),
-                titleNode = get('.course-name', template),
-                reqContainer = get('.req-container', template),
-                creditsNode = get('.course-credits', template);
+            let tile = get('.template-course').content.cloneNode(true),
+                courseNode = get('.course', tile),
+                shortNode = get('.course-shorthand', tile),
+                shortNodeAlt = get('.course-shorthand-alt', tile),
+                titleNode = get('.course-name', tile),
+                reqContainer = get('.req-container', tile),
+                creditsNode = get('.course-credits', tile);
 
-            courseNode.id = this.name.id;
+            courseNode.classList.add(this.name.id);
             shortNode.textContent = this.name.shorthand;
             shortNodeAlt.textContent = this.name.shorthand + ' ';
             linkTitle(titleNode, this);
             addPills(reqContainer, this);
             creditsNode.textContent = this.credits + ' cr.';
 
-            return template;
+            // handle keyboard accessibility for pills
+            reqContainer.focus = 0;
+            reqContainer.elements = getAll('.pill', reqContainer);
+            reqContainer.addEventListener('keydown', makeAccessible);
+
+            // make initial pill focusable, all pills are initially set to tabindex="-1";
+            // ignore courses that don't fill any requirements
+            if (reqContainer.elements.length > 0) {
+                reqContainer.elements[0].setAttribute('tabindex', 0);
+            }
+
+            return tile;
         };
+        this.slots = {}; // for week view tooltips, created in addTimes()
     }
 
     function buildNavigation() {
@@ -295,13 +309,12 @@
     }
 
     function fillRequirements(courses) {
-        /* ***** fill in courses ***** */
         for (let course of courses) {
             let requirement = course.reqs.requirement;
             let attribute = course.reqs.attribute;
 
             // if course is "free" and doesn't meet any requirements, skip it
-            if (requirement === 'other') continue;
+            if (requirement === 'none') continue;
 
             // if course meets multiple requirements, eg. CSC 301 is major and gen ed
             if (typeof requirement === 'object') {
@@ -327,6 +340,34 @@
             }
         }
 
+        get('.degree-requirements').addEventListener('mouseover', function (e) {
+            if (!e.target.matches('.attribute-course.linked')) return;
+
+            let button = e.target;
+            let course = courses.find(course => course.name.id === button.dataset.course);
+            let tooltip = course.tooltip();
+
+            addTooltip(button, tooltip);
+        }, { passive: true });
+
+        get('.degree-requirements').addEventListener('mouseout', function (e) {
+            if (!e.target.matches('.attribute-course.linked')) return;
+
+            let button = e.target;
+            let tooltip = get('.tooltip', button);
+
+            removeTooltip(button, tooltip);
+        }, { passive: true });
+
+        // jump to schedule when clicking on course link
+        get('.degree-requirements').addEventListener('click', function (e) {
+            if (e.target.matches('.attribute-course.linked')) {
+                let clickedCourse = get('.course.' + e.target.dataset.course);
+
+                scrollToCourse(clickedCourse);
+            }
+        }, { passive: true });
+
         function addRow(course, node) {
             // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
@@ -336,68 +377,44 @@
             let button = document.createElement('button');
 
             button.classList.add('attribute-course', 'monospace', 'uppercase', 'linked');
+            button.setAttribute('data-course', course.name.id);
             button.setAttribute('aria-describedby', course.name.id + '-tooltip');
             button.setAttribute('type', 'button');
             button.textContent = course.name.shorthand;
-            addTooltip(course, button);
             node.parentNode.appendChild(button);
-
-            // replace div with button so empty courses are skipped when tabbing through
-            node.remove();
-
-            // on click, jump to course schedule and highlight the course
-            button.addEventListener('click', function () {
-                let clickedCourse = get('#' + course.name.id);
-                let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
-
-                clickedCourse.classList.add('highlighted');
-
-                // disable existing transition property on .pill when jumping to course
-                get('.req-container', clickedCourse).classList.add('no-fade');
-
-                // @TODO: <https://css-tricks.com/smooth-scrolling-accessibility/>
-                //        problem: setting focus as instructed makes the browser jump to target immediately,
-                //        skipping the smooth scroll behavior; alternatively, just remove smooth scroll
-                let parentHeader = get('.semester-num', clickedCourse.parentNode);
-
-                // all courses in "Course Schedule" section
-                if (parentHeader) {
-                    parentHeader.scrollIntoView({ behavior: motion });
-                }
-                // all courses in "Undated Courses" section (no semester header)
-                else {
-                    clickedCourse.parentNode.scrollIntoView({ behavior: motion });
-                }
-
-                window.setTimeout(function () {
-                    get('.req-container', clickedCourse).classList.remove('no-fade');
-                    clickedCourse.classList.remove('highlighted');
-                    clickedCourse.classList.add('fade-out');
-                }, 1500);
-
-                window.setTimeout(function () {
-                    clickedCourse.classList.remove('fade-out');
-                }, 3000);
-            }, false);
+            node.remove(); // replace div with button so empty courses are skipped when tabbing through
         }
 
-        function addTooltip(course, attrNode) {
-            let tooltip = course.tooltip();
+        function scrollToCourse(node) {
+            node.classList.add('highlighted');
+            get('.req-container', node).classList.add('no-fade'); // disable existing transition on pills
 
-            ['mouseenter', 'touchstart', 'focus'].forEach(event => {
-                attrNode.addEventListener(event, function (e) {
-                    e.currentTarget.appendChild(tooltip);
-                    repositionTooltip(tooltip);
-                }, { passive: true });
-            });
+            // @TODO: <https://css-tricks.com/smooth-scrolling-accessibility/>
+            //        problem: setting focus as instructed makes the browser jump to target immediately,
+            //        skipping the smooth scroll behavior; alternatively, just remove smooth scroll
+            let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
+            let parentHeader = get('.semester-num', node.parentNode);
 
-            ['mouseleave', 'touchend', 'blur'].forEach(event => {
-                attrNode.addEventListener(event, function (e) {
-                    if (e.currentTarget.contains(tooltip)) {
-                        e.currentTarget.removeChild(tooltip);
-                    }
-                }, { passive: true });
-            });
+            // all courses in "Course Schedule" section
+            if (parentHeader) {
+                parentHeader.scrollIntoView({ behavior: motion });
+            }
+            // all courses in "Undated Courses" section (no semester header)
+            // @TODO: when screen height is small enough, first course is covered by sticky header
+            else {
+                node.parentNode.scrollIntoView({ behavior: motion });
+            }
+
+            // handle fade out animation
+            window.setTimeout(function () {
+                get('.req-container', node).classList.remove('no-fade');
+                node.classList.remove('highlighted');
+                node.classList.add('fade-out');
+            }, 1500);
+
+            window.setTimeout(function () {
+                node.classList.remove('fade-out');
+            }, 3000);
         }
     }
 
@@ -412,7 +429,6 @@
     //        CORS workaround:
     //            <https://app.cors.bridged.cc/>
     //            <https://medium.com/bridgedxyz/cors-anywhere-for-everyone-free-reliable-cors-proxy-service-73507192714e>
-
     function buildSchedule(courses) {
         // starting year for "Fall 2020" headers; I know it's a bad name
         let semesterYear = 2020;
@@ -477,20 +493,27 @@
 
                 yearNode.appendChild(semTemplate);
             }
-
-            // handle keyboard accessibility for pills
-            getAll('.req-container').forEach(container => {
-                container.focus = 0;
-                container.elements = getAll('.pill', container);
-
-                // ignore courses without pills (ie. courses that don't fill any requirements)
-                if (container.elements.length > 0) {
-                    container.elements[0].setAttribute('tabindex', 0); // all pills are initially set to -1
-                }
-
-                container.addEventListener('keydown', makeAccessible);
-            });
         }
+
+        get('.course-schedule').addEventListener('mouseover', function (e) {
+            if (!e.target.matches('.course-slot')) return;
+
+            let slot = e.target;
+            let index = slot.dataset.tooltipIndex;
+            let course = courses.find(course => course.name.id === slot.dataset.course);
+            let tooltip = course.slots[index];
+
+            addTooltip(slot, tooltip);
+        }, { passive: true });
+
+        get('.course-schedule').addEventListener('mouseout', function (e) {
+            if (!e.target.matches('.course-slot')) return;
+
+            let slot = e.target;
+            let tooltip = get('.tooltip', slot);
+
+            removeTooltip(slot, tooltip);
+        }, { passive: true });
 
         function buildWeek(container, courses) {
             let weekTemplate = get('.template-week').content.cloneNode(true);
@@ -579,8 +602,8 @@
             // set css variable for use in .header-hours and .week-grid
             get('.week-container', container).style.setProperty('--total-hours', totalHours);
 
-            // listen for click and also open schedules in adjacent semesters (directly to
-            // the left or right), primarily so mobile doesn't have huge layout shift
+            // also open schedules in adjacent semesters (directly to the left or right),
+            // primarily to avoid huge layout shift on mobile while not wasting space on desktop
             let weekButton = get('.week-button', container);
 
             weekButton.addEventListener('click', function (e) {
@@ -607,20 +630,23 @@
             let times = course.times;
 
             // add time slots for this course to the grid
-            for (let time of times) {
+            times.forEach((time, index) => {
                 let bgClasses = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple'];
                 let courseNode = document.createElement('div');
 
                 courseNode.setAttribute('tabindex', '0'); // allow users to tab through
                 courseNode.setAttribute('aria-describedby', course.name.id + '-tooltip');
+                courseNode.setAttribute('data-course', course.name.id);
+                courseNode.setAttribute('data-tooltip-index', index);
+                course.slots[index] = buildTooltip(course, time); // add tooltip to course object
+
                 courseNode.classList.add('course-slot', 'monospace', 'uppercase', bgClasses[i]);
                 courseNode.textContent = course.name.shorthand;
                 courseNode.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
                 courseNode.style.gridColumn = convertToColumn(time.day);
-                addTooltip(courseNode, course, time);
 
                 get('.week-grid', container).appendChild(courseNode);
-            }
+            });
 
             function buildTooltip(course, time) {
                 let tooltip = document.createElement('div');
@@ -682,27 +708,6 @@
                 }
             }
 
-            // @TODO: combine the code for this and the Course object's tooltip
-            function addTooltip(node, course, time) {
-                let tooltip = buildTooltip(course, time);
-
-                ['mouseenter', 'touchstart', 'focus'].forEach(event => {
-                    node.addEventListener(event, function (e) {
-                        e.currentTarget.appendChild(tooltip);
-                        repositionTooltip(tooltip);
-                    }, { passive: true });
-                });
-
-                ['mouseleave', 'touchend', 'blur'].forEach(event => {
-                    node.addEventListener(event, function (e) {
-                        // some weird interaction where clicking slot and then clicking away produces error
-                        if (e.currentTarget.contains(tooltip)) {
-                            e.currentTarget.removeChild(tooltip);
-                        }
-                    }, { passive: true });
-                });
-            }
-
             function convertToRow(time) {
                 let timeSplit = time.split(':'),
                     hour = timeSplit[0],
@@ -742,7 +747,7 @@
 
     function buildSummary(courses) {
         // subtotals for requirement types
-        let reqTypes = ['gened', 'major', 'minor', 'other'];
+        let reqTypes = ['gened', 'major', 'minor', 'none'];
 
         for (let type of reqTypes) {
             let filteredCourses = courses.filter(course => course.reqs.requirement.includes(type));
@@ -776,6 +781,18 @@
         creditNode.textContent = creditTotal;
     }
 
+    /* **********************
+          helper functions
+       ********************** */
+
+    function get(selector, scope = document) {
+        return scope.querySelector(selector);
+    }
+
+    function getAll(selector, scope = document) {
+        return scope.querySelectorAll(selector);
+    }
+
     function linkTitle(container, course) {
         let link = document.createElement('a');
 
@@ -792,11 +809,10 @@
         let requirement = course.reqs.requirement;
         let attribute = course.reqs.attribute;
 
-        // skip courses that don't meet any attributes
-        // @TODO: replace with some text like "no requirements" to maintain the same height
-        if (requirement === 'other') {
-            container.classList.add('no-reqs');
-            container.textContent = 'None';
+        // courses that don't fill any requirements
+        if (requirement === 'none') {
+            container.classList.add('no-reqs', 'subdued');
+            container.textContent = 'Does not meet any requirements';
             return;
         }
 
@@ -805,6 +821,7 @@
         if (typeof requirement === 'object') {
             requirement.forEach((req, i) => {
                 buildPill(container, req, attribute[i]);
+                // flat right, flat left
             });
         }
         // if course meets multiple attributes
@@ -813,15 +830,18 @@
             attribute.forEach((attr, i) => {
                 if (i === 0) {
                     buildPill(container, requirement, attr);
+                    // flat right, flat both
                 }
                 // only add remaining attr, not a duplicate requirement + attr
                 // eg. GEO 204 should show [gened] [i] [j] instead of [gened] [i] [gened] [j]
                 else {
                     buildPill(container, requirement, attr, true);
+                    // flat left
                 }
             });
         } else {
             buildPill(container, requirement, attribute);
+            // flat right, flat left
         }
 
         // fade out pills if they overflow the container
@@ -845,6 +865,7 @@
                 }
 
                 let pill = document.createElement('button');
+
                 // separate attributes with the same name that appear in multiple reqs
                 // (eg. core in both major/minor) by making attr classes more specific
                 let typeClass = (type === attr) ? `${req}-${type}` : type;
@@ -887,6 +908,37 @@
         }
     }
 
+    function addTooltip(node, tooltip) {
+        node.appendChild(tooltip);
+        repositionTooltip(tooltip);
+    }
+
+    function removeTooltip(node, tooltip) {
+        node.removeChild(tooltip);
+    }
+
+    function repositionTooltip(tooltip) {
+        let parentWidth = tooltip.parentNode.offsetWidth;
+        let padLeft = parseFloat(window.getComputedStyle(tooltip).getPropertyValue('padding-left'));
+        let intersect = new IntersectionObserver(entries => {
+            let entry = entries[0];
+            let overflow = 0;
+
+            if (entry.intersectionRatio < 1) {
+                overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
+            }
+
+            // move tooltip body while keeping arrow centered over hovered element
+            // @TODO: fix tooltip "jumping" when it appears on Chrome and Firefox
+            let arrowPos = (overflow * -1) + (parentWidth / 2) - (padLeft / 2);
+
+            entry.target.style.left = overflow + 'px';
+            entry.target.style.setProperty('--arrow-pos', arrowPos + 'px');
+        }, { rootMargin: '0px -15px 0px 0px' });
+
+        intersect.observe(tooltip);
+    }
+
     function makeAccessible(event) {
         let target = event.currentTarget,
             elements = target.elements,
@@ -918,28 +970,6 @@
             elements[target.focus].setAttribute('tabindex', 0);
             elements[target.focus].focus();
         }
-    }
-
-    function repositionTooltip(tooltip) {
-        let parentWidth = tooltip.parentNode.offsetWidth;
-        let padLeft = parseFloat(window.getComputedStyle(tooltip).getPropertyValue('padding-left'));
-        let intersect = new IntersectionObserver(entries => {
-            let entry = entries[0];
-            let overflow = 0;
-
-            if (entry.intersectionRatio < 1) {
-                overflow = entry.intersectionRect.right - entry.boundingClientRect.right;
-            }
-
-            // move tooltip body while keeping arrow centered over hovered element
-            // @TODO: fix tooltip "jumping" when it appears on Chrome and Firefox
-            let arrowPos = (overflow * -1) + (parentWidth / 2) - (padLeft / 2);
-
-            entry.target.style.left = overflow + 'px';
-            entry.target.style.setProperty('--arrow-pos', arrowPos + 'px');
-        }, { rootMargin: '0px -15px 0px 0px' });
-
-        intersect.observe(tooltip);
     }
 
     function expandAbbrev(abbrev) {
@@ -984,9 +1014,4 @@
                 return 'Summer 2';
         }
     }
-
-    // remove class that hides content when js is not enabled
-    get('html').classList.remove('no-js');
-
-    fetchData();
 }());

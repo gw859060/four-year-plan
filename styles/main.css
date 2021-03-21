@@ -167,7 +167,7 @@ hr {
 }
 
 h2 + p {
-    margin-top: -0.75em;
+    margin-top: -0.5em;
 }
 
 p + section {
@@ -771,11 +771,6 @@ main > section + section {
 }
 
 .course-body {
-    /* vertically center course title when there are no pills */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
     flex: 1;
     margin-right: 1.1rem;
     min-width: 0; /* <https://css-tricks.com/flexbox-truncated-text/> */
@@ -807,7 +802,8 @@ main > section + section {
 }
 
 .no-reqs {
-    color: var(--txt-05);
+    font-size: .95em;
+    height: 1.5em; /* needs to match height of .req-container with pills */
 }
 
 .fade-overflow {
@@ -944,6 +940,18 @@ main > section + section {
 
 .pill + .pill {
     margin-left: .3em;
+}
+
+.flat-left {
+    border-radius: 0 10em 10em 0;
+}
+
+.flat-right {
+    border-radius: 10em 0 0 10em;
+}
+
+.flat-both {
+    border-radius: 0;
 }
 
 .pill.selected {
