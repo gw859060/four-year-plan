@@ -179,12 +179,12 @@
                             "name": "Business and Organizational Writing",
                             "credits": 3,
                             "requirement": [
-                                "gened",
-                                "major"
+                                "major",
+                                "gened"
                             ],
                             "attribute": [
-                                "writing",
-                                "communications"
+                                "communications",
+                                "writing"
                             ]
                         }
                     ]
@@ -198,34 +198,7 @@
                             "name": "Introduction to Statistics I",
                             "credits": 3,
                             "requirement": "major",
-                            "attribute": "math",
-                            "times": [
-                                {
-                                    "day": "M",
-                                    "start": "10:15",
-                                    "end": "11:45"
-                                },
-                                {
-                                    "day": "T",
-                                    "start": "10:15",
-                                    "end": "11:45"
-                                },
-                                {
-                                    "day": "W",
-                                    "start": "10:15",
-                                    "end": "11:45"
-                                },
-                                {
-                                    "day": "R",
-                                    "start": "10:15",
-                                    "end": "11:45"
-                                },
-                                {
-                                    "day": "F",
-                                    "start": "10:15",
-                                    "end": "11:45"
-                                }
-                            ]
+                            "attribute": "math"
                         }
                     ]
                 }
@@ -525,7 +498,7 @@
             "number": "102",
             "name": "History of Civilization II",
             "credits": 3,
-            "requirement": "other"
+            "requirement": "none"
         },
         {
             "subject": "WRT",
@@ -556,21 +529,21 @@
             "number": "110",
             "name": "Fundamentals in Computer Science",
             "credits": 3,
-            "requirement": "other"
+            "requirement": "none"
         },
         {
             "subject": "CSW",
             "number": "131",
             "name": "Introduction to Web Design",
             "credits": 3,
-            "requirement": "other"
+            "requirement": "none"
         },
         {
             "subject": "CSW",
             "number": "315",
             "name": "Introduction to Web Programming",
             "credits": 3,
-            "requirement": "other"
+            "requirement": "none"
         }
     ]
 }
