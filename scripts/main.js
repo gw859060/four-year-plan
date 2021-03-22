@@ -181,44 +181,33 @@
 
     function buildNavigation() {
         let nav = get('nav');
-        let links = getAll('.nav-link');
+        let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
-        for (let link of links) {
-            link.addEventListener('click', function () {
-                let section = link.dataset.section;
-                let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
+        nav.addEventListener('click', function (e) {
+            // desktop
+            if (e.target.matches('.nav-link')) {
+                let section = e.target.dataset.section;
 
                 get('.' + section).scrollIntoView({ behavior: motion });
-            }, false);
-        }
-
-        // add transition-delay values to nav items
-        let delay = 85;
-
-        getAll('.nav-item').forEach(item => {
-            item.style.transitionDelay = delay + 'ms';
-            delay += 85;
-        });
-
-        // handle opening/closing nav via menu button
-        get('.nav-button').addEventListener('click', function (event) {
-            // if open, close nav
-            if (nav.classList.contains('show-menu')) {
-                nav.classList.remove('show-menu');
-                this.setAttribute('aria-expanded', false);
             }
-            // if closed, open nav
-            else {
-                nav.classList.add('show-menu');
-                this.setAttribute('aria-expanded', true);
 
+            // mobile
+            if (e.target.matches('.nav-button')) {
+                // if open, close nav
+                if (nav.classList.contains('show-menu')) {
+                    nav.classList.remove('show-menu');
+                    this.setAttribute('aria-expanded', false);
+                }
+                // if closed, open nav
+                else {
+                    nav.classList.add('show-menu');
+                    this.setAttribute('aria-expanded', true);
+                }
+
+                // close nav when Esc is pressed
+                // @TODO: move these three listeners outside, otherwise they get recreated each time
                 nav.addEventListener('keydown', function (event) {
-                    // close nav when Esc is pressed
                     if (event.key === 'Escape') nav.classList.remove('show-menu');
-
-                    // @TODO: move focus between items with arrow keys
-                    // <https://www.smashingmagazine.com/2017/11/building-accessible-menu-systems/>
-                    // § "Keyboard And Focus Behavior"
                 }, { passive: true });
 
                 // close nav when focus leaves it or its children (eg. by tabbing out)
@@ -238,6 +227,14 @@
                 }, { passive: true });
             }
         }, { passive: true });
+
+        // add transition-delay values to nav items for mobile dropdown menu
+        let delay = 85;
+
+        for (let item of getAll('.nav-item')) {
+            item.style.transitionDelay = delay + 'ms';
+            delay += 85;
+        }
     }
 
     function buildRequirements(json) {
@@ -340,27 +337,29 @@
             }
         }
 
-        let tiles = getAll('.tile.requirement');
+        // listeners for course tooltips
+        get('.requirements').addEventListener('pointerover', showTooltip, { passive: true });
+        get('.requirements').addEventListener('pointerout', hideTooltip, { passive: true });
+        get('.requirements').addEventListener('focusin', showTooltip, { passive: true });
+        get('.requirements').addEventListener('focusout', hideTooltip, { passive: true });
 
-        for (let tile of tiles) {
-            // listeners for course tooltips
-            tile.addEventListener('pointerover', showTooltip, { passive: true });
-            tile.addEventListener('pointerout', hideTooltip, { passive: true });
-            tile.addEventListener('focusin', showTooltip, { passive: true });
-            tile.addEventListener('focusout', hideTooltip, { passive: true });
+        // stop pointerdown from focusing and adding duplicate tooltip; there's already one from hover
+        get('.requirements').addEventListener('pointerdown', function (e) {
+            if (e.target.matches('.attribute-course.linked')) e.preventDefault();
+        });
 
-            // jump to schedule when clicking on course link
-            tile.addEventListener('click', function (e) {
-                if (e.target.matches('.attribute-course.linked')) {
-                    let clickedCourse = get('.course.' + e.target.dataset.course);
+        // jump to schedule when clicking on course link
+        get('.requirements').addEventListener('click', function (e) {
+            if (!e.target.matches('.attribute-course.linked')) return;
 
-                    scrollToCourse(clickedCourse);
-                }
-            }, { passive: true });
-        }
+            let clickedCourse = get('.course.' + e.target.dataset.course);
+
+            scrollToCourse(clickedCourse);
+        }, { passive: true });
 
         function showTooltip(e) {
             if (!e.target.matches('.attribute-course.linked')) return;
+            if (e.target.contains(get('.tooltip'))) return;
 
             let button = e.target;
             let course = courses.find(course => course.name.id === button.dataset.course);
@@ -458,7 +457,6 @@
             let yearNode = document.createElement('section');
 
             yearNode.classList.add('year');
-            get('.course-schedule').appendChild(yearNode);
 
             // get list of semester numbers (most likely 1, 2) for given year
             let semList = [];
@@ -503,23 +501,21 @@
 
                 yearNode.appendChild(semTemplate);
             }
+
+            get('.course-schedule').appendChild(yearNode);
         }
 
         // click listener for pills
         let years = getAll('.year');
 
-        // for "Course Schedule" section
-        for (let year of years) {
-            year.addEventListener('click', clickPills, { passive: true });
-        }
-
-        // for "Undated Courses" section
+        for (let year of years) year.addEventListener('click', clickPills, { passive: true });
         get('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
 
         // listeners for week view tooltips
         let grids = getAll('.week-grid');
 
         for (let grid of grids) {
+            // @TODO: do touch event preventDefault() to stop focus (and tooltip showing twice)?
             grid.addEventListener('pointerover', showTooltip, { passive: true });
             grid.addEventListener('pointerout', hideTooltip, { passive: true });
             grid.addEventListener('focusin', showTooltip, { passive: true });
@@ -543,7 +539,9 @@
             let slot = e.target;
             let tooltip = get('.tooltip', slot);
 
-            slot.removeChild(tooltip);
+            // if you click on a slot and then click away, focusout tries to remove the tooltip
+            // that's already been removed by pointerout, so check if tooltip exists before removing
+            if (tooltip) slot.removeChild(tooltip);
         }
 
         function clickPills (e) {
@@ -570,11 +568,11 @@
             else {
                 clearSelectedPills();
             }
-        }
 
-        function clearSelectedPills() {
-            getAll('.selected').forEach(el => el.classList.remove('selected'));
-            getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+            function clearSelectedPills() {
+                getAll('.selected').forEach(el => el.classList.remove('selected'));
+                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+            }
         }
 
         function buildWeek(container, courses) {
@@ -878,6 +876,7 @@
             return;
         }
 
+        // @TODO: make related pills join with flat sides
         // if course meets multiple requirements
         // eg. CSC 301 is major and gen ed
         if (typeof requirement === 'object') {
