@@ -11,24 +11,36 @@
                             "number": "141",
                             "name": "Computer Science I",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ]
                         },
                         {
                             "subject": "MAT",
                             "number": "151",
                             "name": "Introduction to Discrete Mathematics",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "math"
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "math"
+                                }
+                            ]
                         },
                         {
                             "subject": "ESS",
                             "number": "101",
                             "name": "Introduction to Geology",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "science",
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "science"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "T",
@@ -52,10 +64,11 @@
                             "number": "204",
                             "name": "Introduction to Urban Studies",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": [
-                                "i",
-                                "j"
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": ["i", "j"]
+                                }
                             ],
                             "times": [
                                 {
@@ -70,8 +83,12 @@
                             "number": "100",
                             "name": "First Year Experience",
                             "credits": 4,
-                            "requirement": "gened",
-                            "attribute": "fye",
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "fye"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "R",
@@ -90,8 +107,12 @@
                             "number": "142",
                             "name": "Computer Science II",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core",
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "T",
@@ -105,8 +126,12 @@
                             "number": "143",
                             "name": "Brief Calculus",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "math",
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "math"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "T",
@@ -125,8 +150,12 @@
                             "number": "110",
                             "name": "General Biology",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "science",
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "science"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "M",
@@ -145,8 +174,12 @@
                             "number": "103",
                             "name": "Introduction to Archaeology",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "social",
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "social"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "T",
@@ -165,8 +198,12 @@
                             "number": "100",
                             "name": "Discover the World on Film",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "humanities"
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "humanities"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -178,13 +215,15 @@
                             "number": "368",
                             "name": "Business and Organizational Writing",
                             "credits": 3,
-                            "requirement": [
-                                "major",
-                                "gened"
-                            ],
-                            "attribute": [
-                                "communications",
-                                "writing"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "communications"
+                                },
+                                {
+                                    "req": "gened",
+                                    "attr": "writing"
+                                }
                             ]
                         }
                     ]
@@ -197,8 +236,12 @@
                             "number": "121",
                             "name": "Introduction to Statistics I",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "math"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "math"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -215,8 +258,12 @@
                             "number": "240",
                             "name": "Computer Science III",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core",
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "M",
@@ -240,8 +287,12 @@
                             "number": "231",
                             "name": "Computer Systems",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core",
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "M",
@@ -265,13 +316,15 @@
                             "number": "301",
                             "name": "Computer Security & Ethics",
                             "credits": 3,
-                            "requirement": [
-                                "major",
-                                "gened"
-                            ],
-                            "attribute": [
-                                "core",
-                                "ethics"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                },
+                                {
+                                    "req": "gened",
+                                    "attr": "ethics"
+                                }
                             ],
                             "times": [
                                 {
@@ -291,8 +344,12 @@
                             "number": "200",
                             "name": "Introduction to Statistics II",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "math",
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "math"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "M",
@@ -316,8 +373,12 @@
                             "number": "200",
                             "name": "Critical Writing and Research",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "english",
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "english"
+                                }
+                            ],
                             "times": [
                                 {
                                     "day": "T",
@@ -341,45 +402,63 @@
                             "number": "220",
                             "name": "Foundations of Computer Science",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "241",
                             "name": "Data Structures & Algorithms",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "317",
                             "name": "Introduction to Digital Image Processing",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         },
                         {
                             "subject": "SPK",
                             "number": "230",
                             "name": "Business and Professional Speech Communication",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "communications"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "communications"
+                                }
+                            ]
                         },
                         {
                             "subject": "FLM",
                             "number": "200",
                             "name": "Introduction to Film",
                             "credits": 3,
-                            "requirement": [
-                                "gened",
-                                "minor"
-                            ],
-                            "attribute": [
-                                "writing",
-                                "core"
+                            "requirements": [
+                                {
+                                    "req": "minor",
+                                    "attr": "core"
+                                },
+                                {
+                                    "req": "gened",
+                                    "attr": "writing"
+                                }
                             ]
                         }
                     ]
@@ -392,8 +471,12 @@
                             "number": "335",
                             "name": "Data Communications and Networking I",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -405,8 +488,12 @@
                             "number": "105",
                             "name": "Global Science Fiction",
                             "credits": 3,
-                            "requirement": "gened",
-                            "attribute": "writing"
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "writing"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -423,32 +510,48 @@
                             "number": "345",
                             "name": "Programming Language Concepts/Paradigms",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "core"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "402",
                             "name": "Software Engineering",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "capstone"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "capstone"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "302",
                             "name": "Computer Security",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "481",
                             "name": "Artificial Intelligence",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -460,24 +563,36 @@
                             "number": "417",
                             "name": "User Interfaces",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "complex"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "complex"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "468",
                             "name": "Introduction to Cloud Computing",
                             "credits": 3,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         },
                         {
                             "subject": "CSC",
                             "number": "400",
                             "name": "Internship",
                             "credits": 6,
-                            "requirement": "major",
-                            "attribute": "elective"
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -490,60 +605,76 @@
             "number": "151",
             "name": "History of the United States I",
             "credits": 3,
-            "requirement": "gened",
-            "attribute": "humanities"
+            "requirements": [
+                {
+                    "req": "gened",
+                    "attr": "humanities"
+                }
+            ]
         },
         {
             "subject": "HIS",
             "number": "102",
             "name": "History of Civilization II",
             "credits": 3,
-            "requirement": "none"
+            "requirements": null
         },
         {
             "subject": "WRT",
             "number": "120",
             "name": "Effective Writing I",
             "credits": 3,
-            "requirement": "gened",
-            "attribute": "english"
+            "requirements": [
+                {
+                    "req": "gened",
+                    "attr": "english"
+                }
+            ]
         },
         {
             "subject": "PSC",
             "number": "240",
             "name": "Introduction to Comparative Politics",
             "credits": 3,
-            "requirement": "gened",
-            "attribute": "social"
+            "requirements": [
+                {
+                    "req": "gened",
+                    "attr": "social"
+                }
+            ]
         },
         {
             "subject": "ART",
             "number": "228",
             "name": "Digital Photography",
             "credits": 3,
-            "requirement": "gened",
-            "attribute": "arts"
+            "requirements": [
+                {
+                    "req": "gened",
+                    "attr": "arts"
+                }
+            ]
         },
         {
             "subject": "CSC",
             "number": "110",
             "name": "Fundamentals in Computer Science",
             "credits": 3,
-            "requirement": "none"
+            "requirements": null
         },
         {
             "subject": "CSW",
             "number": "131",
             "name": "Introduction to Web Design",
             "credits": 3,
-            "requirement": "none"
+            "requirements": null
         },
         {
             "subject": "CSW",
             "number": "315",
             "name": "Introduction to Web Programming",
             "credits": 3,
-            "requirement": "none"
+            "requirements": null
         }
     ]
 }
