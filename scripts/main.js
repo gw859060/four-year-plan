@@ -182,9 +182,13 @@
         nav.addEventListener('click', function (e) {
             // desktop
             if (e.target.matches('.nav-link')) {
-                let section = e.target.dataset.section;
+                let section = get('.' + e.target.dataset.section);
 
-                get('.' + section).scrollIntoView({ behavior: motion });
+                // <https://css-tricks.com/smooth-scrolling-accessibility/>
+                // <https://github.com/w3c/csswg-drafts/issues/3744>
+                section.setAttribute('tabindex', '-1');
+                section.focus({ preventScroll: true });
+                section.scrollIntoView({ behavior: motion });
             }
 
             // mobile
@@ -389,12 +393,12 @@
         }
 
         function scrollToCourse(node) {
-            node.classList.add('highlighted');
-            get('.req-container', node).classList.add('no-fade'); // disable existing transition on pills
+            // <https://css-tricks.com/smooth-scrolling-accessibility/>
+            // <https://github.com/w3c/csswg-drafts/issues/3744>
+            node.setAttribute('tabindex', '-1');
+            node.focus({ preventScroll: true });
+            node.classList.add('highlighted', 'no-fade'); // .no-fade disables existing transition on pills
 
-            // @TODO: <https://css-tricks.com/smooth-scrolling-accessibility/>
-            //        problem: setting focus as instructed makes the browser jump to target immediately,
-            //        skipping the smooth scroll behavior; alternatively, just remove smooth scroll
             let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
             let parentHeader = get('.semester-num', node.parentNode);
 
@@ -409,10 +413,9 @@
                 node.parentNode.scrollIntoView({ behavior: motion });
             }
 
-            // handle fade out animation
+            // handle fade out animations
             window.setTimeout(function () {
-                get('.req-container', node).classList.remove('no-fade');
-                node.classList.remove('highlighted');
+                node.classList.remove('highlighted', 'no-fade');
                 node.classList.add('fade-out');
             }, 1500);
 
@@ -912,18 +915,15 @@
         if (e.target.classList.contains('selected') === false) {
             clearSelectedPills();
 
-            let years = getAll('.year');
             let selectedPills = getAll('.pill.' + e.target.classList[2]); // [0] is .pill; [1] is .pill-<position>
-
-            // for "Course Schedule" section
-            for (let year of years) year.classList.add('filtered');
-            // for "Undated Courses" section
-            get('.undated-courses-container').classList.add('filtered');
 
             for (let pill of selectedPills) {
                 pill.classList.add('selected');
                 pill.closest('.course').classList.add('selected');
             }
+
+            get('.course-schedule').classList.add('filtered');
+            get('.undated-courses').classList.add('filtered');
         }
         // else if clicked pill is already selected, clear selection
         else {
