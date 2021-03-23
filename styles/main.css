@@ -921,7 +921,7 @@ main > section + section {
     color: var(--txt-06);
     background-color: var(--bg-05);
     line-height: 1;
-    padding: .275em .6em;
+    padding: .275em .5em;
     border-radius: 10em;
     transition: var(--duration) var(--ease);
     transition-property: filter, color, background-color;
@@ -939,19 +939,21 @@ main > section + section {
 }
 
 .pill + .pill {
-    margin-left: .3em;
+    margin-left: .25em;
 }
 
-.flat-left {
-    border-radius: 0 10em 10em 0;
-}
-
-.flat-right {
+.pill-left {
     border-radius: 10em 0 0 10em;
+    padding-left: .6em;
 }
 
-.flat-both {
+.pill-middle {
     border-radius: 0;
+}
+
+.pill-right {
+    border-radius: 0 10em 10em 0;
+    padding-right: .6em;
 }
 
 .pill.selected {
@@ -965,8 +967,9 @@ main > section + section {
 }
 
 .pill.fake {
+    font-size: .85em;
     background-color: #e3e3e3;
-    padding: .1em .6em .15em;
+    padding: 0 .6em .1em;
 }
 
 /* ***** week ***** */

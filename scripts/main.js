@@ -65,8 +65,7 @@
                         course.subject,
                         course.number,
                         course.name,
-                        course.requirement,
-                        course.attribute,
+                        course.requirements,
                         course.credits,
                         course.times,
                         year.year,
@@ -84,9 +83,9 @@
                 course.subject,
                 course.number,
                 course.name,
-                course.requirement,
-                course.attribute,
+                course.requirements,
                 course.credits,
+
                 // null = will never have a time; undefined (from above loop) = may get a time in the future
                 null,
                 null,
@@ -99,7 +98,7 @@
         return courseObjects;
     }
 
-    function Course(subject, number, title, requirement, attribute, credits, times, year, semester) {
+    function Course(subject, number, title, requirements, credits, times, year, semester) {
         this.name = {
             'subject': subject,
             'number': number,
@@ -107,10 +106,7 @@
             'shorthand': subject + ' ' + number,
             'id': subject + '-' + number
         };
-        this.reqs = {
-            'requirement': requirement,
-            'attribute': attribute
-        };
+        this.requirements = requirements;
         this.credits = credits;
         this.times = times;
         this.year = year;
@@ -128,7 +124,7 @@
             shortNode.textContent = this.name.shorthand;
             shortNodeAlt.textContent = this.name.shorthand + ' ';
             linkTitle(titleNode, this);
-            addPills(reqContainer, this);
+            insertPills(reqContainer, this);
             creditsNode.textContent = this.credits + ' cr.';
 
             // handle keyboard accessibility for pills
@@ -307,33 +303,32 @@
 
     function fillRequirements(courses) {
         for (let course of courses) {
-            let requirement = course.reqs.requirement;
-            let attribute = course.reqs.attribute;
+            let requirements = course.requirements;
 
-            // if course is "free" and doesn't meet any requirements, skip it
-            if (requirement === 'none') continue;
-
-            // if course meets multiple requirements, eg. CSC 301 is major and gen ed
-            if (typeof requirement === 'object') {
-                requirement.forEach((req, i) => {
-                    let reqNode = get(`.section-${req} .attribute.${attribute[i]} .attribute-course`);
-
-                    addRow(course, reqNode);
-                });
+            // skip courses that don't meet any requirements
+            if (requirements === null) {
+                continue;
             }
-            // if course meets multiple attributes, eg. GEO 204 is interdisciplinary and diverse
-            else if (typeof attribute === 'object') {
-                attribute.forEach(attr => {
-                    let reqNode = get(`.section-${requirement} .attribute.${attr} .attribute-course`);
 
-                    addRow(course, reqNode);
-                });
-            }
-            // otherwise course has a single requirement/attribute pair
-            else {
-                let reqNode = get(`.section-${requirement} .attribute.${attribute} .attribute-course`);
+            // iterate over course's requirements (some fulfill multiple, eg. major and gen ed)
+            for (let requirement of requirements) {
+                let req = requirement.req;
+                let attr = requirement.attr;
 
-                addRow(course, reqNode);
+                // if course meets multiple attributes, eg. i and j, iterate over all of them
+                if (typeof attr === 'object') {
+                    for (let at of attr) {
+                        let node = get(`.section-${req} .attribute.${at} .attribute-course`);
+
+                        addRow(course, node);
+                    }
+                }
+                // otherwise single requirement/attribute pair
+                else {
+                    let node = get(`.section-${req} .attribute.${attr} .attribute-course`);
+
+                    addRow(course, node);
+                }
             }
         }
 
@@ -390,8 +385,7 @@
             button.setAttribute('aria-describedby', course.name.id + '-tooltip');
             button.setAttribute('type', 'button');
             button.textContent = course.name.shorthand;
-            node.parentNode.appendChild(button);
-            node.remove(); // replace div with button so empty courses are skipped when tabbing through
+            node.replaceWith(button); // leave div for empty courses so they're skipped when tabbing through
         }
 
         function scrollToCourse(node) {
@@ -409,7 +403,8 @@
                 parentHeader.scrollIntoView({ behavior: motion });
             }
             // all courses in "Undated Courses" section (no semester header)
-            // @TODO: when screen height is small enough, first course is covered by sticky header
+            // @TODO: when screen height is small enough, first course is covered by sticky header;
+            //        fix by adding hidden header
             else {
                 node.parentNode.scrollIntoView({ behavior: motion });
             }
@@ -509,7 +504,6 @@
         let years = getAll('.year');
 
         for (let year of years) year.addEventListener('click', clickPills, { passive: true });
-        get('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
 
         // listeners for week view tooltips
         let grids = getAll('.week-grid');
@@ -542,37 +536,6 @@
             // if you click on a slot and then click away, focusout tries to remove the tooltip
             // that's already been removed by pointerout, so check if tooltip exists before removing
             if (tooltip) slot.removeChild(tooltip);
-        }
-
-        function clickPills (e) {
-            if (!e.target.matches('.pill')) return;
-
-            // highlight courses with same req/attr, fade all others
-            if (e.target.classList.contains('selected') === false) {
-                clearSelectedPills();
-
-                let years = getAll('.year');
-                let selectedPills = getAll('.pill.' + e.target.classList[1]);
-
-                // for "Course Schedule" section
-                for (let year of years) year.classList.add('filtered');
-                // for "Undated Courses" section
-                get('.undated-courses-container').classList.add('filtered');
-
-                for (let pill of selectedPills) {
-                    pill.classList.add('selected');
-                    pill.closest('.course').classList.add('selected');
-                }
-            }
-            // else if clicked pill is already selected, clear selection
-            else {
-                clearSelectedPills();
-            }
-
-            function clearSelectedPills() {
-                getAll('.selected').forEach(el => el.classList.remove('selected'));
-                getAll('.filtered').forEach(el => el.classList.remove('filtered'));
-            }
         }
 
         function buildWeek(container, courses) {
@@ -803,28 +766,39 @@
         for (let course of filteredCourses) {
             get('.undated-courses-container').appendChild(course.tile());
         }
+
+        get('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
     }
 
     function buildSummary(courses) {
-        // subtotals for requirement types
-        let reqTypes = ['gened', 'major', 'minor', 'none'];
+        let courseSubtotal = { gened: 0, major: 0, minor: 0, none:  0 };
+        let creditSubtotal = { gened: 0, major: 0, minor: 0, none:  0 };
 
-        for (let type of reqTypes) {
-            let filteredCourses = courses.filter(course => course.reqs.requirement.includes(type));
-            let courseSubtotal = 0;
-            let creditSubtotal = 0;
+        for (let course of courses) {
+            if (course.requirements === null) {
+                courseSubtotal.none++;
+                creditSubtotal.none += course.credits;
 
-            for (let course of filteredCourses) {
-                courseSubtotal += 1;
-                creditSubtotal += course.credits;
+                continue;
             }
 
-            // fill in subtotals
-            let courseNode = get(`.summary .courses .${type} .attribute-course`);
-            let creditNode = get(`.summary .credits .${type} .attribute-course`);
+            for (let requirement of course.requirements) {
+                let req = requirement.req;
 
-            courseNode.textContent = courseSubtotal;
-            creditNode.textContent = creditSubtotal;
+                courseSubtotal[req]++;
+                creditSubtotal[req] += course.credits;
+            }
+        }
+
+        insertSubtotals(courseSubtotal, 'courses');
+        insertSubtotals(creditSubtotal, 'credits');
+
+        function insertSubtotals(subtotal, type) {
+            for (let [key, value] of Object.entries(subtotal)) {
+                let node = get(`.summary .${type} .${key} .attribute-course`);
+
+                node.textContent = value;
+            }
         }
 
         // totals
@@ -834,8 +808,8 @@
             creditTotal += course.credits;
         }
 
-        let courseNode = get(`.summary .courses .total .attribute-course`);
-        let creditNode = get(`.summary .credits .total .attribute-course`);
+        let courseNode = get('.summary .courses .total .attribute-course');
+        let creditNode = get('.summary .credits .total .attribute-course');
 
         courseNode.textContent = courses.length; // don't count overlap between types
         creditNode.textContent = creditTotal;
@@ -865,44 +839,41 @@
         container.appendChild(link);
     }
 
-    function addPills(container, course) {
-        let requirement = course.reqs.requirement;
-        let attribute = course.reqs.attribute;
+    function insertPills(container, course) {
+        let requirements = course.requirements;
 
         // courses that don't fill any requirements
-        if (requirement === 'none') {
+        if (requirements === null) {
             container.classList.add('no-reqs', 'subdued');
             container.textContent = 'Does not meet any requirements';
             return;
         }
 
-        // @TODO: make related pills join with flat sides
-        // if course meets multiple requirements
-        // eg. CSC 301 is major and gen ed
-        if (typeof requirement === 'object') {
-            requirement.forEach((req, i) => {
-                buildPill(container, req, attribute[i]);
-                // flat right, flat left
-            });
-        }
-        // if course meets multiple attributes
-        // eg. GEO 204 is i and j
-        else if (typeof attribute === 'object') {
-            attribute.forEach((attr, i) => {
-                if (i === 0) {
-                    buildPill(container, requirement, attr);
-                    // flat right, flat both
-                }
-                // only add remaining attr, not a duplicate requirement + attr
-                // eg. GEO 204 should show [gened] [i] [j] instead of [gened] [i] [gened] [j]
-                else {
-                    buildPill(container, requirement, attr, true);
-                    // flat left
-                }
-            });
-        } else {
-            buildPill(container, requirement, attribute);
-            // flat right, flat left
+        for (let requirement of requirements) {
+            let req = requirement.req;
+            let attr = requirement.attr;
+
+            container.appendChild(buildPill(req, 'left'));
+
+            // if course meets multiple attributes, eg. i and j, iterate over all of them
+            if (typeof attr === 'object') {
+                let len = attr.length;
+
+                attr.forEach((at, i) => {
+                    let position;
+
+                    // if attribute is last in the array, it's the right end
+                    if (i === (len - 1)) {
+                        position = 'right';
+                    } else {
+                        position = 'middle';
+                    }
+
+                    container.appendChild(buildPill(at, position, req));
+                });
+            } else {
+                container.appendChild(buildPill(attr, 'right', req));
+            }
         }
 
         // fade out pills if they overflow the container
@@ -917,26 +888,51 @@
         });
 
         reqObserver.observe(container);
+    }
 
-        function buildPill(container, req, attr, duplicate = false) {
-            for (let type of [req, attr]) {
-                // skip duplicate requirements
-                if (type === req && duplicate === true) {
-                    continue;
-                }
+    function buildPill(reqOrAttr, position, req) {
+        let pill = document.createElement('button');
+        let pillClass = reqOrAttr;
 
-                let pill = document.createElement('button');
+        // if pill is for an attribute, prepend class with requirement too, to make it more specific
+        if (req) pillClass = req + '-' + reqOrAttr;
 
-                // separate attributes with the same name that appear in multiple reqs
-                // (eg. core in both major/minor) by making attr classes more specific
-                let typeClass = (type === attr) ? `${req}-${type}` : type;
+        pill.classList.add('pill', 'pill-' + position, pillClass);
+        pill.textContent = expandAbbrev(reqOrAttr);
+        pill.setAttribute('type', 'button');
+        pill.setAttribute('tabindex', '-1');
 
-                pill.classList.add('pill', typeClass);
-                pill.textContent = expandAbbrev(type);
-                pill.setAttribute('type', 'button');
-                pill.setAttribute('tabindex', '-1');
-                container.appendChild(pill);
+        return pill;
+    }
+
+    function clickPills(e) {
+        if (!e.target.matches('.pill')) return;
+
+        // highlight courses with same req/attr, fade all others
+        if (e.target.classList.contains('selected') === false) {
+            clearSelectedPills();
+
+            let years = getAll('.year');
+            let selectedPills = getAll('.pill.' + e.target.classList[2]); // [0] is .pill; [1] is .pill-<position>
+
+            // for "Course Schedule" section
+            for (let year of years) year.classList.add('filtered');
+            // for "Undated Courses" section
+            get('.undated-courses-container').classList.add('filtered');
+
+            for (let pill of selectedPills) {
+                pill.classList.add('selected');
+                pill.closest('.course').classList.add('selected');
             }
+        }
+        // else if clicked pill is already selected, clear selection
+        else {
+            clearSelectedPills();
+        }
+
+        function clearSelectedPills() {
+            getAll('.selected').forEach(el => el.classList.remove('selected'));
+            getAll('.filtered').forEach(el => el.classList.remove('filtered'));
         }
     }
 
