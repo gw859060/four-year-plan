@@ -557,19 +557,6 @@ nav {
         opacity: 1;
     }
 
-    .nav-item {
-        transition: opacity .4s var(--ease);
-        opacity: 0;
-    }
-
-    .show-menu .nav-item {
-        opacity: 1;
-    }
-
-    .nav-item + .nav-item {
-        border-top: 1px solid #414141;
-    }
-
     .nav-link {
         display: block;
         width: 100%;
@@ -585,6 +572,10 @@ nav {
     .nav-link:focus {
         color: var(--txt-01);
         background-color: transparent;
+    }
+
+    .nav-link + .nav-link {
+        border-top: 1px solid #414141;
     }
 
     .nav-link .subdued {

@@ -37,22 +37,14 @@
             <h1 class="subdued">West Chester University of Pennsylvania</h1>
         </div>
     </header>
-    <nav>
-        <button class="nav-button monospace uppercase" type="button" aria-expanded="false">Contents</button>
-        <ol class="nav-list constrained-width">
-            <li class="nav-item">
-                <button class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-section="course-schedule"><span class="subdued">02.</span> Course Schedule</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-section="undated-courses"><span class="subdued">03.</span> Undated Courses</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-section="summary"><span class="subdued">04.</span> Summary</button>
-            </li>
-        </ol>
+    <nav tabindex="-1" aria-keyshortcuts="Alt+M Shift+M">
+        <button class="nav-button monospace uppercase" type="button" aria-expanded="false" aria-controls="menu">Contents</button>
+        <div id="menu" class="nav-list constrained-width">
+            <button class="nav-link" data-section="degree-requirements"><span class="subdued">01.</span> Degree Requirements</button>
+            <button class="nav-link" data-section="course-schedule"><span class="subdued">02.</span> Course Schedule</button>
+            <button class="nav-link" data-section="undated-courses"><span class="subdued">03.</span> Undated Courses</button>
+            <button class="nav-link" data-section="summary"><span class="subdued">04.</span> Summary</button>
+        </div>
     </nav>
     <noscript>
         <p class="no-js-warning">You'll need to enable JavaScript for this site to work.</p>

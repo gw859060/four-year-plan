@@ -177,10 +177,19 @@
 
     function buildNavigation() {
         let nav = get('nav');
+        let button = get('.nav-button');
         let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
+        // @TODO: cycle through items with arrow keys instead of tabbing;
+        //        maybe move focus to first item when opened?
+        // let list = get('.nav-list');
+        //
+        // list.focus = 0;
+        // list.elements = getAll('.nav-link');
+        // list.addEventListener('keydown', makeAccessible);
+
         nav.addEventListener('click', function (e) {
-            // desktop
+            // handle section links
             if (e.target.matches('.nav-link')) {
                 let section = get('.' + e.target.dataset.section);
 
@@ -191,49 +200,55 @@
                 section.scrollIntoView({ behavior: motion });
             }
 
-            // mobile
+            // dropdown menu
             if (e.target.matches('.nav-button')) {
-                // if open, close nav
-                if (nav.classList.contains('show-menu')) {
-                    nav.classList.remove('show-menu');
-                    this.setAttribute('aria-expanded', false);
+                nav.classList.toggle('show-menu');
+
+                if (button.getAttribute('aria-expanded') === 'false') {
+                    openMenu();
+                } else {
+                    closeMenu();
                 }
-                // if closed, open nav
-                else {
-                    nav.classList.add('show-menu');
-                    this.setAttribute('aria-expanded', true);
-                }
-
-                // close nav when Esc is pressed
-                // @TODO: move these three listeners outside, otherwise they get recreated each time
-                nav.addEventListener('keydown', function (event) {
-                    if (event.key === 'Escape') nav.classList.remove('show-menu');
-                }, { passive: true });
-
-                // close nav when focus leaves it or its children (eg. by tabbing out)
-                nav.addEventListener('focusout', function (event) {
-                    // if newly focused element is still in nav, ignore the event
-                    if (nav.contains(event.relatedTarget)) return;
-
-                    nav.classList.remove('show-menu');
-                }, { passive: true });
-
-                // click outside nav to close
-                document.addEventListener('click', function clickOutside(event) {
-                    if (!event.target.closest('nav')) {
-                        nav.classList.remove('show-menu');
-                        document.removeEventListener('click', clickOutside, { passive: true });
-                    }
-                }, { passive: true });
             }
         }, { passive: true });
 
-        // add transition-delay values to nav items for mobile dropdown menu
-        let delay = 85;
+        // close nav when Esc is pressed
+        nav.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+                button.focus(); // refocus menu button on close
+            }
+        }, { passive: true });
 
-        for (let item of getAll('.nav-item')) {
-            item.style.transitionDelay = delay + 'ms';
-            delay += 85;
+        // close nav when focus leaves it or its children, for example by clicking outside,
+        // tabbing out past the end, or activating one of the section links
+        nav.addEventListener('focusout', function (e) {
+            if (!nav.contains(e.relatedTarget)) {
+                closeMenu();
+            }
+        }, { passive: true });
+
+        // focus the menu from anywhere on the page with Alt+M or Shift+M keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            if ((e.altKey || e.shiftKey) && e.code === 'KeyM') {
+                // if @media max-width: 700px, nav is dropdown
+                if (window.innerWidth <= 700) {
+                    get('.nav-button').focus();
+                    openMenu();
+                } else {
+                    nav.focus();
+                }
+            }
+        }, { passive: true });
+
+        function openMenu() {
+            nav.classList.add('show-menu');
+            button.setAttribute('aria-expanded', true);
+        }
+
+        function closeMenu() {
+            nav.classList.remove('show-menu');
+            button.setAttribute('aria-expanded', false);
         }
     }
 
