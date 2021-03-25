@@ -283,14 +283,14 @@
                             ]
                         },
                         {
-                            "subject": "CSC",
-                            "number": "231",
-                            "name": "Computer Systems",
+                            "subject": "STA",
+                            "number": "200",
+                            "name": "Introduction to Statistics II",
                             "credits": 3,
                             "requirements": [
                                 {
                                     "req": "major",
-                                    "attr": "core"
+                                    "attr": "math"
                                 }
                             ],
                             "times": [
@@ -340,14 +340,14 @@
                             ]
                         },
                         {
-                            "subject": "STA",
-                            "number": "200",
-                            "name": "Introduction to Statistics II",
+                            "subject": "CSC",
+                            "number": "231",
+                            "name": "Computer Systems",
                             "credits": 3,
                             "requirements": [
                                 {
                                     "req": "major",
-                                    "attr": "math"
+                                    "attr": "core"
                                 }
                             ],
                             "times": [
