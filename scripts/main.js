@@ -811,14 +811,6 @@
         insertSubtotals(courseSubtotal, 'courses');
         insertSubtotals(creditSubtotal, 'credits');
 
-        function insertSubtotals(subtotal, type) {
-            for (let [key, value] of Object.entries(subtotal)) {
-                let node = get(`.summary .${type} .${key} .attribute-course`);
-
-                node.textContent = value;
-            }
-        }
-
         // totals
         let creditTotal = 0;
 
@@ -831,6 +823,168 @@
 
         courseNode.textContent = courses.length; // don't count overlap between types
         creditNode.textContent = creditTotal;
+
+        buildMostTakenChart(courses);
+        buildAverageTimeChart(courses);
+
+        function insertSubtotals(subtotal, type) {
+            for (let [key, value] of Object.entries(subtotal)) {
+                let node = get(`.summary .${type} .${key} .attribute-course`);
+
+                node.textContent = value;
+            }
+        }
+
+        function buildMostTakenChart(courses) {
+            let subjects = {};
+
+            // count up number of courses per subject
+            for (let course of courses) {
+                if (subjects.hasOwnProperty(course.name.subject)) {
+                    subjects[course.name.subject]++;
+                } else {
+                    subjects[course.name.subject] = 1;
+                }
+            }
+
+            // sort from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
+            let subjectKeys = Object.keys(subjects).sort(function (a, b) { return subjects[b] - subjects[a] });
+            let subjectValues = subjectKeys.map(key => subjects[key]);
+            let highestValue = subjectValues[0];
+            let interval = 2; // y-axis label every 2 numbers
+
+            if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
+
+            // add x-axis labels and top six courses to grid
+
+            for (let i = 0; i < 6; i++) {
+                let block = document.createElement('div');
+
+                block.classList.add('grid-block', 'bg-bloo-' + (i + 1));
+                block.title = subjectValues[i] + ' courses'; // @TODO: replace with tooltip
+                block.style.height = (subjectValues[i] / highestValue * 100) + '%';
+                get('.chart-most-taken .chart-grid').appendChild(block);
+
+                let xLabel = document.createElement('div');
+
+                xLabel.classList.add('x-label');
+                xLabel.textContent = subjectKeys[i];
+                get('.chart-most-taken .x-labels').appendChild(xLabel);
+            }
+
+            // create y-axis labels and gridlines
+            // @TODO: go by twos if > 10, and if > 18, go by threes
+            //        goal is to keep y-label count below 10 rows
+            let rowCount = highestValue / interval;
+
+            get('.chart-most-taken').style.setProperty('--row-count', rowCount);
+
+            for (let i = rowCount; i > 0; i--) {
+                let yLabel = document.createElement('div');
+
+                yLabel.classList.add('y-label');
+                yLabel.textContent = i * interval;
+                get('.chart-most-taken .y-labels').appendChild(yLabel);
+
+                let gridLine = document.createElement('div');
+
+                gridLine.classList.add('grid-line');
+                get('.chart-most-taken .grid-lines').appendChild(gridLine);
+            }
+        }
+
+        function buildAverageTimeChart(courses) {
+            // calculate durations for each day
+            let dayOrder = ['M', 'T', 'W', 'R', 'F'];
+            let days = { M: 0, T: 0, W: 0, R: 0, F: 0 };
+            let average = 0;
+
+            for (let course of courses) {
+                if (!course.times) continue;
+
+                for (let time of course.times) {
+                    let day = time.day;
+                    let start = time.start;
+                    let end = time.end;
+                    let duration = getDuration(start, end);
+
+                    days[day] += duration;
+                    average += duration;
+                }
+            }
+
+            // average values over number of semesters
+            // @TODO: get number of semesters programatically
+            let semesterCount = 3;
+
+            for (let day in days) days[day] /= semesterCount;
+            average /= semesterCount * dayOrder.length;
+
+            // sort from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
+            let daysKeys = Object.keys(days).sort(function (a, b) { return days[b] - days[a] });
+            let daysValues = daysKeys.map(key => days[key]);
+            let highestValue = daysValues[0];
+            let interval = 30; // y-axis label every 30 minutes
+
+            // round to next highest multiple (for nicer y-axis labels)
+            if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
+
+            // add days to the grid
+            let bgColors = ['bg-red', 'bg-orange', 'bg-green', 'bg-blue', 'bg-purple', 'bg-black'];
+
+            for (let day of dayOrder) {
+                let block = document.createElement('div');
+                let index = dayOrder.indexOf(day);
+                let hrs = Math.floor(days[day] / 60);
+                let min = Math.round(days[day] % 60);
+
+                block.classList.add('grid-block', bgColors[index]);
+                block.title = hrs + ' hours ' + min + ' minutes'; // @TODO: replace with tooltip
+                block.style.height = (days[day] / highestValue * 100) + '%';
+                get('.chart-average-time .chart-grid').appendChild(block);
+            }
+
+            // add average column
+            let avgBlock = document.createElement('div');
+            let avgHrs = Math.floor(average / 60);
+            let avgMin = Math.round(average % 60);
+
+            avgBlock.classList.add('grid-block', 'bg-black');
+            avgBlock.title = avgHrs + ' hours ' + avgMin + ' minutes'; // @TODO: replace with tooltip
+            avgBlock.style.height = (average / highestValue * 100) + '%';
+            get('.chart-average-time .chart-grid').appendChild(avgBlock);
+
+            // create y-axis labels and gridlines
+            let rowCount = highestValue / interval;
+
+            get('.chart-average-time').style.setProperty('--row-count', rowCount);
+
+            for (let i = rowCount; i > 0; i--) {
+                let yLabel = document.createElement('div');
+
+                yLabel.classList.add('y-label', 'uppercase');
+                yLabel.textContent = (i * interval / 60).toFixed(1); // convert minutes to hours
+                get('.chart-average-time .y-labels').appendChild(yLabel);
+
+                let gridLine = document.createElement('div');
+
+                gridLine.classList.add('grid-line');
+                get('.chart-average-time .grid-lines').appendChild(gridLine);
+            }
+
+            function getDuration(start, end) {
+                return convertToMinutes(end) - convertToMinutes(start);
+            }
+
+            function convertToMinutes(time) {
+                let timeSplit = time.split(':');
+                let hour = parseInt(timeSplit[0]);
+                let min = parseInt(timeSplit[1]);
+                let total = hour * 60 + min;
+
+                return total;
+            }
+        }
     }
 
     /* **********************

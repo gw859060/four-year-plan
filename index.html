@@ -105,22 +105,22 @@
         <section class="summary constrained-width">
             <h2><span class="subdued">04.</span> Summary</h2>
             <div class="summary-container">
-                <div class="tile courses">
+                <div class="tile tile-third courses">
                     <h4>Courses</h4>
                     <div class="attribute gened">
-                        <div class="attribute-name">General Education</div>
+                        <div class="attribute-name">General Education courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute major">
-                        <div class="attribute-name">Major</div>
+                        <div class="attribute-name">Major courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute minor">
-                        <div class="attribute-name">Minor</div>
+                        <div class="attribute-name">Minor courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute none">
-                        <div class="attribute-name dotted" title="Includes all other courses that do not fufill any requirements">Other</div>
+                        <div class="attribute-name dotted" title="Includes all other courses that do not fufill any requirements">Other courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <hr />
@@ -129,22 +129,22 @@
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                 </div>
-                <div class="tile credits">
+                <div class="tile tile-third credits">
                     <h4>Credits</h4>
                     <div class="attribute gened">
-                        <div class="attribute-name">General Education</div>
+                        <div class="attribute-name">General Education credits</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute major">
-                        <div class="attribute-name">Major</div>
+                        <div class="attribute-name">Major credits</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute minor">
-                        <div class="attribute-name">Minor</div>
+                        <div class="attribute-name">Minor credits</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute none">
-                        <div class="attribute-name dotted" title="Includes all other courses that do not fufill any requirements">Other</div>
+                        <div class="attribute-name dotted" title="Includes all other courses that do not fufill any requirements">Other credits</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <hr />
@@ -153,34 +153,54 @@
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                 </div>
-                <!-- @TODO: other ideas
-                            - number of semesters
-                            - number of 100, 200, and 300-level courses
-                            - total time spent in class
-                -->
-                <div class="tile fun">
-                    <h4>Fun</h4>
-                    <div class="attribute common">
-                        <div class="attribute-name">Most common prefix</div>
-                        <abbr class="attribute-course monospace uppercase">CSC</abbr>
-                    </div>
-                    <div class="attribute common-2">
-                        <div class="attribute-name">2nd most common prefix</div>
-                        <abbr class="attribute-course monospace uppercase">MAT</abbr>
-                    </div>
-                    <hr />
+                <div class="tile tile-third misc">
+                    <h4>Other</h4>
                     <div class="attribute avg-courses">
-                        <div class="attribute-name">Avg. courses per day</div>
+                        <div class="attribute-name">No. of 100-level courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute avg-hours">
-                        <div class="attribute-name">Avg. hours per day</div>
+                        <div class="attribute-name">No. of 200-level courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
                     <div class="attribute busiest">
-                        <div class="attribute-name">Busiest day of the week</div>
+                        <div class="attribute-name">No. of 300/400-level courses</div>
                         <abbr class="attribute-course monospace uppercase">—</abbr>
                     </div>
+                    <hr />
+                    <div class="attribute common">
+                        <div class="attribute-name">Total number of semesters</div>
+                        <abbr class="attribute-course monospace uppercase">–</abbr>
+                    </div>
+                    <div class="attribute common-2">
+                        <div class="attribute-name">Total time spent in class</div>
+                        <abbr class="attribute-course monospace uppercase">–</abbr>
+                    </div>
+                </div>
+                <div class="tile tile-half chart-most-taken">
+                    <h4>Most-taken subjects, by number of courses</h4>
+                    <figure class="chart-container">
+                        <div class="grid-lines"></div>
+                        <div class="chart-grid"></div>
+                        <div class="y-labels monospace uppercase subdued"></div>
+                        <div class="x-labels monospace uppercase"></div>
+                    </figure>
+                </div>
+                <div class="tile tile-half chart-average-time" style="--row-count: 8">
+                    <h4>Average time spent in class, in hours</h4>
+                    <figure class="chart-container">
+                        <div class="grid-lines"></div>
+                        <div class="chart-grid"></div>
+                        <div class="y-labels monospace subdued"></div>
+                        <div class="x-labels monospace uppercase">
+                            <div class="x-label">Mon</div>
+                            <div class="x-label">Tue</div>
+                            <div class="x-label">Wed</div>
+                            <div class="x-label">Thu</div>
+                            <div class="x-label">Fri</div>
+                            <div class="x-label">Avg</div>
+                        </div>
+                    </figure>
                 </div>
             </div>
         </section>
