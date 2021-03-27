@@ -1155,6 +1155,10 @@ main > section + section {
 
 /* ***** summary ***** */
 
+.summary {
+    max-width: 63em;
+}
+
 .summary-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -1199,7 +1203,7 @@ main > section + section {
 
 /* @TODO: combine this code with week view */
 .chart-container {
-    --column-gap: 1.25rem;
+    --column-gap: .8rem;
     --columns: 6;
 
     display: grid;
@@ -1261,21 +1265,27 @@ main > section + section {
 
 /* fake the last hour header */
 .y-label:last-child::after {
+    content: '0';
     position: absolute;
     right: 0;
     bottom: -1.4em;
 }
 
-.chart-most-taken .y-label:last-child::after {
-    content: '0';
-}
-
-.chart-average-time .y-label:last-child::after {
-    content: '0.0';
-}
-
 .grid-block {
+    display: flex;
+    justify-content: center;
+    align-items: start;
     border-radius: .35rem .35rem 0 0;
+}
+
+.grid-block-text {
+    display: inline-block;
+    background-color: #e9e9e9; /* match color of tile */
+    font-size: .75em;
+    text-align: center;
+    line-height: 1;
+    padding: 0 .4em;
+    transform: translateY(-1.25em);
 }
 
 .bg-bloo-1 {

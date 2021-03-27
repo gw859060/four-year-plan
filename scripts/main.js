@@ -851,18 +851,23 @@
             let subjectKeys = Object.keys(subjects).sort(function (a, b) { return subjects[b] - subjects[a] });
             let subjectValues = subjectKeys.map(key => subjects[key]);
             let highestValue = subjectValues[0];
-            let interval = 2; // y-axis label every 2 numbers
+            let interval = 3; // y-axis label every 3 numbers
 
             if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
 
             // add x-axis labels and top six courses to grid
-
             for (let i = 0; i < 6; i++) {
                 let block = document.createElement('div');
+                let text = document.createElement('div');
 
                 block.classList.add('grid-block', 'bg-bloo-' + (i + 1));
-                block.title = subjectValues[i] + ' courses'; // @TODO: replace with tooltip
+                block.setAttribute('tabindex', 0);
                 block.style.height = (subjectValues[i] / highestValue * 100) + '%';
+
+                text.classList.add('grid-block-text', 'monospace', 'uppercase');
+                text.textContent = subjectValues[i];
+
+                block.appendChild(text);
                 get('.chart-most-taken .chart-grid').appendChild(block);
 
                 let xLabel = document.createElement('div');
@@ -873,8 +878,8 @@
             }
 
             // create y-axis labels and gridlines
-            // @TODO: go by twos if > 10, and if > 18, go by threes
-            //        goal is to keep y-label count below 10 rows
+            // @TODO: go by twos if > 10, and if > 16, go by threes;
+            //        goal is to keep y-rows below 8
             let rowCount = highestValue / interval;
 
             get('.chart-most-taken').style.setProperty('--row-count', rowCount);
@@ -924,7 +929,7 @@
             let daysKeys = Object.keys(days).sort(function (a, b) { return days[b] - days[a] });
             let daysValues = daysKeys.map(key => days[key]);
             let highestValue = daysValues[0];
-            let interval = 30; // y-axis label every 30 minutes
+            let interval = 60; // y-axis label every 60 minutes
 
             // round to next highest multiple (for nicer y-axis labels)
             if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
@@ -934,24 +939,36 @@
 
             for (let day of dayOrder) {
                 let block = document.createElement('div');
+                let text = document.createElement('div');
                 let index = dayOrder.indexOf(day);
                 let hrs = Math.floor(days[day] / 60);
                 let min = Math.round(days[day] % 60);
 
                 block.classList.add('grid-block', bgColors[index]);
-                block.title = hrs + ' hours ' + min + ' minutes'; // @TODO: replace with tooltip
+                block.setAttribute('tabindex', 0);
                 block.style.height = (days[day] / highestValue * 100) + '%';
+
+                text.classList.add('grid-block-text', 'monospace', 'uppercase');
+                text.textContent = hrs + ':' + min;
+
+                block.appendChild(text);
                 get('.chart-average-time .chart-grid').appendChild(block);
             }
 
             // add average column
             let avgBlock = document.createElement('div');
+            let avgText = document.createElement('div');
             let avgHrs = Math.floor(average / 60);
             let avgMin = Math.round(average % 60);
 
             avgBlock.classList.add('grid-block', 'bg-black');
-            avgBlock.title = avgHrs + ' hours ' + avgMin + ' minutes'; // @TODO: replace with tooltip
+            avgBlock.setAttribute('tabindex', 0);
             avgBlock.style.height = (average / highestValue * 100) + '%';
+
+            avgText.classList.add('grid-block-text', 'monospace', 'uppercase');
+            avgText.textContent = avgHrs + ':' + avgMin;
+
+            avgBlock.appendChild(avgText);
             get('.chart-average-time .chart-grid').appendChild(avgBlock);
 
             // create y-axis labels and gridlines
@@ -962,10 +979,11 @@
             for (let i = rowCount; i > 0; i--) {
                 let yLabel = document.createElement('div');
 
-                yLabel.classList.add('y-label', 'uppercase');
-                yLabel.textContent = (i * interval / 60).toFixed(1); // convert minutes to hours
+                yLabel.classList.add('y-label');
+                yLabel.textContent = (i * interval / 60); // convert minutes to hours
                 get('.chart-average-time .y-labels').appendChild(yLabel);
 
+                // @TODO: create half-hour gridlines?
                 let gridLine = document.createElement('div');
 
                 gridLine.classList.add('grid-line');
