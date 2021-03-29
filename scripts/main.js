@@ -417,15 +417,13 @@
             let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
             let parentHeader = get('.semester-num', node.parentNode);
 
-            // all courses in "Course Schedule" section
+            // courses in "Course Schedule" section
             if (parentHeader) {
                 parentHeader.scrollIntoView({ behavior: motion });
             }
-            // all courses in "Undated Courses" section (no semester header)
-            // @TODO: when screen height is small enough, first course is covered by sticky header;
-            //        fix by adding hidden header
+            // courses in "Undated Courses" section
             else {
-                node.parentNode.scrollIntoView({ behavior: motion });
+                get('.fake-header').scrollIntoView({ behavior: motion });
             }
 
             // handle fade out animations
@@ -838,8 +836,11 @@
         function buildMostTakenChart(courses) {
             let subjects = {};
 
-            // count up number of courses per subject
             for (let course of courses) {
+                // skip undated courses because if AP/transfer credit, it wasn't taken at WCU
+                if (course.times === null) continue;
+
+                // count up number of courses per subject
                 if (subjects.hasOwnProperty(course.name.subject)) {
                     subjects[course.name.subject]++;
                 } else {
@@ -851,18 +852,25 @@
             let subjectKeys = Object.keys(subjects).sort(function (a, b) { return subjects[b] - subjects[a] });
             let subjectValues = subjectKeys.map(key => subjects[key]);
             let highestValue = subjectValues[0];
-            let interval = 3; // y-axis label every 3 numbers
+            let interval = 1;
 
+            // y-axis label every <interval> courses; goal is to keep y-rows below 7
+            if (highestValue >= 16) {
+                interval = 3;
+            } else if (highestValue >= 8) {
+                interval = 2;
+            }
+
+            // round to next highest multiple for nicer y-axis labels
             if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
 
             // add x-axis labels and top six courses to grid
             for (let i = 0; i < 6; i++) {
                 let block = document.createElement('div');
-                let text = document.createElement('div');
+                let text = document.createElement('span');
 
                 block.classList.add('grid-block', 'bg-bloo-' + (i + 1));
-                block.setAttribute('tabindex', 0);
-                block.style.height = (subjectValues[i] / highestValue * 100) + '%';
+                block.style.height = (subjectValues[i] / highestValue * 100).toFixed(1) + '%';
 
                 text.classList.add('grid-block-text', 'monospace', 'uppercase');
                 text.textContent = subjectValues[i];
@@ -878,8 +886,6 @@
             }
 
             // create y-axis labels and gridlines
-            // @TODO: go by twos if > 10, and if > 16, go by threes;
-            //        goal is to keep y-rows below 8
             let rowCount = highestValue / interval;
 
             get('.chart-most-taken').style.setProperty('--row-count', rowCount);
@@ -899,31 +905,33 @@
         }
 
         function buildAverageTimeChart(courses) {
+            // get list of unique semesters
+            let semesterArray = [];
+
+            for (let course of courses) {
+                if (!course.times || semesterArray.includes(course.year + ' ' + course.semester)) continue;
+
+                semesterArray.push(course.year + ' ' + course.semester);
+            }
+
+            let semesterCount = semesterArray.length;
+
             // calculate durations for each day
-            let dayOrder = ['M', 'T', 'W', 'R', 'F'];
+            let dayOrder = ['M', 'T', 'W', 'R', 'F', 'average'];
             let days = { M: 0, T: 0, W: 0, R: 0, F: 0 };
-            let average = 0;
+            let avg = 0; // separate from days object so it's not included when sorting from high to low
 
             for (let course of courses) {
                 if (!course.times) continue;
 
                 for (let time of course.times) {
                     let day = time.day;
-                    let start = time.start;
-                    let end = time.end;
-                    let duration = getDuration(start, end);
+                    let duration = getDuration(time.start, time.end);
 
-                    days[day] += duration;
-                    average += duration;
+                    days[day] += duration / semesterCount; // average values over number of semesters
+                    avg += duration / semesterCount / 5; // 5 days a week
                 }
             }
-
-            // average values over number of semesters
-            // @TODO: get number of semesters programatically
-            let semesterCount = 3;
-
-            for (let day in days) days[day] /= semesterCount;
-            average /= semesterCount * dayOrder.length;
 
             // sort from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
             let daysKeys = Object.keys(days).sort(function (a, b) { return days[b] - days[a] });
@@ -931,7 +939,7 @@
             let highestValue = daysValues[0];
             let interval = 60; // y-axis label every 60 minutes
 
-            // round to next highest multiple (for nicer y-axis labels)
+            // round to next highest multiple for nicer y-axis labels
             if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
 
             // add days to the grid
@@ -939,14 +947,14 @@
 
             for (let day of dayOrder) {
                 let block = document.createElement('div');
-                let text = document.createElement('div');
+                let text = document.createElement('span');
                 let index = dayOrder.indexOf(day);
-                let hrs = Math.floor(days[day] / 60);
-                let min = Math.round(days[day] % 60);
+                let minutes = (day === 'average') ? avg : days[day];
+                let hrs = Math.floor(minutes / 60);
+                let min = Math.round(minutes % 60);
 
                 block.classList.add('grid-block', bgColors[index]);
-                block.setAttribute('tabindex', 0);
-                block.style.height = (days[day] / highestValue * 100) + '%';
+                block.style.height = (minutes / highestValue * 100).toFixed(1) + '%';
 
                 text.classList.add('grid-block-text', 'monospace', 'uppercase');
                 text.textContent = hrs + ':' + min;
@@ -954,22 +962,6 @@
                 block.appendChild(text);
                 get('.chart-average-time .chart-grid').appendChild(block);
             }
-
-            // add average column
-            let avgBlock = document.createElement('div');
-            let avgText = document.createElement('div');
-            let avgHrs = Math.floor(average / 60);
-            let avgMin = Math.round(average % 60);
-
-            avgBlock.classList.add('grid-block', 'bg-black');
-            avgBlock.setAttribute('tabindex', 0);
-            avgBlock.style.height = (average / highestValue * 100) + '%';
-
-            avgText.classList.add('grid-block-text', 'monospace', 'uppercase');
-            avgText.textContent = avgHrs + ':' + avgMin;
-
-            avgBlock.appendChild(avgText);
-            get('.chart-average-time .chart-grid').appendChild(avgBlock);
 
             // create y-axis labels and gridlines
             let rowCount = highestValue / interval;
@@ -1220,9 +1212,9 @@
             case 3:
                 return 'Winter';
             case 4:
-                return 'Summer 1';
+                return 'Summer I';
             case 5:
-                return 'Summer 2';
+                return 'Summer II';
         }
     }
 }());
