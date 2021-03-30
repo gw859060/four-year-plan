@@ -51,7 +51,7 @@
     --txt-06: #4d4d4d;
     --txt-07: #262626;
 
-    --red: hsl(359.28, 80.23%, 62.2%);
+    --red: hsl(359.28, 83.23%, 62.2%);
     --orange: hsl(35, 100%, 50%);
     --green: hsl(120, 100%, 33.73%);
     --blue: hsl(218.04, 83.23%, 55.27%);
@@ -1229,7 +1229,6 @@ main > section + section {
 }
 
 .chart-description {
-    color: var(--txt-05);
     font-size: 1em;
 }
 
@@ -1257,6 +1256,11 @@ main > section + section {
     grid-column: 1 / -1;
 }
 
+.dashed-line {
+    border-color: #ccc;
+    border-style: dashed;
+}
+
 .x-labels {
     display: grid;
     grid-area: xaxis;
@@ -1280,6 +1284,10 @@ main > section + section {
     font-size: .75rem;
     text-align: right;
     transform: translateY(-1.35ch);
+}
+
+.chart-average-time .y-label {
+    grid-row: auto / span 2;
 }
 
 /* fake the last hour header */

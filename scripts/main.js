@@ -822,8 +822,8 @@
         courseNode.textContent = courses.length; // don't count overlap between types
         creditNode.textContent = creditTotal;
 
-        buildMostTakenChart(courses);
-        buildAverageTimeChart(courses);
+        buildMostTakenChart(courses, get('.chart-most-taken'));
+        buildAverageTimeChart(courses, get('.chart-average-time'));
 
         function insertSubtotals(subtotal, type) {
             for (let [key, value] of Object.entries(subtotal)) {
@@ -833,7 +833,7 @@
             }
         }
 
-        function buildMostTakenChart(courses) {
+        function buildMostTakenChart(courses, chart) {
             let subjects = {};
 
             for (let course of courses) {
@@ -848,10 +848,9 @@
                 }
             }
 
-            // sort from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
+            // sort keys from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
             let subjectKeys = Object.keys(subjects).sort(function (a, b) { return subjects[b] - subjects[a] });
-            let subjectValues = subjectKeys.map(key => subjects[key]);
-            let highestValue = subjectValues[0];
+            let highestValue = subjects[subjectKeys[0]];
             let interval = 1;
 
             // y-axis label every <interval> courses; goal is to keep y-rows below 7
@@ -870,41 +869,41 @@
                 let text = document.createElement('span');
 
                 block.classList.add('grid-block', 'bg-bloo-' + (i + 1));
-                block.style.height = (subjectValues[i] / highestValue * 100).toFixed(1) + '%';
+                block.style.height = (subjects[subjectKeys[i]] / highestValue * 100).toFixed(1) + '%';
 
                 text.classList.add('grid-block-text', 'monospace', 'uppercase');
-                text.textContent = subjectValues[i];
+                text.textContent = subjects[subjectKeys[i]];
 
                 block.appendChild(text);
-                get('.chart-most-taken .chart-grid').appendChild(block);
+                get('.chart-grid', chart).appendChild(block);
 
                 let xLabel = document.createElement('div');
 
                 xLabel.classList.add('x-label');
                 xLabel.textContent = subjectKeys[i];
-                get('.chart-most-taken .x-labels').appendChild(xLabel);
+                get('.x-labels', chart).appendChild(xLabel);
             }
 
             // create y-axis labels and gridlines
             let rowCount = highestValue / interval;
 
-            get('.chart-most-taken').style.setProperty('--row-count', rowCount);
+            chart.style.setProperty('--row-count', rowCount);
 
             for (let i = rowCount; i > 0; i--) {
                 let yLabel = document.createElement('div');
 
                 yLabel.classList.add('y-label');
                 yLabel.textContent = i * interval;
-                get('.chart-most-taken .y-labels').appendChild(yLabel);
+                get('.y-labels', chart).appendChild(yLabel);
 
                 let gridLine = document.createElement('div');
 
                 gridLine.classList.add('grid-line');
-                get('.chart-most-taken .grid-lines').appendChild(gridLine);
+                get('.grid-lines', chart).appendChild(gridLine);
             }
         }
 
-        function buildAverageTimeChart(courses) {
+        function buildAverageTimeChart(courses, chart) {
             // get list of unique semesters
             let semesterArray = [];
 
@@ -933,11 +932,10 @@
                 }
             }
 
-            // sort from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
+            // sort keys from highest to lowest, modified from <https://stackoverflow.com/a/16794116>
             let daysKeys = Object.keys(days).sort(function (a, b) { return days[b] - days[a] });
-            let daysValues = daysKeys.map(key => days[key]);
-            let highestValue = daysValues[0];
-            let interval = 60; // y-axis label every 60 minutes
+            let highestValue = days[daysKeys[0]];
+            let interval = 30; // y-axis label every 30 minutes
 
             // round to next highest multiple for nicer y-axis labels
             if (highestValue % interval !== 0) highestValue = Math.ceil(highestValue / interval) * interval;
@@ -947,39 +945,44 @@
 
             for (let day of dayOrder) {
                 let block = document.createElement('div');
-                let text = document.createElement('span');
                 let index = dayOrder.indexOf(day);
                 let minutes = (day === 'average') ? avg : days[day];
-                let hrs = Math.floor(minutes / 60);
-                let min = Math.round(minutes % 60);
 
                 block.classList.add('grid-block', bgColors[index]);
                 block.style.height = (minutes / highestValue * 100).toFixed(1) + '%';
+
+                let text = document.createElement('span');
+                let hrs = Math.floor(minutes / 60);
+                let min = Math.round(minutes % 60);
 
                 text.classList.add('grid-block-text', 'monospace', 'uppercase');
                 text.textContent = hrs + ':' + min;
 
                 block.appendChild(text);
-                get('.chart-average-time .chart-grid').appendChild(block);
+                get('.chart-grid', chart).appendChild(block);
             }
 
             // create y-axis labels and gridlines
             let rowCount = highestValue / interval;
 
-            get('.chart-average-time').style.setProperty('--row-count', rowCount);
+            chart.style.setProperty('--row-count', rowCount);
 
             for (let i = rowCount; i > 0; i--) {
                 let yLabel = document.createElement('div');
 
-                yLabel.classList.add('y-label');
-                yLabel.textContent = (i * interval / 60); // convert minutes to hours
-                get('.chart-average-time .y-labels').appendChild(yLabel);
+                // only create labels on the hour, not half-hour
+                if (i % 2 === 0) {
+                    yLabel.classList.add('y-label');
+                    yLabel.textContent = (i * interval / 60); // convert minutes to hours
+                    get('.y-labels', chart).appendChild(yLabel);
+                }
 
-                // @TODO: create half-hour gridlines?
+                // create hour lines and half-hour lines
                 let gridLine = document.createElement('div');
 
                 gridLine.classList.add('grid-line');
-                get('.chart-average-time .grid-lines').appendChild(gridLine);
+                if (i % 2 !== 0) gridLine.classList.add('dashed-line');
+                get('.grid-lines', chart).appendChild(gridLine);
             }
 
             function getDuration(start, end) {
