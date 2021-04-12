@@ -953,7 +953,7 @@
 
                 let text = document.createElement('span');
                 let hrs = Math.floor(minutes / 60);
-                let min = Math.round(minutes % 60);
+                let min = Math.round(minutes % 60).toString().padStart(2, '0');
 
                 text.classList.add('grid-block-text', 'monospace', 'uppercase');
                 text.textContent = hrs + ':' + min;
