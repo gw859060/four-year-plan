@@ -252,6 +252,8 @@
         }
     }
 
+    // @TODO: - handle no minor listed (only a major)
+    //        - handle double major
     function buildRequirements(json) {
         /* ***** gen eds ***** */
         let geneds = json.gened[0];
@@ -723,7 +725,7 @@
                     convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
 
                 details.classList.add('tooltip-details', 'subdued');
-                details.textContent = `${convertedStart}–${convertedEnd} • ${hours}${minutes % 60}m`;
+                details.textContent = `${convertedStart}–${convertedEnd} (${hours}${minutes % 60}min)`;
                 tooltip.appendChild(details);
 
                 return tooltip;
@@ -822,6 +824,7 @@
         courseNode.textContent = courses.length; // don't count overlap between types
         creditNode.textContent = creditTotal;
 
+        insertOtherStats();
         buildMostTakenChart(courses, get('.chart-most-taken'));
         buildAverageTimeChart(courses, get('.chart-average-time'));
 
@@ -830,6 +833,26 @@
                 let node = get(`.summary .${type} .${key} .attribute-course`);
 
                 node.textContent = value;
+            }
+        }
+
+        function insertOtherStats() {
+            let levelCount = {};
+
+            for (let course of courses) {
+                let level = Math.floor(course.name.number / 100) * 100;
+
+                if (levelCount[level]) {
+                    levelCount[level]++;
+                } else {
+                    levelCount[level] = 1;
+                }
+            }
+
+            for (let level in levelCount) {
+                let node = get(`.tile.misc .level-${level} .attribute-course`);
+
+                node.textContent = levelCount[level];
             }
         }
 
@@ -1018,7 +1041,7 @@
         link.classList.add('course-link');
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener');
-        link.setAttribute('title', `See description in WCUPA Course Catalog`);
+        link.setAttribute('title', `Open ${course.name.shorthand} in WCUPA Course Catalog`);
         link.href = `https://catalog.wcupa.edu/search/?P=${course.name.subject}+${course.name.number}`;
         link.textContent = course.name.title;
         container.appendChild(link);
@@ -1042,22 +1065,20 @@
 
             // if course meets multiple attributes, eg. i and j, iterate over all of them
             if (typeof attr === 'object') {
-                let len = attr.length;
-
-                attr.forEach((at, i) => {
+                attr.forEach((att, i) => {
                     let position;
 
                     // if attribute is last in the array, it's the right end
-                    if (i === (len - 1)) {
+                    if (i === (attr.length - 1)) {
                         position = 'right';
                     } else {
                         position = 'middle';
                     }
 
-                    container.appendChild(buildPill(at, position, req));
+                    container.appendChild(buildPill(att, position));
                 });
             } else {
-                container.appendChild(buildPill(attr, 'right', req));
+                container.appendChild(buildPill(attr, 'right'));
             }
         }
 
@@ -1075,12 +1096,9 @@
         reqObserver.observe(container);
     }
 
-    function buildPill(reqOrAttr, position, req) {
+    function buildPill(reqOrAttr, position) {
         let pill = document.createElement('button');
         let pillClass = reqOrAttr;
-
-        // if pill is for an attribute, prepend class with requirement too, to make it more specific
-        if (req) pillClass = req + '-' + reqOrAttr;
 
         pill.classList.add('pill', 'pill-' + position, pillClass);
         pill.textContent = expandAbbrev(reqOrAttr);

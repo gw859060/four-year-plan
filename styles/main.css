@@ -58,6 +58,8 @@
     --purple: hsl(253.68, 90.51%, 68.39%);
     --pink: hsl(335.04, 90.4%, 75.49%);
 
+    --arrow-pos: 35px; /* default value; overriden by JS later in repositionTooltip() */
+
     --gap-large: 1.25em;
     --gap-small: .6em;
 
@@ -1084,7 +1086,7 @@ main > section + section {
 }
 
 .week-grid .tooltip-details {
-    margin-top: .075em;
+    margin-top: .125em;
 }
 
 /* color reference: <https://www.ibm.com/plex/>, <https://rsms.me/inter/> */
@@ -1309,6 +1311,7 @@ main > section + section {
 
 .grid-block-text {
     font-size: .75em;
+    font-weight: bold;
     background-color: #e9e9e9; /* match color of tile */
     line-height: 1;
     padding: 0 .35em;
