@@ -522,18 +522,6 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "302",
-                            "name": "Computer Security",
-                            "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "major",
-                                    "attr": "elective"
-                                }
-                            ]
-                        },
-                        {
-                            "subject": "CSC",
                             "number": "481",
                             "name": "Artificial Intelligence",
                             "credits": 3,
@@ -545,14 +533,14 @@
                             ]
                         },
                         {
-                            "subject": "LNC",
-                            "number": "105",
-                            "name": "Global Science Fiction",
+                            "subject": "CSC",
+                            "number": "331",
+                            "name": "Operating Systems",
                             "credits": 3,
                             "requirements": [
                                 {
-                                    "req": "gened",
-                                    "attr": "writing"
+                                    "req": "major",
+                                    "attr": "elective"
                                 }
                             ]
                         }
@@ -575,8 +563,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "468",
-                            "name": "Introduction to Cloud Computing",
+                            "number": "404",
+                            "name": "Software Testing",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -587,13 +575,25 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "400",
-                            "name": "Internship",
-                            "credits": 6,
+                            "number": "302",
+                            "name": "Computer Security",
+                            "credits": 3,
                             "requirements": [
                                 {
                                     "req": "major",
                                     "attr": "elective"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "LNC",
+                            "number": "105",
+                            "name": "Global Science Fiction",
+                            "credits": 3,
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "writing"
                                 }
                             ]
                         }
