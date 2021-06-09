@@ -458,35 +458,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "semester": 4,
-                    "courses": [
-                        {
-                            "subject": "CSC",
-                            "number": "335",
-                            "name": "Data Communications and Networking I",
-                            "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "major",
-                                    "attr": "elective"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "semester": 5,
-                    "courses": [
-                        {
-                            "subject": "HIS",
-                            "number": "100",
-                            "name": "Contemporary Global History",
-                            "credits": 3,
-                            "requirements": null
-                        }
-                    ]
                 }
             ]
         },
@@ -522,6 +493,18 @@
                         },
                         {
                             "subject": "CSC",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
+                            "credits": 3,
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "CSC",
                             "number": "481",
                             "name": "Artificial Intelligence",
                             "credits": 3,
@@ -533,16 +516,11 @@
                             ]
                         },
                         {
-                            "subject": "CSC",
-                            "number": "331",
-                            "name": "Operating Systems",
+                            "subject": "HIS",
+                            "number": "100",
+                            "name": "Contemporary Global History",
                             "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "major",
-                                    "attr": "elective"
-                                }
-                            ]
+                            "requirements": null
                         }
                     ]
                 },
@@ -577,6 +555,18 @@
                             "subject": "CSC",
                             "number": "302",
                             "name": "Computer Security",
+                            "credits": 3,
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "331",
+                            "name": "Operating Systems",
                             "credits": 3,
                             "requirements": [
                                 {
