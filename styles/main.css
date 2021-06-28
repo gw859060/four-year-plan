@@ -390,6 +390,7 @@ abbr {
 header {
     background-color: var(--bg-01);
     color: var(--txt-01);
+    border-bottom: 1px solid #414141;
 }
 
 .header-container {
@@ -429,7 +430,6 @@ nav {
     top: -1px;
     color: var(--txt-02);
     background-color: var(--bg-01);
-    border-top: 1px solid #414141;
     z-index: 1; /* position above checkmarks */
 }
 
@@ -796,11 +796,11 @@ main > section + section {
     position: relative; /* for .fade-overflow */
     white-space: nowrap;
     margin-top: .2em;
+    height: 1.4em; /* so courses with pills (reqs) and without (no reqs) are the same height */
 }
 
 .no-reqs {
     font-size: .95em;
-    height: 1.5em; /* needs to match height of .req-container with pills */
 }
 
 .fade-overflow {

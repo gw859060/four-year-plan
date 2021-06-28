@@ -180,18 +180,18 @@
         let button = get('.nav-button');
         let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
-        // @TODO: cycle through items with arrow keys instead of tabbing;
-        //        maybe move focus to first item when opened?
-        // let list = get('.nav-list');
-        //
-        // list.focus = 0;
-        // list.elements = getAll('.nav-link');
-        // list.addEventListener('keydown', makeAccessible);
-
+        // @TODO: - cycle through items with arrow keys instead of tabbing;
+        //          maybe move focus to first item when opened?
+        //        - just use native id/anchor links?
         nav.addEventListener('click', function (e) {
             // handle section links
-            if (e.target.matches('.nav-link')) {
+            if (e.target.matches('.nav-link, .nav-link .subdued')) {
                 let section = get('.' + e.target.dataset.section);
+
+                // section numbers (with class="subdued") are a child of the node with the data attribute
+                if (e.target.classList.contains('subdued')) {
+                    section = get('.' + e.target.parentNode.dataset.section);
+                }
 
                 // <https://css-tricks.com/smooth-scrolling-accessibility/>
                 // <https://github.com/w3c/csswg-drafts/issues/3744>
@@ -280,11 +280,11 @@
         }
 
         /* ***** minor ***** */
-        let minor = json.minor[0];
-
-        // only one attr in each section so no need for forloop
-        buildAttrRow(minor.core, get('.section-minor .core'), 0);
-        buildAttrRow(minor.electives, get('.section-minor .electives'), 0);
+        // let minor = json.minor[0];
+        //
+        // // only one attr in each section so no need for forloop
+        // buildAttrRow(minor.core, get('.section-minor .core'), 0);
+        // buildAttrRow(minor.electives, get('.section-minor .electives'), 0);
 
         function buildAttrRow(attr, parentNode, i) {
             let attrTemplate = get('.template-attribute').content.cloneNode(true);
@@ -629,7 +629,6 @@
             }
 
             // add .today class to current day of the week
-            // @TODO: only for current semester? would require setting semester start/end dates
             let dayHeaders = getAll('.header-day', container);
             let todayNum = new Date().getDay();
             let todayNode = dayHeaders[todayNum - 1]; // subtract 1 because week starts on monday, not sunday
@@ -1053,7 +1052,7 @@
         // courses that don't fill any requirements
         if (requirements === null) {
             container.classList.add('no-reqs', 'subdued');
-            container.textContent = 'Does not meet any requirements';
+            container.textContent = 'Does not fulfill any requirements';
             return;
         }
 
