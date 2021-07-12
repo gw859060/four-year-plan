@@ -63,13 +63,13 @@
     --gap-large: 1.25em;
     --gap-small: .6em;
 
-    --shadow-small: 0 2px 4px rgba(0, 0, 0, .12),
-                    0 4px 8px rgba(0, 0, 0, .13),
-                    0 8px 16px rgba(0, 0, 0, .14);
-    --shadow-big: 0 2px 4px rgba(0, 0, 0, .09),
-                  0 4px 8px rgba(0, 0, 0, .10),
-                  0 8px 16px rgba(0, 0, 0, .11),
-                  0 16px 32px rgba(0, 0, 0, .12);
+    --shadow-small: 0 2px 4px rgba(0, 0, 0, .14),
+                    0 4px 8px rgba(0, 0, 0, .15),
+                    0 7px 14px rgba(0, 0, 0, .16);
+    --shadow-big: 0 2px 4px rgba(0, 0, 0, .11),
+                  0 4px 8px rgba(0, 0, 0, .12),
+                  0 8px 16px rgba(0, 0, 0, .13),
+                  0 16px 32px rgba(0, 0, 0, .14);
 
     --duration: .2s;
     --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -701,8 +701,6 @@ main > section + section {
 }
 
 .year + .year {
-    border-top: 2px dashed var(--bg-04);
-    padding-top: 3em;
     margin-top: 3em;
 }
 

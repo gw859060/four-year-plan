@@ -710,7 +710,7 @@
                 if (hours === 0) {
                     hours = '';
                 } else {
-                    hours += 'hr ';
+                    hours += 'h ';
                 }
 
                 let startHour = time.start.split(':')[0],
@@ -721,10 +721,11 @@
                     endPeriod = checkPeriod(endHour);
 
                 let convertedStart = `${convertHour(startHour)}:${startMin} ${startPeriod}`,
-                    convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`;
+                    convertedEnd = `${convertHour(endHour)}:${endMin} ${endPeriod}`,
+                    duration = `${hours}${minutes % 60}m`; // unused; formerly in details.textContent
 
                 details.classList.add('tooltip-details', 'subdued');
-                details.textContent = `${convertedStart}–${convertedEnd} (${hours}${minutes % 60}min)`;
+                details.textContent = `${convertedStart}—${convertedEnd}`;
                 tooltip.appendChild(details);
 
                 return tooltip;
