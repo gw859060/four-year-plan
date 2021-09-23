@@ -446,16 +446,11 @@
                             ]
                         },
                         {
-                            "subject": "FLM",
-                            "number": "200",
-                            "name": "Introduction to Film",
+                            "subject": "HIS",
+                            "number": "100",
+                            "name": "Contemporary Global History",
                             "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "gened",
-                                    "attr": "writing"
-                                }
-                            ]
+                            "requirements": null
                         }
                     ]
                 }
@@ -516,11 +511,16 @@
                             ]
                         },
                         {
-                            "subject": "HIS",
-                            "number": "100",
-                            "name": "Contemporary Global History",
+                            "subject": "ENG",
+                            "number": "371",
+                            "name": "Technical Writing",
                             "credits": 3,
-                            "requirements": null
+                            "requirements": [
+                                {
+                                    "req": "gened",
+                                    "attr": "writing"
+                                }
+                            ]
                         }
                     ]
                 },
