@@ -399,6 +399,18 @@
                     "courses": [
                         {
                             "subject": "CSC",
+                            "number": "317",
+                            "name": "Introduction to Digital Image Processing",
+                            "credits": 3,
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "CSC",
                             "number": "220",
                             "name": "Foundations of Computer Science",
                             "credits": 3,
@@ -442,18 +454,6 @@
                                     "day": "R",
                                     "start": "14:00",
                                     "end": "15:15"
-                                }
-                            ]
-                        },
-                        {
-                            "subject": "CSC",
-                            "number": "317",
-                            "name": "Introduction to Digital Image Processing",
-                            "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "major",
-                                    "attr": "elective"
                                 }
                             ]
                         },
