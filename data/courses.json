@@ -524,8 +524,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "335",
-                            "name": "Data Communications and Networking I",
+                            "number": "331",
+                            "name": "Operating Systems",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -589,8 +589,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "302",
-                            "name": "Computer Security",
+                            "number": "468",
+                            "name": "Introduction to Cloud Computing",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -601,8 +601,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "331",
-                            "name": "Operating Systems",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
                             "credits": 3,
                             "requirements": [
                                 {
