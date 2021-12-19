@@ -21,14 +21,13 @@
 
 <body>
     <script>
-        let colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        switchFavicon(window.matchMedia('(prefers-color-scheme: dark)'));
 
-        switchFavicon(colorScheme);
-        colorScheme.addEventListener('change', () => switchFavicon(colorScheme));
-
-        function switchFavicon(event) {
+        function switchFavicon(theme) {
             let favicon = document.querySelector('link[rel="icon"]');
-            (event.matches) ? favicon.href = 'favicon-dark.png' : favicon.href = 'favicon.png';
+
+            theme.matches ? favicon.href = 'favicon-dark.png' : favicon.href = 'favicon.png';
+            theme.addEventListener('change', () => switchFavicon(theme));
         }
     </script>
     <header>
