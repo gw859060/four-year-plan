@@ -990,6 +990,15 @@
 
             chart.style.setProperty('--row-count', rowCount);
 
+            // if rowcount is odd, add a empty one-row placeholder label at the top,
+            // so everything is pushed down a half-hour and zero starts at bottom
+            if (rowCount % 2 == 1) {
+                let yPlaceholder = document.createElement('div');
+
+                yPlaceholder.classList.add('y-placeholder');
+                get('.y-labels', chart).appendChild(yPlaceholder);
+            }
+
             for (let i = rowCount; i > 0; i--) {
                 let yLabel = document.createElement('div');
 
