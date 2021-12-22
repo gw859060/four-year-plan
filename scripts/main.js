@@ -1062,7 +1062,7 @@
         // courses that don't fill any requirements
         if (requirements === null) {
             container.classList.add('no-reqs', 'subdued');
-            container.textContent = 'Does not fulfill any requirements';
+            container.textContent = 'Not used for major or minor requirements';
             return;
         }
 
