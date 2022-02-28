@@ -2,7 +2,7 @@
     'use strict';
 
     // remove class that hides content when js is not enabled
-    get('html').classList.remove('no-js');
+    $('html').classList.remove('no-js');
 
     // kick everything off
     fetchData();
@@ -26,13 +26,13 @@
                     }
                 })
                 .catch(error => {
-                    if (!get('.tile.error')) {
+                    if (!$('.tile.error')) {
                         let warning = document.createElement('div');
 
                         warning.classList.add('tile', 'dark', 'error');
                         warning.textContent = 'Parts of this page failed to load. Click here to try again.';
                         warning.addEventListener('click', () => { window.location.reload(); });
-                        get('main').appendChild(warning);
+                        $('main').appendChild(warning);
                     }
 
                     console.error(error);
@@ -112,13 +112,13 @@
         this.year = year;
         this.semester = semester;
         this.tile = function () {
-            let tile = get('.template-course').content.cloneNode(true),
-                courseNode = get('.course', tile),
-                shortNode = get('.course-shorthand', tile),
-                shortNodeAlt = get('.course-shorthand-alt', tile),
-                titleNode = get('.course-name', tile),
-                reqContainer = get('.req-container', tile),
-                creditsNode = get('.course-credits', tile);
+            let tile = $('.template-course').content.cloneNode(true),
+                courseNode = $('.course', tile),
+                shortNode = $('.course-shorthand', tile),
+                shortNodeAlt = $('.course-shorthand-alt', tile),
+                titleNode = $('.course-name', tile),
+                reqContainer = $('.req-container', tile),
+                creditsNode = $('.course-credits', tile);
 
             courseNode.classList.add(this.name.id);
             shortNode.textContent = this.name.shorthand;
@@ -129,7 +129,7 @@
 
             // handle keyboard accessibility for pills
             reqContainer.focus = 0;
-            reqContainer.elements = getAll('.pill', reqContainer);
+            reqContainer.elements = $$('.pill', reqContainer);
             reqContainer.addEventListener('keydown', makeAccessible);
 
             // make initial pill focusable, all pills are initially set to tabindex="-1";
@@ -176,8 +176,8 @@
     }
 
     function buildNavigation() {
-        let nav = get('nav');
-        let button = get('.nav-button');
+        let nav = $('nav');
+        let button = $('.nav-button');
         let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
 
         // @TODO: - cycle through items with arrow keys instead of tabbing;
@@ -186,11 +186,11 @@
         nav.addEventListener('click', function (e) {
             // handle section links
             if (e.target.matches('.nav-link, .nav-link .subdued')) {
-                let section = get('.' + e.target.dataset.section);
+                let section = $('.' + e.target.dataset.section);
 
                 // section numbers (with class="subdued") are a child of the node with the data attribute
                 if (e.target.classList.contains('subdued')) {
-                    section = get('.' + e.target.parentNode.dataset.section);
+                    section = $('.' + e.target.parentNode.dataset.section);
                 }
 
                 // <https://css-tricks.com/smooth-scrolling-accessibility/>
@@ -233,7 +233,7 @@
             if ((e.altKey || e.shiftKey) && e.code === 'KeyM') {
                 // if @media max-width: 700px, nav is dropdown
                 if (window.innerWidth <= 700) {
-                    get('.nav-button').focus();
+                    $('.nav-button').focus();
                     openMenu();
                 } else {
                     nav.focus();
@@ -261,7 +261,7 @@
 
         for (let type of genedTypes) {
             geneds[type].forEach((attr, i) => {
-                let parentNode = get('.section-gened .' + type);
+                let parentNode = $('.section-gened .' + type);
 
                 buildAttrRow(attr, parentNode, i);
             });
@@ -273,7 +273,7 @@
 
         for (let type of majorTypes) {
             major[type].forEach((attr, i) => {
-                let parentNode = get('.section-major .' + type);
+                let parentNode = $('.section-major .' + type);
 
                 buildAttrRow(attr, parentNode, i);
             });
@@ -283,17 +283,17 @@
         // let minor = json.minor[0];
         //
         // // only one attr in each section so no need for forloop
-        // buildAttrRow(minor.core, get('.section-minor .core'), 0);
-        // buildAttrRow(minor.electives, get('.section-minor .electives'), 0);
+        // buildAttrRow(minor.core, $('.section-minor .core'), 0);
+        // buildAttrRow(minor.electives, $('.section-minor .electives'), 0);
 
         function buildAttrRow(attr, parentNode, i) {
-            let attrTemplate = get('.template-attribute').content.cloneNode(true);
-            let nameNode = get('.attribute-name', attrTemplate);
-            let courseNode = get('.attribute-course', attrTemplate);
+            let attrTemplate = $('.template-attribute').content.cloneNode(true);
+            let nameNode = $('.attribute-name', attrTemplate);
+            let courseNode = $('.attribute-course', attrTemplate);
 
             if (i !== 0) parentNode.appendChild(document.createElement('hr'));
 
-            get('.attribute', attrTemplate).classList.add(attr.attribute);
+            $('.attribute', attrTemplate).classList.add(attr.attribute);
             nameNode.textContent = expandAbbrev(attr.attribute);
             courseNode.textContent = '—';
             parentNode.appendChild(attrTemplate);
@@ -310,10 +310,10 @@
                 let rowCount = attr.number - 1;
 
                 while (rowCount > 0) {
-                    let attrTemplate = get('.template-attribute').content.cloneNode(true);
-                    let courseNode = get('.attribute-course', attrTemplate);
+                    let attrTemplate = $('.template-attribute').content.cloneNode(true);
+                    let courseNode = $('.attribute-course', attrTemplate);
 
-                    get('.attribute', attrTemplate).classList.add(attr.attribute);
+                    $('.attribute', attrTemplate).classList.add(attr.attribute);
                     courseNode.textContent = '—';
                     parentNode.appendChild(attrTemplate);
                     rowCount--;
@@ -339,14 +339,14 @@
                 // if course meets multiple attributes, eg. i and j, iterate over all of them
                 if (typeof attr === 'object') {
                     for (let at of attr) {
-                        let node = get(`.section-${req} .attribute.${at} .attribute-course`);
+                        let node = $(`.section-${req} .attribute.${at} .attribute-course`);
 
                         addRow(course, node);
                     }
                 }
                 // otherwise single requirement/attribute pair
                 else {
-                    let node = get(`.section-${req} .attribute.${attr} .attribute-course`);
+                    let node = $(`.section-${req} .attribute.${attr} .attribute-course`);
 
                     addRow(course, node);
                 }
@@ -354,28 +354,28 @@
         }
 
         // listeners for course tooltips
-        get('.requirements').addEventListener('pointerover', showTooltip, { passive: true });
-        get('.requirements').addEventListener('pointerout', hideTooltip, { passive: true });
-        get('.requirements').addEventListener('focusin', showTooltip, { passive: true });
-        get('.requirements').addEventListener('focusout', hideTooltip, { passive: true });
+        $('.requirements').addEventListener('pointerover', showTooltip, { passive: true });
+        $('.requirements').addEventListener('pointerout', hideTooltip, { passive: true });
+        $('.requirements').addEventListener('focusin', showTooltip, { passive: true });
+        $('.requirements').addEventListener('focusout', hideTooltip, { passive: true });
 
         // stop pointerdown from focusing and adding duplicate tooltip; there's already one from hover
-        get('.requirements').addEventListener('pointerdown', function (e) {
+        $('.requirements').addEventListener('pointerdown', function (e) {
             if (e.target.matches('.attribute-course.linked')) e.preventDefault();
         });
 
         // jump to schedule when clicking on course link
-        get('.requirements').addEventListener('click', function (e) {
+        $('.requirements').addEventListener('click', function (e) {
             if (!e.target.matches('.attribute-course.linked')) return;
 
-            let clickedCourse = get('.course.' + e.target.dataset.course);
+            let clickedCourse = $('.course.' + e.target.dataset.course);
 
             scrollToCourse(clickedCourse);
         }, { passive: true });
 
         function showTooltip(e) {
             if (!e.target.matches('.attribute-course.linked')) return;
-            if (e.target.contains(get('.tooltip'))) return;
+            if (e.target.contains($('.tooltip'))) return;
 
             let button = e.target;
             let course = courses.find(course => course.name.id === button.dataset.course);
@@ -388,7 +388,7 @@
             if (!e.target.matches('.attribute-course.linked')) return;
 
             let button = e.target;
-            let tooltip = get('.tooltip', button);
+            let tooltip = $('.tooltip', button);
 
             button.removeChild(tooltip);
         }
@@ -396,7 +396,7 @@
         function addRow(course, node) {
             // if attribute is already filled, skip and move to the next one
             while (node.textContent !== '—') {
-                node = get('.attribute-course', node.parentNode.nextElementSibling);
+                node = $('.attribute-course', node.parentNode.nextElementSibling);
             }
 
             let button = document.createElement('button');
@@ -417,7 +417,7 @@
             node.classList.add('highlighted', 'no-fade'); // .no-fade disables existing transition on pills
 
             let motion = (window.matchMedia('(prefers-reduced-motion)').matches) ? 'auto' : 'smooth';
-            let parentHeader = get('.semester-num', node.parentNode);
+            let parentHeader = $('.semester-num', node.parentNode);
 
             // courses in "Course Schedule" section
             if (parentHeader) {
@@ -425,7 +425,7 @@
             }
             // courses in "Undated Courses" section
             else {
-                get('.fake-header').scrollIntoView({ behavior: motion });
+                $('.fake-header').scrollIntoView({ behavior: motion });
             }
 
             // handle fade out animations
@@ -483,9 +483,9 @@
                 let courseList = courses.filter(c => c.year === year).filter(c => c.semester === semester);
 
                 // create empty semester section
-                let semTemplate = get('.template-semester').content.cloneNode(true),
-                    semNode = get('.semester', semTemplate),
-                    semHeader = get('.semester-num', semTemplate),
+                let semTemplate = $('.template-semester').content.cloneNode(true),
+                    semNode = $('.semester', semTemplate),
+                    semHeader = $('.semester-num', semTemplate),
                     season = expandSeason(semester);
 
                 semHeader.innerHTML = `${season} ${semesterYear} <span class="subdued">Year ${year}</span>`;
@@ -515,16 +515,16 @@
                 yearNode.appendChild(semTemplate);
             }
 
-            get('.course-schedule').appendChild(yearNode);
+            $('.course-schedule').appendChild(yearNode);
         }
 
         // click listener for pills
-        let years = getAll('.year');
+        let years = $$('.year');
 
         for (let year of years) year.addEventListener('click', clickPills, { passive: true });
 
         // listeners for week view tooltips
-        let grids = getAll('.week-grid');
+        let grids = $$('.week-grid');
 
         for (let grid of grids) {
             // @TODO: do touch event preventDefault() to stop focus (and tooltip showing twice)?
@@ -549,7 +549,7 @@
             if (!e.target.matches('.course-slot')) return;
 
             let slot = e.target;
-            let tooltip = get('.tooltip', slot);
+            let tooltip = $('.tooltip', slot);
 
             // if you click on a slot and then click away, focusout tries to remove the tooltip
             // that's already been removed by pointerout, so check if tooltip exists before removing
@@ -557,7 +557,7 @@
         }
 
         function buildWeek(container, courses) {
-            let weekTemplate = get('.template-week').content.cloneNode(true);
+            let weekTemplate = $('.template-week').content.cloneNode(true);
 
             container.appendChild(weekTemplate);
 
@@ -604,7 +604,7 @@
                 hourHeader.classList.add('header-hour');
                 hourHeader.textContent = hourNum + ':00';
                 hourNum++;
-                get('.header-hours', container).appendChild(hourHeader);
+                $('.header-hours', container).appendChild(hourHeader);
 
                 // fake the last hour header
                 if (i + 1 === totalHours) {
@@ -617,7 +617,7 @@
                 hourLine.classList.add('hour-line');
                 hourLine.style.gridRow = gridLineRow + ' / ' + (gridLineRow + 12); // 12 rows = 1 hr
                 gridLineRow += 12;
-                get('.week-grid', container).appendChild(hourLine);
+                $('.week-grid', container).appendChild(hourLine);
             }
 
             // add course slots to weekly schedule
@@ -628,8 +628,10 @@
                 addTimes(container, course, courses.indexOf(course), earliestHour);
             }
 
-            // add .today class to current day of the week
-            let dayHeaders = getAll('.header-day', container);
+            // highlight current day of the week in current semester
+            // @TODO: need a way to pass in the current section's year
+            //        and semester, so I can compare it to today's date
+            let dayHeaders = $$('.header-day', container);
             let todayNum = new Date().getDay();
             let todayNode = dayHeaders[todayNum - 1]; // subtract 1 because week starts on monday, not sunday
 
@@ -640,18 +642,18 @@
             }
 
             // set css variable for use in .header-hours and .week-grid
-            get('.week-container', container).style.setProperty('--total-hours', totalHours);
+            $('.week-container', container).style.setProperty('--total-hours', totalHours);
 
             // also open schedules in adjacent semesters (directly to the left or right),
             // primarily to avoid huge layout shift on mobile while not wasting space on desktop
-            let weekButton = get('.week-button', container);
+            let weekButton = $('.week-button', container);
 
             weekButton.addEventListener('click', function (e) {
-                let semesters = getAll('.semester', e.target.closest('.year'));
+                let semesters = $$('.semester', e.target.closest('.year'));
                 let targetPos = e.target.closest('.semester').getBoundingClientRect().top;
 
                 for (let semester of semesters) {
-                    let schedule = get('.weekly-schedule', semester);
+                    let schedule = $('.weekly-schedule', semester);
                     let semesterPos = semester.getBoundingClientRect().top;
 
                     // if semester doesn't contain a weekly schedule, skip it
@@ -685,7 +687,7 @@
                 courseNode.style.gridRow = convertToRow(time.start) + '/' + convertToRow(time.end);
                 courseNode.style.gridColumn = convertToColumn(time.day);
 
-                get('.week-grid', container).appendChild(courseNode);
+                $('.week-grid', container).appendChild(courseNode);
             });
 
             function buildTooltip(course, time) {
@@ -782,10 +784,10 @@
         let filteredCourses = courses.filter(course => course.times === null);
 
         for (let course of filteredCourses) {
-            get('.undated-courses-container').appendChild(course.tile());
+            $('.undated-courses-container').appendChild(course.tile());
         }
 
-        get('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
+        $('.undated-courses-container').addEventListener('click', clickPills, { passive: true });
     }
 
     function buildSummary(courses) {
@@ -818,19 +820,19 @@
             creditTotal += course.credits;
         }
 
-        let courseNode = get('.summary .courses .total .attribute-course');
-        let creditNode = get('.summary .credits .total .attribute-course');
+        let courseNode = $('.summary .courses .total .attribute-course');
+        let creditNode = $('.summary .credits .total .attribute-course');
 
         courseNode.textContent = courses.length; // don't count overlap between types
         creditNode.textContent = creditTotal;
 
         insertOtherStats();
-        buildMostTakenChart(courses, get('.chart-most-taken'));
-        buildAverageTimeChart(courses, get('.chart-average-time'));
+        buildMostTakenChart(courses, $('.chart-most-taken'));
+        buildAverageTimeChart(courses, $('.chart-average-time'));
 
         function insertSubtotals(subtotal, type) {
             for (let [key, value] of Object.entries(subtotal)) {
-                let node = get(`.summary .${type} .${key} .attribute-course`);
+                let node = $(`.summary .${type} .${key} .attribute-course`);
 
                 node.textContent = value;
             }
@@ -850,7 +852,7 @@
             }
 
             for (let level in levelCount) {
-                let node = get(`.tile.misc .level-${level} .attribute-course`);
+                let node = $(`.tile.misc .level-${level} .attribute-course`);
 
                 node.textContent = levelCount[level];
             }
@@ -898,13 +900,13 @@
                 text.textContent = subjects[subjectKeys[i]];
 
                 block.appendChild(text);
-                get('.chart-grid', chart).appendChild(block);
+                $('.chart-grid', chart).appendChild(block);
 
                 let xLabel = document.createElement('div');
 
                 xLabel.classList.add('x-label');
                 xLabel.textContent = subjectKeys[i];
-                get('.x-labels', chart).appendChild(xLabel);
+                $('.x-labels', chart).appendChild(xLabel);
             }
 
             // create y-axis labels and gridlines
@@ -917,12 +919,12 @@
 
                 yLabel.classList.add('y-label');
                 yLabel.textContent = i * interval;
-                get('.y-labels', chart).appendChild(yLabel);
+                $('.y-labels', chart).appendChild(yLabel);
 
                 let gridLine = document.createElement('div');
 
                 gridLine.classList.add('grid-line');
-                get('.grid-lines', chart).appendChild(gridLine);
+                $('.grid-lines', chart).appendChild(gridLine);
             }
         }
 
@@ -982,7 +984,7 @@
                 text.textContent = hrs + ':' + min;
 
                 block.appendChild(text);
-                get('.chart-grid', chart).appendChild(block);
+                $('.chart-grid', chart).appendChild(block);
             }
 
             // create y-axis labels and gridlines
@@ -996,7 +998,7 @@
                 let yPlaceholder = document.createElement('div');
 
                 yPlaceholder.classList.add('y-placeholder');
-                get('.y-labels', chart).appendChild(yPlaceholder);
+                $('.y-labels', chart).appendChild(yPlaceholder);
             }
 
             for (let i = rowCount; i > 0; i--) {
@@ -1006,7 +1008,7 @@
                 if (i % 2 === 0) {
                     yLabel.classList.add('y-label');
                     yLabel.textContent = (i * interval / 60); // convert minutes to hours
-                    get('.y-labels', chart).appendChild(yLabel);
+                    $('.y-labels', chart).appendChild(yLabel);
                 }
 
                 // create hour lines and half-hour lines
@@ -1014,7 +1016,7 @@
 
                 gridLine.classList.add('grid-line');
                 if (i % 2 !== 0) gridLine.classList.add('dashed-line');
-                get('.grid-lines', chart).appendChild(gridLine);
+                $('.grid-lines', chart).appendChild(gridLine);
             }
 
             function getDuration(start, end) {
@@ -1036,11 +1038,13 @@
           helper functions
        ********************** */
 
-    function get(selector, scope = document) {
+    // get single element matching css selector
+    function $(selector, scope = document) {
         return scope.querySelector(selector);
     }
 
-    function getAll(selector, scope = document) {
+    // get all elements matching css selector
+    function $$(selector, scope = document) {
         return scope.querySelectorAll(selector);
     }
 
@@ -1124,15 +1128,15 @@
         if (e.target.classList.contains('selected') === false) {
             clearSelectedPills();
 
-            let selectedPills = getAll('.pill.' + e.target.classList[2]); // [0] is .pill; [1] is .pill-<position>
+            let selectedPills = $$('.pill.' + e.target.classList[2]); // [0] is .pill; [1] is .pill-<position>
 
             for (let pill of selectedPills) {
                 pill.classList.add('selected');
                 pill.closest('.course').classList.add('selected');
             }
 
-            get('.course-schedule').classList.add('filtered');
-            get('.undated-courses').classList.add('filtered');
+            $('.course-schedule').classList.add('filtered');
+            $('.undated-courses').classList.add('filtered');
         }
         // else if clicked pill is already selected, clear selection
         else {
@@ -1140,8 +1144,8 @@
         }
 
         function clearSelectedPills() {
-            getAll('.selected').forEach(el => el.classList.remove('selected'));
-            getAll('.filtered').forEach(el => el.classList.remove('filtered'));
+            $$('.selected').forEach(el => el.classList.remove('selected'));
+            $$('.filtered').forEach(el => el.classList.remove('filtered'));
         }
     }
 
