@@ -66,6 +66,7 @@
                         course.number,
                         course.name,
                         course.requirements,
+                        course.repeat,
                         course.credits,
                         course.times,
                         year.year,
@@ -84,6 +85,7 @@
                 course.number,
                 course.name,
                 course.requirements,
+                course.repeat,
                 course.credits,
 
                 // null = will never have a time; undefined (from above loop) = may get a time in the future
@@ -98,7 +100,7 @@
         return courseObjects;
     }
 
-    function Course(subject, number, title, requirements, credits, times, year, semester) {
+    function Course(subject, number, title, requirements, repeat, credits, times, year, semester) {
         this.name = {
             'subject': subject,
             'number': number,
@@ -107,6 +109,7 @@
             'id': subject + '-' + number
         };
         this.requirements = requirements;
+        this.repeat = repeat;
         this.credits = credits;
         this.times = times;
         this.year = year;
@@ -324,15 +327,14 @@
 
     function fillRequirements(courses) {
         for (let course of courses) {
-            let requirements = course.requirements;
-
             // skip courses that don't meet any requirements
-            if (requirements === null) {
+            // or are repeated from a previous semester
+            if (course.requirements === null || course.repeat === true) {
                 continue;
             }
 
             // iterate over course's requirements (some fulfill multiple, eg. major and gen ed)
-            for (let requirement of requirements) {
+            for (let requirement of course.requirements) {
                 let req = requirement.req;
                 let attr = requirement.attr;
 
@@ -791,10 +793,15 @@
     }
 
     function buildSummary(courses) {
-        let courseSubtotal = { gened: 0, major: 0, minor: 0, none:  0 };
-        let creditSubtotal = { gened: 0, major: 0, minor: 0, none:  0 };
+        let courseSubtotal = { gened: 0, major: 0, minor: 0, none: 0 };
+        let creditSubtotal = { gened: 0, major: 0, minor: 0, none: 0 };
 
         for (let course of courses) {
+            // don't count repeated courses (only count the first time)
+            if (course.repeat === true) {
+                continue;
+            }
+
             if (course.requirements === null) {
                 courseSubtotal.none++;
                 creditSubtotal.none += course.credits;
@@ -817,7 +824,10 @@
         let creditTotal = 0;
 
         for (let course of courses) {
-            creditTotal += course.credits;
+            // don't count repeated courses (only count the first time)
+            if (course.repeat !== true) {
+                creditTotal += course.credits;
+            }
         }
 
         let courseNode = $('.summary .courses .total .attribute-course');
