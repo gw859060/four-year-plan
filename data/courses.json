@@ -535,30 +535,6 @@
                             ],
                             "times": [
                                 {
-                                    "day": "M",
-                                    "start": "15:00",
-                                    "end": "16:15"
-                                },
-                                {
-                                    "day": "W",
-                                    "start": "15:00",
-                                    "end": "16:15"
-                                }
-                            ]
-                        },
-                        {
-                            "subject": "CSC",
-                            "number": "321",
-                            "name": "Database Management Systems",
-                            "credits": 3,
-                            "requirements": [
-                                {
-                                    "req": "major",
-                                    "attr": "elective"
-                                }
-                            ],
-                            "times": [
-                                {
                                     "day": "T",
                                     "start": "16:25",
                                     "end": "17:40"
@@ -572,9 +548,34 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "400",
-                            "name": "Internship",
-                            "credits": 6,
+                            "number": "220",
+                            "name": "Foundations of Computer Science",
+                            "credits": 3,
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "core"
+                                }
+                            ],
+                            "repeat": true,
+                            "times": [
+                                {
+                                    "day": "M",
+                                    "start": "15:00",
+                                    "end": "16:15"
+                                },
+                                {
+                                    "day": "W",
+                                    "start": "15:00",
+                                    "end": "16:15"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "335",
+                            "name": "Data Communications and Networking I",
+                            "credits": 3,
                             "requirements": [
                                 {
                                     "req": "major",
@@ -584,13 +585,8 @@
                             "times": [
                                 {
                                     "day": "M",
-                                    "start": "12:00",
-                                    "end": "13:50"
-                                },
-                                {
-                                    "day": "W",
-                                    "start": "12:00",
-                                    "end": "13:50"
+                                    "start": "19:15",
+                                    "end": "22:00"
                                 }
                             ]
                         },
@@ -620,6 +616,18 @@
                                     "day": "F",
                                     "start": "14:00",
                                     "end": "14:50"
+                                }
+                            ]
+                        },
+                        {
+                            "subject": "CSC",
+                            "number": "400",
+                            "name": "Internship",
+                            "credits": 6,
+                            "requirements": [
+                                {
+                                    "req": "major",
+                                    "attr": "elective"
                                 }
                             ]
                         }
@@ -666,8 +674,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "335",
-                            "name": "Data Communications and Networking I",
+                            "number": "321",
+                            "name": "Database Management Systems",
                             "credits": 3,
                             "requirements": [
                                 {
