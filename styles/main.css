@@ -707,6 +707,8 @@ main > section + section {
 
 .year + .year {
     margin-top: 3em;
+    padding-top: 2.5em;
+    border-top: 1px solid #ddd;
 }
 
 /* added with js */
