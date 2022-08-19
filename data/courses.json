@@ -588,9 +588,9 @@
                             ]
                         },
                         {
-                            "subject": "FLM",
+                            "subject": "PSC",
                             "number": "200",
-                            "name": "Introduction to Film",
+                            "name": "Political Analysis",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -600,14 +600,9 @@
                             ],
                             "times": [
                                 {
-                                    "day": "T",
-                                    "start": "16:25",
-                                    "end": "17:40"
-                                },
-                                {
                                     "day": "R",
-                                    "start": "16:25",
-                                    "end": "17:40"
+                                    "start": "11:00",
+                                    "end": "12:15"
                                 }
                             ]
                         },
@@ -715,8 +710,8 @@
         },
         {
             "subject": "PSC",
-            "number": "240",
-            "name": "Introduction to Comparative Politics",
+            "number": "100",
+            "name": "United States Government and Politics",
             "credits": 3,
             "requirements": [
                 {
