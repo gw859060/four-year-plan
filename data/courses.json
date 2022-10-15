@@ -633,12 +633,19 @@
                                     "req": "major",
                                     "attr": "complex"
                                 }
+                            ],
+                            "times": [
+                                {
+                                    "day": "R",
+                                    "start": "19:15",
+                                    "end": "22:00"
+                                }
                             ]
                         },
                         {
                             "subject": "CSC",
-                            "number": "404",
-                            "name": "Software Testing",
+                            "number": "466",
+                            "name": "Distributed and Parallel Computing",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -649,25 +656,49 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "468",
-                            "name": "Introduction to Cloud Computing",
+                            "number": "321",
+                            "name": "Database Management Systems",
                             "credits": 3,
                             "requirements": [
                                 {
                                     "req": "major",
                                     "attr": "elective"
                                 }
+                            ],
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "16:25",
+                                    "end": "17:40"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "16:25",
+                                    "end": "17:40"
+                                }
                             ]
                         },
                         {
-                            "subject": "LNC",
-                            "number": "105",
-                            "name": "Global Science Fiction",
+                            "subject": "ENG",
+                            "number": "371",
+                            "name": "Technical Writing",
                             "credits": 3,
                             "requirements": [
                                 {
                                     "req": "gened",
                                     "attr": "writing"
+                                }
+                            ],
+                            "times": [
+                                {
+                                    "day": "T",
+                                    "start": "12:30",
+                                    "end": "13:45"
+                                },
+                                {
+                                    "day": "R",
+                                    "start": "12:30",
+                                    "end": "13:45"
                                 }
                             ]
                         }
