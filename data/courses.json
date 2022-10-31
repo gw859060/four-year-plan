@@ -656,8 +656,8 @@
                         },
                         {
                             "subject": "CSC",
-                            "number": "321",
-                            "name": "Database Management Systems",
+                            "number": "471",
+                            "name": "Modern Malware Analysis",
                             "credits": 3,
                             "requirements": [
                                 {
@@ -668,13 +668,13 @@
                             "times": [
                                 {
                                     "day": "T",
-                                    "start": "16:25",
-                                    "end": "17:40"
+                                    "start": "11:00",
+                                    "end": "12:15"
                                 },
                                 {
                                     "day": "R",
-                                    "start": "16:25",
-                                    "end": "17:40"
+                                    "start": "11:00",
+                                    "end": "12:15"
                                 }
                             ]
                         },
